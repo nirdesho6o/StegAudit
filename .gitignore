@@ -1,0 +1,44 @@
+# Secrets — never commit
+.env
+.env.*
+*.key
+*.pem
+
+# Remote-call response cache (rebuildable, may contain model outputs at scale)
+cache/
+
+# Model weights and Hugging Face caches
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.gguf
+*.onnx
+hf_cache/
+.cache/
+models/
+
+# Large datasets
+data/
+datasets/
+*.parquet
+*.arrow
+
+# Papers (copyrighted PDFs, local reference only)
+papers/
+
+# Python / tooling
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
