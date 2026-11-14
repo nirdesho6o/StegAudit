@@ -9,6 +9,7 @@ torch==2.15.0+cpu
 transformers==5.23.0
 tokenizers==0.23.3
 safetensors==0.8.0
+huggingface_hub==2.4.0   # snapshot_download of the pinned model revision
 
 # Key exchange (X25519) + HKDF-SHA256
 cryptography==50.0.2

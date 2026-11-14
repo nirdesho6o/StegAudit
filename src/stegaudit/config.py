@@ -27,6 +27,15 @@ from dataclasses import asdict, dataclass
 MODEL_SMALL = "Qwen/Qwen2.5-0.5B-Instruct"
 MODEL_LARGE = "Qwen/Qwen2.5-1.5B-Instruct"
 
+# Pinned Hugging Face commit hashes (looked up 2026-11-15 with
+# huggingface_hub.HfApi().model_info(name).sha). Loading by hash means a later
+# upload to the model repo cannot silently change the weights or tokenizer,
+# which would change the distributions and break reproducibility.
+MODEL_REVISIONS = {
+    MODEL_SMALL: "7ae557604adf67be50417f59c2c2f167def9a775",
+    MODEL_LARGE: "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+}
+
 
 @dataclass(frozen=True)
 class MeteorConfig:
@@ -60,7 +69,14 @@ class MeteorConfig:
     def message_bits(self) -> int:
         return self.payload_bits - self.tag_bits
 
+    @property
+    def model_revision(self) -> str:
+        """Pinned HF commit hash for model_name (see MODEL_REVISIONS)."""
+        return MODEL_REVISIONS[self.model_name]
+
     def __post_init__(self) -> None:
+        if self.model_name not in MODEL_REVISIONS:
+            raise ValueError(f"no pinned revision for {self.model_name}; add it to MODEL_REVISIONS")
         if not 1 <= self.beta <= 62:
             raise ValueError("beta must be in [1, 62]")
         if self.top_k < 1:
@@ -72,4 +88,6 @@ class MeteorConfig:
 
     def to_dict(self) -> dict:
         """For writing into every result JSON."""
-        return asdict(self)
+        d = asdict(self)
+        d["model_revision"] = self.model_revision
+        return d

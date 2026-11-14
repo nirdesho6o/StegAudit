@@ -9,7 +9,8 @@ The "Nirdesh verified / changed" column is filled in by Nirdesh, not by Claude.
 |---|---|---|---|
 | 2026-11-15 | Phase 0, commit 1 | `.gitignore` (secrets, cache, weights, datasets, papers). CLAUDE.md was written by Nirdesh. | |
 | 2026-11-15 | Phase 0, commit 2 | `pyproject.toml`, pinned `requirements.txt`, `src/stegaudit/__init__.py`, `config.py`, `tests/test_smoke.py`, stubs of README / NOTES / AI_USE / REFERENCES / `results/LOG.md`. Read (read-only) `apart-sprint/swarm-sprint/swarm/llm.py` to copy the Adaption SDK choice and version. | Answered the plan's open questions (Adaption SDK source, EOS policy, beta sweep, prefix detectors, git). |
-| 2026-11-15 | Phase 0, references | Reformatted REFERENCES.md with [VERIFIED] / [VERIFY] / TODO tags. Claude Code's first draft had author lists written from memory. | Checked Anwar et al. (2026) and Motwani et al. (2024) against the PDFs and supplied the corrected entries, including the Anwar title, which Claude had wrong. Supplied the Kiekintveld et al. (2009) entry. Meteor, Audit Games and Kiekintveld are still to be checked against the PDFs. |
+| 2026-11-15 | Phase 0, references | Reformatted REFERENCES.md with [VERIFIED] / [VERIFY] / TODO tags. Claude Code's first draft had author lists written from memory. | Checked Anwar et al. (2026) and Motwani et al. (2024) against the PDFs and supplied the corrected entries, including the real Anwar title (Claude's draft had only a placeholder marked TODO). Supplied the Kiekintveld et al. (2009) entry. Meteor, Audit Games and Kiekintveld are still to be checked against the PDFs. |
+| 2026-11-15 | Phase 0, commit 3 | `lm.py` (deterministic CPU load of Qwen from the pinned snapshot, chat prompt ids, next-token logits), `provenance.py` (metadata for every result JSON), pinned `MODEL_REVISIONS` in `config.py`, `tests/test_lm.py`, `tests/test_provenance.py`. First attempt checked `config._commit_hash`, which transformers 5 no longer sets; changed to loading from the snapshot folder named by the hash. | Asked for: the revision pin, revision + torch/transformers versions in every result JSON, and a bit-for-bit two-load determinism test. |
 
 ## Design decisions (proposed by Claude Code, approved by Nirdesh on 2026-11-15)
 
@@ -46,3 +47,7 @@ Each one is a choice CLAUDE.md left open or that the plain spec would get wrong.
     Why: `import stegaudit` from `src/` needs an installed package (`pip install -e .`); requirements.txt alone does not do it.
 14. **Adaption client copies `apart-sprint/swarm-sprint`:** `adaption==0.19.0` SDK, `client.responses.create(...)`, only `ADAPTION_API_KEY`. It does not use the OpenAI client.
     Why: Nirdesh's instruction. This is the SDK and version already used successfully in that project.
+15. **Model revision pinned by HF commit hash; loaded from `snapshots/<hash>`; eager attention; 1 thread.** *(Revision pin requested by Nirdesh.)*
+    Why: a later upload to the HF repo could otherwise change weights or tokenizer under the same name. Loading from the hash-named folder makes the revision checkable. Eager attention is the simplest, most transparent code path. One thread fixes the order of floating-point additions.
+16. **Every result JSON gets `meta`:** git commit + dirty flag, seed, model + revision, full config, torch / transformers / tokenizers versions, platform, timestamp.
+    Why: bit-identical logits are only guaranteed for the same software versions, so a result is only reproducible if those are recorded.
