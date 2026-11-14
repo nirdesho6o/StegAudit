@@ -16,6 +16,7 @@ The "Nirdesh verified / changed" column is filled in by Nirdesh, not by Claude.
 | 2026-11-15 | Phase 1, keys.py | `keys.py` (X25519 `Party`, HKDF-SHA256 → stego_key → mask_key / tag_key, seeded parties for experiments, explicit all-zero secret check), `tests/test_keys.py` (incl. an independent RFC 5869 HKDF written with stdlib `hmac` as outside judge). | |
 | 2026-11-15 | Phase 1, prg.py | `prg.py` (HMAC-SHA256 over a fixed-width (label, msg_id, step) encoding, top-n-bits output, `PRGS` registry), `tests/test_prg.py` (literal byte-layout spec checked with stdlib hmac, distinct masks per msg_id/step/label/key, bit balance, bad-argument rejection). | |
 | 2026-11-15 | Phase 1, quantize.py | `quantize.py` (`quantize` → `QuantizedDist` with widths / lo / find / n_vanished / remainder; `tv_distance`), `tests/test_quantize.py` (exact tiling at beta 8–62, per-token error < 2^-β, TV < k·2^-β, exhaustive beta = 8 lookup vs linear scan, vanishing boundary at exactly 2^-β). | |
+| 2026-11-15 | Phase 1, lm.py step API | `topk_dist` (top-k sorted by token id, float64 softmax, EOS masking before top-k with `eos_mass`), `Session` (prefill + one-token KV-cache steps), `eos_ids`, `ids_to_text` / `text_to_ids`; `tests/conftest.py` (one shared Qwen load), `tests/test_lm_step.py`. Measured the KV-vs-full-recompute difference and wrote it into the docstring. | |
 
 ## Design decisions (proposed by Claude Code, approved by Nirdesh on 2026-11-15)
 
@@ -100,3 +101,15 @@ Each one is a choice CLAUDE.md left open or that the plain spec would get wrong.
     Why: an empty interval has end = start ≤ x, so it is skipped automatically. Meteor can therefore never emit a vanished token, with no special case. Checked exhaustively at β = 8 against a linear scan.
 33. **`n_vanished` counts only tokens with p > 0 and width 0; β is limited to [1, 62].**
     Why: a token with p = 0 never had any probability, so it does not count as vanished. The 62-bit cap keeps all sums inside int64. CLAUDE.md's β values (8–32) are well inside it.
+
+### Phase 1: lm.py step API
+34. **EOS is masked by setting its logits to -inf BEFORE top-k**, so k non-EOS tokens remain. `eos_mass` = probability EOS would have had in the unmasked top-k.
+    Why: masking after top-k would leave fewer than k tokens and change the support size by step. `eos_mass` is what experiments log for "how often and how strongly EOS was masked" (Nirdesh's requirement on decision 9).
+35. **EOS set = generation_config.eos_token_id ∪ tokenizer.eos_token_id** (Qwen2.5: 151643 `<|endoftext|>`, 151645 `<|im_end|>`).
+    Why: either token ends a Qwen chat reply, so both must be masked.
+36. **Fixed order = ascending token id after top-k.**
+    Why: token ids never change between runs; sorting by probability could reorder near-ties.
+37. **Measured, not assumed: KV-cache steps and full recompute differ in the low bits** (146,520 / 151,936 logits, max 2.0e-5 after 10 tokens).
+    Why: this is the evidence for decision 5 (same code path on both sides). The test checks only `allclose` between the two paths, and exact equality between two runs of the same path.
+38. **`ids_to_text` / `text_to_ids`: no special tokens, `clean_up_tokenization_spaces=False`.**
+    Why: the text must be exactly the concatenation of the token strings; any clean-up would add retokenisation mismatches that are not BPE's fault.

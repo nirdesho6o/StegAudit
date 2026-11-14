@@ -33,17 +33,83 @@ failure instead of garbage), but the message is lost. Determinism here is
 only claimed for the same machine and software versions; every result JSON
 records those versions (see provenance.py).
 
-Phase 0 scope: load the model and return next-token logits for a prompt.
-The incremental KV-cache step API used by Meteor is added in Phase 1.
+The step API used by Meteor
+---------------------------
+    sess = lm.start(prompt_ids)          # one forward pass over the prompt ("prefill")
+    d = sess.dist(mask_eos=True)         # top-k distribution for the next token
+    sess.advance(token_id)               # feed ONE token, reuse the KV cache
+
+KV cache: after the prefill, the model keeps the attention keys and values of
+every earlier token, so each new token costs one small forward pass instead of
+re-reading the whole text. The incremental path and a full recompute give
+logits that are close but NOT bit-identical (different order of floating-point
+operations). Measured 2026-11-15 after 10 tokens: 146,520 of 151,936 logits
+differed, max |difference| 2.0e-5. Tiny, but enough to move an interval edge
+at beta = 32. So Sender and Receiver must BOTH use exactly this path: prefill
+the prompt, then one token at a time.
+
+Fixed token order: `topk_dist` keeps the k most likely tokens and then sorts
+them by TOKEN ID (ascending). Sorting by probability would also be
+deterministic, but ties and near-ties could reorder; token ids never change.
+
+EOS masking (decision 9 in AI_USE.md, a deviation from pure Meteor): while the
+payload is being sent, the end-of-sequence tokens (`<|im_end|>`,
+`<|endoftext|>` for Qwen2.5) get logit -inf BEFORE top-k is taken, so the text
+cannot end before all payload bits are out. `StepDist.eos_mass` records how
+much probability the EOS tokens would have had at that step (0 if they would
+not have been in the top-k), so experiments can log how often and how strongly
+the masking changed the distribution.
+
+Float64: the k selected fp32 logits are cast to float64 before temperature
+and softmax, so quantisation at beta = 32 works on meaningful bits
+(decision 4).
+
+Text <-> ids: `ids_to_text` and `text_to_ids` never add special tokens and
+never "clean up" spaces, so text is exactly the concatenation of the token
+strings. Even so, `text_to_ids(ids_to_text(ids)) == ids` is NOT guaranteed
+(BPE can split a string differently from how it was generated); meteor.py
+counts such retokenisation mismatches instead of assuming them away.
 """
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+
+import numpy as np
 import torch
 from huggingface_hub import snapshot_download
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from stegaudit.config import MeteorConfig
+
+
+@dataclass(frozen=True)
+class StepDist:
+    """The next-token distribution as Meteor sees it, in the fixed order."""
+    ids: np.ndarray       # int64 token ids, ascending
+    probs: np.ndarray     # float64, same order, sums to 1
+    eos_mass: float = 0.0 # mass EOS would have had in the unmasked top-k (0 if not masked)
+
+
+def topk_dist(logits: torch.Tensor, k: int, temperature: float,
+              eos_ids: tuple[int, ...] = (), mask_eos: bool = False) -> StepDist:
+    """Top-k of fp32 logits, sorted by token id, softmax in float64 at `temperature`.
+
+    With mask_eos=True the EOS ids are removed BEFORE taking the top-k (so k
+    non-EOS tokens remain), and eos_mass reports what EOS would have had.
+    """
+    logits = logits.detach().to(torch.float32).flatten()
+    eos_mass = 0.0
+    if mask_eos and eos_ids:
+        unmasked = topk_dist(logits, k, temperature)
+        eos_mass = float(unmasked.probs[np.isin(unmasked.ids, eos_ids)].sum())
+        logits = logits.clone()
+        logits[list(eos_ids)] = float("-inf")
+    idx = torch.topk(logits, k).indices
+    ids = torch.sort(idx).values                      # fixed order: by token id
+    z = logits[ids].numpy().astype(np.float64) / temperature
+    p = np.exp(z - z.max())
+    return StepDist(ids.numpy().astype(np.int64), p / p.sum(), eos_mass)
 
 
 def setup_determinism(seed: int = 0) -> None:
@@ -91,3 +157,50 @@ class LocalLM:
         """fp32 logits over the full vocabulary for the token after `ids` (one full forward pass)."""
         out = self.model(torch.tensor([ids], dtype=torch.long))
         return out.logits[0, -1].clone()
+
+    # ---------- step API (Phase 1) ----------
+    @property
+    def eos_ids(self) -> tuple[int, ...]:
+        """All token ids that end generation (generation_config + tokenizer)."""
+        g = self.model.generation_config.eos_token_id
+        ids = set(g if isinstance(g, (list, tuple)) else [g]) | {self.tokenizer.eos_token_id}
+        return tuple(sorted(i for i in ids if i is not None))
+
+    def start(self, prompt_ids: list[int]) -> "Session":
+        return Session(self, prompt_ids)
+
+    def ids_to_text(self, ids) -> str:
+        return self.tokenizer.decode([int(i) for i in ids], skip_special_tokens=False,
+                                     clean_up_tokenization_spaces=False)
+
+    def text_to_ids(self, text: str) -> list[int]:
+        return self.tokenizer(text, add_special_tokens=False)["input_ids"]
+
+
+class Session:
+    """One generation in progress: prefill once, then one token per step with the KV cache.
+
+    Sender and Receiver each run their own Session over the same tokens; this
+    single code path is what makes their distributions bit-identical.
+    """
+
+    def __init__(self, lm: LocalLM, prompt_ids: list[int]):
+        self.lm = lm
+        self._cache = None
+        self._logits = self._forward(list(prompt_ids))   # prefill
+        self.generated: list[int] = []
+
+    @torch.inference_mode()
+    def _forward(self, ids: list[int]) -> torch.Tensor:
+        out = self.lm.model(torch.tensor([ids], dtype=torch.long),
+                            past_key_values=self._cache, use_cache=True)
+        self._cache = out.past_key_values
+        return out.logits[0, -1].clone()
+
+    def dist(self, mask_eos: bool = False) -> StepDist:
+        cfg = self.lm.cfg
+        return topk_dist(self._logits, cfg.top_k, cfg.temperature, self.lm.eos_ids, mask_eos)
+
+    def advance(self, token_id: int) -> None:
+        self._logits = self._forward([int(token_id)])
+        self.generated.append(int(token_id))
