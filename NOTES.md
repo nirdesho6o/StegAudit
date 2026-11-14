@@ -29,3 +29,19 @@ Questions only. Nirdesh answers them himself.
 11. What is "low-probability vanishing"? Show that a token vanishes exactly when p_i < 2^-β. Why did we expect vanishing to be almost absent at β = 32 with top-k = 50, and why does that make the β sweep necessary?
 12. Why are the probabilities computed in float64 even though the model runs in fp32? What would happen at β = 32 with fp32 probabilities?
 13. Why can `find(x)` never return a vanished token? Change β to 16 live: which tests would you expect to still pass, and what changes in the vanishing count?
+
+### Phase 1b: lm.py step API, meteor.py
+**lm.py step API**
+1. What is the KV cache, and why does using it make each generated token cheaper? The KV-cache path and a full recompute differed in 146,520 of 151,936 logits (max 2.0e-5). Why does that force Sender and Receiver to use the same path, even though the difference is tiny?
+2. Why are the top-k tokens sorted by token id rather than by probability? What would go wrong if the Sender sorted one way and the Receiver the other?
+3. EOS is masked by setting its logit to -inf *before* top-k. What would change if it were removed *after* top-k instead? What does `eos_mass` measure, and why is it logged?
+
+**meteor.py**
+4. Run the worked example yourself: p = [0.5, 0.3, 0.2], β = 4, message bits 1011, mask 0110. Give the widths, the intervals, x, the chosen token, the common prefix, and the recovered bits. Then do it again with mask 0011 and explain why 0 bits are sent.
+5. Why is the number of bits sent at a step equal to the common prefix length of lo and hi−1? Why can the Receiver compute this number without knowing the key?
+6. Why is the token Meteor emits a fair sample from the (quantised) model distribution, whatever the message? Which test checks this exactly, and how?
+7. What is the HMAC tag for? With a t-bit tag, what fraction of wrong-key decodes should pass? The Qwen test accepted 2 of 300 wrong keys with t = 8: is that consistent? Why does the tag include msg_id?
+8. When fewer than β payload bits remain, the chunk is padded with zeros. Why does this not make the token choice biased?
+9. Explain the retokenisation failure on msg 29 (`Program` + `ming` vs `Programming`). Why is it a BPE problem and not a Meteor problem? Why is it important that the failure is detected rather than producing a wrong message?
+10. EOS masking during the payload is a deviation from pure Meteor. Why was it needed? How could a detector exploit it, and what does `eos_masked_steps` let you measure?
+11. Live modification: change `tag_bits` from 8 to 4. What happens to the wrong-key test, and why? Change β from 32 to 8: what happens to bits per token and to the vanishing count?
