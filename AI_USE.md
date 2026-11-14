@@ -11,6 +11,7 @@ The "Nirdesh verified / changed" column is filled in by Nirdesh, not by Claude.
 | 2026-11-15 | Phase 0, commit 2 | `pyproject.toml`, pinned `requirements.txt`, `src/stegaudit/__init__.py`, `config.py`, `tests/test_smoke.py`, stubs of README / NOTES / AI_USE / REFERENCES / `results/LOG.md`. Read (read-only) `apart-sprint/swarm-sprint/swarm/llm.py` to copy the Adaption SDK choice and version. | Answered the plan's open questions (Adaption SDK source, EOS policy, beta sweep, prefix detectors, git). |
 | 2026-11-15 | Phase 0, references | Reformatted REFERENCES.md with [VERIFIED] / [VERIFY] / TODO tags. Claude Code's first draft had author lists written from memory. | Checked Anwar et al. (2026) and Motwani et al. (2024) against the PDFs and supplied the corrected entries, including the real Anwar title (Claude's draft had only a placeholder marked TODO). Supplied the Kiekintveld et al. (2009) entry. Meteor, Audit Games and Kiekintveld are still to be checked against the PDFs. |
 | 2026-11-15 | Phase 0, commit 3 | `lm.py` (deterministic CPU load of Qwen from the pinned snapshot, chat prompt ids, next-token logits), `provenance.py` (metadata for every result JSON), pinned `MODEL_REVISIONS` in `config.py`, `tests/test_lm.py`, `tests/test_provenance.py`. First attempt checked `config._commit_hash`, which transformers 5 no longer sets; changed to loading from the snapshot folder named by the hash. | Asked for: the revision pin, revision + torch/transformers versions in every result JSON, and a bit-for-bit two-load determinism test. |
+| 2026-11-15 | Phase 0, commit 4 | `remote.py` (AsyncAdaption wrapper copying swarm-sprint's call pattern; response cache; credits log; cost gate), `tests/test_remote.py` (fake SDK, no network), `experiments/00_adaption_check.py`. Checked the `adaption` 0.19.0 SDK type definitions to see which metadata fields exist. | Asked for: a tiny live test call (≤ 16 output tokens) with its cost printed, server metadata saved, and the note that remote reproducibility comes from the cache. |
 
 ## Design decisions (proposed by Claude Code, approved by Nirdesh on 2026-11-15)
 
@@ -51,3 +52,15 @@ Each one is a choice CLAUDE.md left open or that the plain spec would get wrong.
     Why: a later upload to the HF repo could otherwise change weights or tokenizer under the same name. Loading from the hash-named folder makes the revision checkable. Eager attention is the simplest, most transparent code path. One thread fixes the order of floating-point additions.
 16. **Every result JSON gets `meta`:** git commit + dirty flag, seed, model + revision, full config, torch / transformers / tokenizers versions, platform, timestamp.
     Why: bit-identical logits are only guaranteed for the same software versions, so a result is only reproducible if those are recorded.
+
+### Remote models (Adaption)
+17. **Reproducibility of remote answers comes from the response cache, not from the model.** *(Nirdesh's instruction.)*
+    Why: temperature 0 on a hosted model is not guaranteed deterministic. Batching, kernels and server-side updates can change the text, and the model behind an id can change without the id changing. Every answer is cached under `cache/` keyed by SHA-256 of (model, instructions, input, max_output_tokens, temperature), so reruns read the exact same text at zero cost. Deleting the cache means a new sample, which must be reported as such. No test assumes two live calls agree.
+18. **Each cache entry and `results/adaption_models.json` store the server's own metadata:** model name as returned, response id, `created_at`; for listed models: id, created, owned_by, display_name, shutdown_date. *(Nirdesh's instruction.)*
+    Why: this makes a silent model change behind the same id visible afterwards. The SDK has no explicit model-version field, so these are the strongest evidence available.
+19. **The cache key covers all request fields, not only (model, prompt hash) as CLAUDE.md says.**
+    Why: the same prompt at a different temperature or token limit is a different request and must not return a cached answer meant for the other one.
+20. **An unpriced model's cost is `None` ("unknown"), never 0.** Prices are copied from swarm-sprint's table.
+    Why: a silent 0 would make the cost gate pass when it shouldn't.
+21. **Reasoning tokens are read from `usage.output_tokens_details` as a dict.**
+    Why: in `adaption` 0.19.0 it is a dict. swarm-sprint read it with `getattr`, which would always give 0. This is the only deliberate difference from swarm-sprint's client.
