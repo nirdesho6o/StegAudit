@@ -64,3 +64,11 @@ Each one is a choice CLAUDE.md left open or that the plain spec would get wrong.
     Why: a silent 0 would make the cost gate pass when it shouldn't.
 21. **Reasoning tokens are read from `usage.output_tokens_details` as a dict.**
     Why: in `adaption` 0.19.0 it is a dict. swarm-sprint read it with `getattr`, which would always give 0. This is the only deliberate difference from swarm-sprint's client.
+
+### Phase 2 rules (set by Nirdesh on 2026-11-15, before any Phase 2 code)
+22. **Cost estimates use billed token totals from cached pilot calls, including reasoning tokens, never the visible answer length.** *(Nirdesh's rule.)* Implemented as `remote.cached_token_stats` / `estimate_cost_from_cache`.
+    Why: Phase 0 showed a 1-word answer ("ok", about 3 visible tokens) billed 24 output tokens, 21 of them reasoning. Estimating from visible text would under-count by about 8×. `usage.output_tokens` already includes reasoning (observed 24 ≥ 21 and 16 = 16), so billed output = `output_tokens`.
+23. **Incomplete or unparseable answers are parse failures, logged and reported per model and per condition. If any condition's failure rate is above 5 %, stop and report to Nirdesh; do not drop the items.** *(Nirdesh's rule; also goes into PREREG.md.)*
+    Why: if failures were dropped, and they happened more often for the Sentinel than the Receiver (or the reverse), the remaining items would differ between the two. The accuracy gap would then be biased by which items survived, not by who had the key.
+24. **RQ1c Sentinels: same family = `qwen3.5-397b` (or `qwen3.8-27b` if cost matters); cross family = `glm-5.2` or `deepseek-v4-flash`.** *(Nirdesh's choice.)*
+    Meaning of "same family": the same Qwen lineage as the local 0.5B channel model (Qwen2.5-0.5B-Instruct), NOT the same model and not the same size or version. A 397B Qwen 3.5 and a 0.5B Qwen 2.5 share a developer and likely overlapping training data and tokenizer lineage, which is the reason a same-family Sentinel might read the channel model's style better. It does not mean the Sentinel can compute the channel model's distributions, so it still cannot decode Meteor without the key.

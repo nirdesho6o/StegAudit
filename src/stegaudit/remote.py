@@ -246,6 +246,44 @@ def estimate_cost(model: str, n_calls: int, in_tokens_per_call: int,
     return None if c is None else c * n_calls
 
 
+def cached_token_stats(model: str, experiment: str | None = None,
+                       cache_dir: Path = CACHE_DIR) -> dict:
+    """Mean BILLED tokens per call from cached responses (e.g. a small pilot batch).
+
+    Cost estimates must use these, not the length of the visible answer:
+    reasoning models spend hidden tokens that are billed. Phase 0 observed that
+    `usage.output_tokens` already includes reasoning (24 out, 21 of them
+    reasoning, for a 1-word answer), so billed output = output_tokens.
+    `experiment` restricts to entries written by that experiment, so the
+    estimate comes from the same kind of prompt.
+    """
+    entries = []
+    for p in (Path(cache_dir) / model.replace("/", "_")).glob("*.json"):
+        e = json.loads(p.read_text())
+        if experiment is None or e.get("experiment") == experiment:
+            entries.append(e["response_meta"])
+    n = len(entries)
+    if n == 0:
+        return {"n": 0, "mean_input_tokens": None, "mean_output_tokens": None,
+                "mean_reasoning_tokens": None, "max_output_tokens_seen": None}
+    return {
+        "n": n,
+        "mean_input_tokens": sum(e["input_tokens"] for e in entries) / n,
+        "mean_output_tokens": sum(e["output_tokens"] for e in entries) / n,
+        "mean_reasoning_tokens": sum(e["reasoning_tokens"] for e in entries) / n,
+        "max_output_tokens_seen": max(e["output_tokens"] for e in entries),
+    }
+
+
+def estimate_cost_from_cache(model: str, n_calls: int, experiment: str | None = None,
+                             cache_dir: Path = CACHE_DIR) -> float | None:
+    """n_calls x mean billed cost of the cached pilot calls. None if no pilot or no price."""
+    s = cached_token_stats(model, experiment, cache_dir)
+    if s["n"] == 0:
+        return None
+    return estimate_cost(model, n_calls, s["mean_input_tokens"], s["mean_output_tokens"])
+
+
 def confirm_cost(model: str, n_calls: int, in_tokens_per_call: int,
                  out_tokens_per_call: int, input_fn=input) -> bool:
     """Print a cost estimate. For > 500 calls, require the user to type 'yes'."""

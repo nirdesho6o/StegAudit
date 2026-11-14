@@ -133,3 +133,19 @@ def test_missing_key_raises(monkeypatch, tmp_path):
     monkeypatch.delenv("ADAPTION_API_KEY", raising=False)
     with pytest.raises(RuntimeError):
         AdaptionClient("x", cache_dir=tmp_path, credits_path=tmp_path / "c.json")
+
+
+def test_cost_estimate_uses_billed_tokens_including_reasoning(tmp_path):
+    """The fake returns 100 billed output tokens for a short visible answer;
+    the estimate must use the 100, not the visible text length."""
+    from stegaudit.remote import cached_token_stats, estimate_cost_from_cache
+    c, _ = make_client(tmp_path)
+    for q in ("a", "b", "c"):
+        run(c.ask("glm-5.2", "sys", q))
+    s = cached_token_stats("glm-5.2", experiment="unit", cache_dir=tmp_path / "cache")
+    assert s["n"] == 3 and s["mean_output_tokens"] == 100 and s["mean_reasoning_tokens"] == 7
+    est = estimate_cost_from_cache("glm-5.2", 1000, experiment="unit", cache_dir=tmp_path / "cache")
+    assert est == pytest.approx(1000 * call_cost("glm-5.2", 1000, 100))
+    # other experiments' entries are ignored; no pilot -> None (never a silent 0)
+    assert cached_token_stats("glm-5.2", experiment="other", cache_dir=tmp_path / "cache")["n"] == 0
+    assert estimate_cost_from_cache("glm-5.2", 10, experiment="other", cache_dir=tmp_path / "cache") is None
