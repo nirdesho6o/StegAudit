@@ -9,6 +9,7 @@ The "Nirdesh verified / changed" column is filled in by Nirdesh, not by Claude.
 |---|---|---|---|
 | 2026-11-15 | Phase 0, commit 1 | `.gitignore` (secrets, cache, weights, datasets, papers). CLAUDE.md was written by Nirdesh. | |
 | 2026-11-15 | Phase 0, commit 2 | `pyproject.toml`, pinned `requirements.txt`, `src/stegaudit/__init__.py`, `config.py`, `tests/test_smoke.py`, stubs of README / NOTES / AI_USE / REFERENCES / `results/LOG.md`. Read (read-only) `apart-sprint/swarm-sprint/swarm/llm.py` to copy the Adaption SDK choice and version. | Answered the plan's open questions (Adaption SDK source, EOS policy, beta sweep, prefix detectors, git). |
+| 2026-11-15 | Phase 0, references | Reformatted REFERENCES.md with [VERIFIED] / [VERIFY] / TODO tags. Claude Code's first draft had author lists written from memory. | Checked Anwar et al. (2026) and Motwani et al. (2024) against the PDFs and supplied the corrected entries, including the Anwar title, which Claude had wrong. Supplied the Kiekintveld et al. (2009) entry. Meteor, Audit Games and Kiekintveld are still to be checked against the PDFs. |
 
 ## Design decisions (proposed by Claude Code, approved by Nirdesh on 2026-11-15)
 
