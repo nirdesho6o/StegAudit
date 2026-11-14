@@ -1,13 +1,13 @@
 {
   "00_adaption_check": {
     "deepseek-v4-flash": {
-      "calls": 1,
+      "calls": 2,
       "cache_hits": 0,
       "retries": 0,
-      "input_tokens": 92,
-      "output_tokens": 16,
-      "reasoning_tokens": 16,
-      "credits": 6.176e-06,
+      "input_tokens": 184,
+      "output_tokens": 40,
+      "reasoning_tokens": 37,
+      "credits": 1.3416e-05,
       "unpriced_calls": 0
     }
   }
