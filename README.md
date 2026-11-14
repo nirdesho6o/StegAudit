@@ -22,7 +22,11 @@ The first model load downloads Qwen2.5-0.5B-Instruct (about 1 GB) at the pinned 
 pytest -q
 ```
 
-Runtime on CPU: about 10–15 s once the model is cached (the model is loaded twice plus once in a fresh process for the determinism tests). The first run also includes the model download. Remote tests use a fake SDK client: no network, no credits.
+Runtime on CPU (one thread, by design), once the model is cached:
+- `pytest -q`: everything, about 6–7 min (132 tests on 2026-11-15). Most of the time is `tests/test_meteor_qwen.py`: 50 real Meteor round trips, decoded from ids and from text.
+- `pytest -q -m "not slow"`: skips only the real-model Meteor round trips, about 40 s. Use it for quick checks during live edits, then run the full suite.
+
+The first run also includes the model download. Remote tests use a fake SDK client: no network, no credits.
 
 ## Experiments
 
