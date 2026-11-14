@@ -14,6 +14,7 @@ The "Nirdesh verified / changed" column is filled in by Nirdesh, not by Claude.
 | 2026-11-15 | Phase 0, commit 4 | `remote.py` (AsyncAdaption wrapper copying swarm-sprint's call pattern; response cache; credits log; cost gate), `tests/test_remote.py` (fake SDK, no network), `experiments/00_adaption_check.py`. Checked the `adaption` 0.19.0 SDK type definitions to see which metadata fields exist. | Asked for: a tiny live test call (≤ 16 output tokens) with its cost printed, server metadata saved, and the note that remote reproducibility comes from the cache. |
 | 2026-11-15 | Phase 0, close | `--max-output-tokens` option for `00_adaption_check.py`; `cached_token_stats` / `estimate_cost_from_cache` in `remote.py` + test; Phase 0 viva questions in NOTES.md (questions only); README install/test/experiment sections; LOG entries for both live calls. | Approved the 256-token retry; set the Phase 2 rules (decisions 22–24). Viva answers: to be written by Nirdesh. |
 | 2026-11-15 | Phase 1, keys.py | `keys.py` (X25519 `Party`, HKDF-SHA256 → stego_key → mask_key / tag_key, seeded parties for experiments, explicit all-zero secret check), `tests/test_keys.py` (incl. an independent RFC 5869 HKDF written with stdlib `hmac` as outside judge). | |
+| 2026-11-15 | Phase 1, prg.py | `prg.py` (HMAC-SHA256 over a fixed-width (label, msg_id, step) encoding, top-n-bits output, `PRGS` registry), `tests/test_prg.py` (literal byte-layout spec checked with stdlib hmac, distinct masks per msg_id/step/label/key, bit balance, bad-argument rejection). | |
 
 ## Design decisions (proposed by Claude Code, approved by Nirdesh on 2026-11-15)
 
@@ -82,3 +83,11 @@ Each one is a choice CLAUDE.md left open or that the plain spec would get wrong.
     Why: experiments must be reproducible from a logged seed. Cost: anyone who knows the seed knows the key. Documented as lab-only; the security claim of the pilot is about what a monitor *without* the key sees, which this does not change.
 27. **Explicit all-zero shared-secret check, and `StegoKeys.__repr__` hides key bytes; `fingerprint()` (8 hex chars of SHA-256) is what gets logged.**
     Why: the library already rejects low-order points, but the check makes the protection visible in our code. Hiding keys from repr prevents a key from leaking into result JSONs or logs by accident.
+
+### Phase 1: prg.py
+28. **Mask = the TOP n bits of one HMAC-SHA256 output; at most 256 bits per (label, msg_id, step).**
+    Why: one HMAC call per token step is enough for any beta ≤ 62. Taking the top bits means a shorter mask is a prefix of a longer one, which is easy to check by hand.
+29. **Label is length-prefixed (1 byte) and limited to {"payload", "cover"}; msg_id and step are u64 big-endian.**
+    Why: the length prefix keeps the encoding unambiguous even if labels of different lengths are added later. Rejecting unknown labels stops a typo from silently creating a third stream.
+30. **`PRGS` registry keyed by `MeteorConfig.prg`.**
+    Why: "swap the PRG" is a viva modification point in CLAUDE.md; it becomes one new function plus one registry line.
