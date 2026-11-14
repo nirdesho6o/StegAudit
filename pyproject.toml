@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stegaudit"
+version = "0.1.0"
+description = "Meteor steganography pilot + stake-aware audit LPs (CNS course project, NIT Warangal)"
+requires-python = ">=3.11"
+# Exact pinned versions live in requirements.txt (reproducibility); install with
+#   pip install -r requirements.txt && pip install -e .
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

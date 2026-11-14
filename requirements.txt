@@ -1,0 +1,30 @@
+# Exact versions verified installing together on Python 3.12, CPU only (2026-11-15).
+# Install:  pip install -r requirements.txt && pip install -e .
+
+# CPU-only PyTorch wheel (no CUDA). Project rule: CPU only, fp32.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.15.0+cpu
+
+# Local channel model (Qwen2.5-Instruct) for Meteor encode/decode
+transformers==5.23.0
+tokenizers==0.23.3
+safetensors==0.8.0
+
+# Key exchange (X25519) + HKDF-SHA256
+cryptography==50.0.2
+
+# Numerics, stats, LPs, plots, data
+numpy==2.5.4
+scipy==1.18.1
+pandas==3.1.1
+matplotlib==3.11.2
+scikit-learn==1.9.1
+datasets==5.2.0
+
+# Adaption remote models (Sentinel / Receiver answering / LLM judge).
+# Same SDK + version as apart-sprint/swarm-sprint (swarm/llm.py); NOT the openai client.
+adaption==0.19.0
+python-dotenv==1.2.4
+
+# Tests
+pytest==9.2.0
