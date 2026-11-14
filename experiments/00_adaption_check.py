@@ -4,10 +4,17 @@ What it does
 ------------
 1. Lists the hosted models this API key can use and saves every field the SDK
    returns (id, created, owned_by, display_name, shutdown_date).
-2. Makes one chat call with a trivial prompt and max_output_tokens = 16,
-   at temperature 0, and prints its credit cost from COST_PER_M.
-3. Writes results/adaption_models.json (with provenance meta) and adds the
-   token use to results/credits.json.
+2. Makes one chat call with a trivial prompt (default max_output_tokens = 16,
+   override with --max-output-tokens), at temperature 0, and prints its credit
+   cost from COST_PER_M.
+3. Writes the JSON (with provenance meta) and adds the token use to
+   results/credits.json. Default output: results/adaption_models.json; with a
+   non-default token cap: results/adaption_check_mot<N>.json, so earlier runs
+   are never overwritten.
+
+Usage:
+    python experiments/00_adaption_check.py                       # 16-token call
+    python experiments/00_adaption_check.py --max-output-tokens 256
 
 The model for the test call is the cheapest model in COST_PER_M that the key
 can see (falls back to the first listed model, whose cost is then "unknown").
@@ -18,16 +25,22 @@ spends nothing; the output says "cached: True" in that case.
 
 from __future__ import annotations
 
+import argparse
 import asyncio
 
 from stegaudit.config import MeteorConfig
 from stegaudit.provenance import REPO_ROOT, write_result_json
 from stegaudit.remote import COST_PER_M, AdaptionClient, call_cost
 
-MAX_OUTPUT_TOKENS = 16
+DEFAULT_MAX_OUTPUT_TOKENS = 16
 INSTRUCTIONS = "Reply with exactly one word."
 PROMPT = "Say ok."
-OUT = REPO_ROOT / "results" / "adaption_models.json"
+
+
+def out_path(max_output_tokens: int):
+    if max_output_tokens == DEFAULT_MAX_OUTPUT_TOKENS:
+        return REPO_ROOT / "results" / "adaption_models.json"
+    return REPO_ROOT / "results" / f"adaption_check_mot{max_output_tokens}.json"
 
 
 def pick_test_model(model_ids: list[str]) -> str:
@@ -37,7 +50,8 @@ def pick_test_model(model_ids: list[str]) -> str:
     return model_ids[0]
 
 
-async def main() -> None:
+async def main(max_output_tokens: int) -> None:
+    out = out_path(max_output_tokens)
     client = AdaptionClient("00_adaption_check")
     try:
         models = await client.list_models()
@@ -49,7 +63,7 @@ async def main() -> None:
 
         model = pick_test_model(ids)
         r = await client.ask(model, INSTRUCTIONS, PROMPT,
-                             max_output_tokens=MAX_OUTPUT_TOKENS, temperature=0.0)
+                             max_output_tokens=max_output_tokens, temperature=0.0)
         cost = call_cost(model, r.meta["input_tokens"], r.meta["output_tokens"])
         print(f"\ntest call -> {model}")
         print(f"  status={r.status} cached={r.cached} text={r.text!r}")
@@ -66,7 +80,7 @@ async def main() -> None:
                 "model_requested": model,
                 "instructions": INSTRUCTIONS,
                 "prompt": PROMPT,
-                "max_output_tokens": MAX_OUTPUT_TOKENS,
+                "max_output_tokens": max_output_tokens,
                 "temperature": 0.0,
                 "status": r.status,
                 "output_text": r.text,
@@ -76,14 +90,16 @@ async def main() -> None:
             },
             "price_table_credits_per_M": COST_PER_M,
         }
-        write_result_json(OUT, results, MeteorConfig(), experiment="00_adaption_check",
+        write_result_json(out, results, MeteorConfig(), experiment="00_adaption_check",
                           note="meta.model_name/revision refer to the LOCAL channel model, "
                                "not the remote models listed here")
         client.save_credits()
-        print(f"\nwrote {OUT.relative_to(REPO_ROOT)} and results/credits.json")
+        print(f"\nwrote {out.relative_to(REPO_ROOT)} and results/credits.json")
     finally:
         await client.close()
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--max-output-tokens", type=int, default=DEFAULT_MAX_OUTPUT_TOKENS)
+    asyncio.run(main(ap.parse_args().max_output_tokens))
