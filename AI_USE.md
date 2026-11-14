@@ -15,6 +15,7 @@ The "Nirdesh verified / changed" column is filled in by Nirdesh, not by Claude.
 | 2026-11-15 | Phase 0, close | `--max-output-tokens` option for `00_adaption_check.py`; `cached_token_stats` / `estimate_cost_from_cache` in `remote.py` + test; Phase 0 viva questions in NOTES.md (questions only); README install/test/experiment sections; LOG entries for both live calls. | Approved the 256-token retry; set the Phase 2 rules (decisions 22–24). Viva answers: to be written by Nirdesh. |
 | 2026-11-15 | Phase 1, keys.py | `keys.py` (X25519 `Party`, HKDF-SHA256 → stego_key → mask_key / tag_key, seeded parties for experiments, explicit all-zero secret check), `tests/test_keys.py` (incl. an independent RFC 5869 HKDF written with stdlib `hmac` as outside judge). | |
 | 2026-11-15 | Phase 1, prg.py | `prg.py` (HMAC-SHA256 over a fixed-width (label, msg_id, step) encoding, top-n-bits output, `PRGS` registry), `tests/test_prg.py` (literal byte-layout spec checked with stdlib hmac, distinct masks per msg_id/step/label/key, bit balance, bad-argument rejection). | |
+| 2026-11-15 | Phase 1, quantize.py | `quantize.py` (`quantize` → `QuantizedDist` with widths / lo / find / n_vanished / remainder; `tv_distance`), `tests/test_quantize.py` (exact tiling at beta 8–62, per-token error < 2^-β, TV < k·2^-β, exhaustive beta = 8 lookup vs linear scan, vanishing boundary at exactly 2^-β). | |
 
 ## Design decisions (proposed by Claude Code, approved by Nirdesh on 2026-11-15)
 
@@ -91,3 +92,11 @@ Each one is a choice CLAUDE.md left open or that the plain spec would get wrong.
     Why: the length prefix keeps the encoding unambiguous even if labels of different lengths are added later. Rejecting unknown labels stops a typo from silently creating a third stream.
 30. **`PRGS` registry keyed by `MeteorConfig.prg`.**
     Why: "swap the PRG" is a viva modification point in CLAUDE.md; it becomes one new function plus one registry line.
+
+### Phase 1: quantize.py
+31. **Rounding: `width_i = floor(p_i · 2^β)`, the leftover units go to the argmax token (ties → lowest position).**
+    Why: the simplest scheme that sums to exactly 2^β. It gives a clean bound (every non-argmax token off by < 2^-β; TV < k·2^-β), and it makes "vanishing" exactly `p_i < 2^-β`, matching CLAUDE.md. A minimum-width-1 scheme would remove vanishing but distort the distribution more and would change the phenomenon under study.
+32. **`find(x)` = first position whose interval end exceeds x (`searchsorted(hi, x, "right")`).**
+    Why: an empty interval has end = start ≤ x, so it is skipped automatically. Meteor can therefore never emit a vanished token, with no special case. Checked exhaustively at β = 8 against a linear scan.
+33. **`n_vanished` counts only tokens with p > 0 and width 0; β is limited to [1, 62].**
+    Why: a token with p = 0 never had any probability, so it does not count as vanished. The 62-bit cap keeps all sums inside int64. CLAUDE.md's β values (8–32) are well inside it.
