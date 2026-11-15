@@ -37,3 +37,13 @@ The first run also includes the model download. Remote tests use a fake SDK clie
 Every result JSON has a `meta` block: git commit and dirty flag, seed, local model and revision, config, library versions, timestamp. Remote answers are cached in `cache/` (gitignored); rerunning a script reads the cache and costs nothing.
 
 More experiments are added here as they land.
+
+## Future work (cut for the course deadline, 2026-11-15)
+These were planned but cut to meet the deadline. None of them has been started.
+- **RQ2: paraphrasing** as a defence (does a paraphraser between Sender and Receiver destroy the channel, and at what cost?).
+- **Shimmer** and other stego schemes, as a comparison to Meteor.
+- **RRNs-HT** transcript detector (to be implemented only from the paper).
+- **Qwen2.5-1.5B-Instruct** as the channel model (its revision is already pinned in `config.py`).
+- **β sweep for the detectors** in experiment 02 (β = 8, 12, 16). Experiment 01 already measured how the vanishing rate depends on β.
+- **Further efficiency analysis** beyond the exploratory 01c result (about 0.58 bits per bit of top-k entropy at β = 32).
+- Retokenisation-robust encoding (Nozaki & Murawaki 2022; SyncPool, Qi et al. 2024). Not needed so far: the PREREG kill rule did not fire.

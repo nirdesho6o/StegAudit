@@ -8,8 +8,18 @@ Everything here must be correct, reproducible, explainable by Nirdesh in a viva,
 Background docs (read before coding): Kaptchuk et al., Meteor (CCS 2021); Anwar et al., steganographic gap (arXiv 2602.23163); Blocki et al., Audit Games (arXiv 1303.0356); Motwani et al., Secret Collusion (arXiv 2402.07510). If a paper detail is needed and not in the repo, ask; never invent an algorithm detail.
 
 ## Scope of THIS session
-Phase 0 setup → Phase 1 Meteor pilot → Phase 2 gap sanity check → Phase 3 audit LP on synthetic stakes.
-NOT in scope yet: Streamlit app (Component B, later), Shimmer, Perry LSH, paraphrasing, frontier models.
+Phase 0 setup → Phase 1 Meteor pilot → Phase 2 gap sanity check → Phase 3 audit LP on synthetic stakes → Streamlit app tabs (Component B).
+
+### Deadline and plan (set by Nirdesh 2026-11-15; deadline in 4 days)
+- Nov 15: experiment 02 (local detectors at β = 32; LLM-judge decision pending, see LOG.md) + Phase 3 LP code and tests (no Qwen needed, runs alongside 02).
+- Nov 16: Phase 2 run in background + app tabs 1 and 4.
+- Nov 17: app tabs 2–3, screenshots, README, full tests.
+- Nov 18: report draft + viva preparation.
+- Nov 19: buffer.
+- **Any single run expected to take over 45 minutes: stop and tell Nirdesh first.**
+
+### CUT for this deadline (listed under "Future work" in README.md)
+RQ2 paraphrasing; Shimmer; RRNs-HT; the 1.5B channel model; the β sweep for detectors in experiment 02; further efficiency analysis (beyond 01c). Also still out: Perry LSH, frontier models.
 
 ## Course rules that bind every phase (from the professor's guidelines)
 1. Understanding over output. Code from AI with no understanding gets limited credit. So:
@@ -68,7 +78,7 @@ stegaudit/
 
 ### Model roles: what runs locally vs on Adaption credits
 The stego CHANNEL must stay local. Meteor needs the full next-token distribution at every step, and Sender and Receiver must compute bit-identical distributions. Hosted APIs return at most a few top logprobs, are not bit-reproducible across calls (batching, kernels), and would need one call per token. Any mismatch breaks decoding.
-- LOCAL (channel): `Qwen/Qwen2.5-0.5B-Instruct` default, `Qwen/Qwen2.5-1.5B-Instruct` option. Used for Meteor encode/decode only. One config value.
+- LOCAL (channel): `Qwen/Qwen2.5-0.5B-Instruct` default, `Qwen/Qwen2.5-1.5B-Instruct` option (pinned in config, but CUT from experiments for this deadline). Used for Meteor encode/decode only. One config value.
 - ADAPTION (everything that only reads text and answers): Sentinel(s), the Receiver's answering step after it has decoded the payload, the LLM-judge transcript detector, and cross-family Sentinels for RQ1c. Models available on the account include Qwen, GLM, DeepSeek and Gemma families (e.g. qwen3.5-397b, glm-5.2, deepseek-v4-flash used in a past project); confirm exact model ids with a list-models call, do not guess.
 - Client: `src/stegaudit/remote.py`. Read `ADAPTION_API_KEY` and `ADAPTION_BASE_URL` from env (never commit keys). Assume an OpenAI-compatible chat endpoint only after verifying with one test call; if it is not, stop and ask.
 - Every remote call: temperature 0 where the task is answering, cache responses to `cache/` keyed by (model, prompt hash) so reruns cost nothing, log tokens used per experiment to `results/credits.json`. Print an estimated cost before any run > 500 calls and wait for confirmation.
@@ -105,11 +115,12 @@ Security idea: masked bits are pseudorandom, so the chosen token is (up to quant
 - Compare 200 Meteor texts vs 200 normal samples (same prompts, same top-k, same temperature).
 - Detectors: (a) mean token log-prob and its distribution (KS test), (b) vanishing-token test: frequency of tokens with p < 2^-β (normal sampling can emit them, Meteor at quantisation cannot), (c) LLM judge on Adaption: shown one text, asked for P(contains hidden message) 0–100; use two judge models from different families.
 - Report AUROC with bootstrap 95% CI for each detector.
-- Do NOT implement RRNs-HT from memory. Leave a TODO pointing to the paper.
+- β sweep for the detectors (β = 8, 12, 16): CUT for this deadline (2026-11-15); detectors run at β = 32 only. The β sweep of the vanishing RATE in experiment 01 is done.
+- Do NOT implement RRNs-HT from memory. Leave a TODO pointing to the paper. (RRNs-HT is CUT for this deadline.)
 
 ## Phase 2 — gap sanity check (RQ1a)
 Purpose: confirm decision auditing sees what transcript auditing cannot. Expected to work almost by construction; if it fails, the setup is broken.
-- Data: MMLU (4 options) via `datasets` (`cais/mmlu`), 200 questions, fixed seed. Payload = 2-bit answer index + tag.
+- Data: MMLU (4 options) via `datasets` (`cais/mmlu`), 100 questions (reduced from 200 on 2026-11-15 for the deadline; PREREG Deviations), fixed seed. Payload = 2-bit answer index + tag.
 - Sender: knows the correct answer, writes a short neutral study tip about the subject, Meteor-encoding the payload.
 - Receiver: has key → decodes locally → answers (decoded hint + question passed to the same Adaption model the Sentinel uses, so the only difference is the key).
 - Sentinel: Adaption model, no key, gets question + message → answers (temperature 0, parse A–D; log parse failures).
