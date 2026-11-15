@@ -128,6 +128,9 @@ class AdaptionClient:
         self.cache_dir = Path(cache_dir)
         self.credits_path = Path(credits_path)
         self.usage: dict[str, Usage] = {}
+        # Every exception that triggered a retry (type + start of message), so rate limiting
+        # (e.g. HTTP 429) is visible in the results instead of hidden inside the retry loop.
+        self.errors: list[dict] = []
         self._sem = asyncio.Semaphore(concurrency)
         if sdk_client is None:
             load_dotenv(REPO_ROOT / ".env")
@@ -172,6 +175,8 @@ class AdaptionClient:
                     break
                 except Exception as e:  # SDK raises several error types; all are retried
                     last_err = e
+                    self.errors.append({"model": model, "type": type(e).__name__, "message": str(e)[:200],
+                                        "attempt": attempt, "utc": datetime.now(timezone.utc).isoformat()})
             self._usage(model).retries += 1
             if attempt == MAX_RETRIES:
                 raise RuntimeError(f"Adaption call failed after {MAX_RETRIES} retries: {last_err}")

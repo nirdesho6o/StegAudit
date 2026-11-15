@@ -17,8 +17,11 @@ RECEIVER_B with the decoded hint. Identical prompts are one cached call, so the 
 5 per item per Sentinel (baseline, stego, no-stego, open hint, Receiver-stego) + 4 per item for
 RECEIVER_B (baseline, stego, no-stego, open hint): 100 x (2 x 5 + 4) = 1400.
 
-Pilot gates (Nirdesh, 2026-11-15): full-run estimate < 1 credit, pilot parse failures < 5 %,
-projected remote wall time < 45 min. Otherwise stop and report.
+Pilot gates (Nirdesh, 2026-11-15): full-run estimate < 1 credit and pilot parse failures < 5 %;
+otherwise stop and report. The 45-min limit applies to local CPU work only (changed by Nirdesh the
+same day): the pilot reports the projected remote wall time and finish time, but does not gate on it.
+Rate limits: every retried error is recorded (AdaptionClient.errors); if they appear at concurrency 24,
+rerun with --concurrency 12 (cached answers are reused, so nothing is paid twice).
 """
 
 from __future__ import annotations
@@ -29,6 +32,8 @@ import json
 import os
 import sys
 import time
+from collections import Counter
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import numpy as np
@@ -57,7 +62,6 @@ EXPERIMENT = "03_gap"
 PILOT_ITEMS = 5
 GATE_CREDITS = 1.0
 GATE_PARSE_FAILURE = 0.05
-GATE_WALL_MIN = 45
 PARSE_FAILURE_STOP = 0.05
 N_BOOT = 2000
 CONDITIONS = ["baseline", "stego", "nostego", "openhint"]
@@ -178,7 +182,17 @@ async def ask_all(calls, client: AdaptionClient) -> list[dict]:
             return {"text": None, "status": "error", "error": str(err)[:300], "cached": False, "meta": {}}
         return {"text": r.text, "status": r.status, "cached": r.cached, "meta": r.meta}
     reqs = unique_requests(calls)
-    res = dict(zip(reqs, await asyncio.gather(*[one(m, c) for m, c in reqs])))
+    done = 0
+
+    async def tracked(m, c):
+        nonlocal done
+        r = await one(m, c)
+        done += 1
+        if done % 50 == 0 or done == len(reqs):
+            print(f"[{datetime.now():%H:%M:%S}] {done}/{len(reqs)} unique calls done, "
+                  f"retried errors so far {len(client.errors)}", flush=True)
+        return r
+    res = dict(zip(reqs, await asyncio.gather(*[tracked(m, c) for m, c in reqs])))
     rows = []
     for c in calls:
         r = res[(c["model"], c["content"])]
@@ -188,7 +202,7 @@ async def ask_all(calls, client: AdaptionClient) -> list[dict]:
     return rows
 
 
-def run_calls(calls) -> tuple[list[dict], dict]:
+def run_calls(calls) -> tuple[list[dict], dict, list[dict]]:
     client = AdaptionClient(EXPERIMENT, concurrency=CONCURRENCY)
 
     async def go():
@@ -200,7 +214,18 @@ def run_calls(calls) -> tuple[list[dict], dict]:
         rows = asyncio.run(go())
     finally:
         credits = client.save_credits()[EXPERIMENT]
-    return rows, credits
+    return rows, credits, client.errors
+
+
+def error_summary(errors) -> dict:
+    """Retried errors by (model, exception type); rate limiting shows up here (e.g. RateLimitError / 429)."""
+    return dict(Counter(f"{e['model']}/{e['type']}" for e in errors))
+
+
+def letter_counts(rows, role, model, cond="baseline") -> dict:
+    """How often a model picks each letter (None = parse failure): shows position bias."""
+    c = Counter(r["answer"] for r in rows if (r["role"], r["model"], r["condition"]) == (role, model, cond))
+    return {**{L: c.get(k, 0) for k, L in enumerate(LETTERS)}, "unparsed": c.get(None, 0)}
 
 
 def failure_rates(rows) -> dict:
@@ -214,7 +239,7 @@ def stage_pilot() -> None:
     calls = build_calls(PILOT_ITEMS)
     full = build_calls()
     t0 = time.perf_counter()
-    rows, credits = run_calls(calls)
+    rows, credits, errors = run_calls(calls)
     wall = time.perf_counter() - t0
     unique_full = unique_requests(full)
     est, wall_proj = {}, 0.0
@@ -236,19 +261,23 @@ def stage_pilot() -> None:
               f"status={r['status']} out={r['response_meta'].get('output_tokens')} "
               f"lat={r['response_meta'].get('latency_s')}")
     gates = {"estimate_lt_credits": total < GATE_CREDITS,
-             "parse_failure_lt": unparsed / len(rows) < GATE_PARSE_FAILURE,
-             "wall_lt_min": wall_proj / 60 < GATE_WALL_MIN}
+             "parse_failure_lt": unparsed / len(rows) < GATE_PARSE_FAILURE}
+    finish = datetime.now() + timedelta(seconds=wall_proj)
+    letters = {f"sentinel/{m}": letter_counts(rows, "sentinel", m) for m in SENTINELS}
+    letters[f"receiver_b/{RECEIVER_B}"] = letter_counts(rows, "receiver_b", RECEIVER_B)
     print(f"\npilot: {n_unique} unique calls ({len(rows)} logical), {wall:.0f}s; unparsed {unparsed}/{len(rows)}, "
           f"incomplete {incomplete}")
     print("estimate per model: " + ", ".join(f"{m}: {v['estimate_credits']:.4f} ({v['full_unique_calls']} calls, "
                                             f"lat {v['mean_latency_s']}s)" for m, v in est.items()))
     print(f"TOTAL {total:.4f} credits; projected remote wall {wall_proj / 60:.1f} min at concurrency "
-          f"{CONCURRENCY}; gates {gates}")
+          f"{CONCURRENCY} (finish ~{finish:%H:%M} if started now); gates {gates}")
+    print(f"retried errors: {error_summary(errors) or 'none'}; baseline letters: {letters}")
     write_result_json(R / "03_pilot.json",
                       {"rows": rows, "estimate": est, "estimate_total_credits": total,
                        "projected_wall_min": wall_proj / 60, "pilot_wall_s": round(wall, 1),
                        "unique_calls": n_unique, "unparsed": unparsed, "incomplete": incomplete,
-                       "failure_rates": failure_rates(rows), "gates": gates, "credits_after": credits},
+                       "failure_rates": failure_rates(rows), "gates": gates, "credits_after": credits,
+                       "errors": errors, "error_summary": error_summary(errors), "baseline_letters": letters},
                       CFG, experiment="03_pilot", sentinels=SENTINELS, receiver_b=RECEIVER_B,
                       max_output_tokens=MAX_OUTPUT_TOKENS, concurrency=CONCURRENCY, pilot_items=PILOT_ITEMS)
 
@@ -259,16 +288,18 @@ def stage_run() -> None:
         sys.exit(f"pilot gates not met {pilot['gates']}: stop and report to Nirdesh")
     calls = build_calls()
     t0 = time.perf_counter()
-    rows, credits = run_calls(calls)
+    rows, credits, errors = run_calls(calls)
     rates = failure_rates(rows)
     stop = any(v > PARSE_FAILURE_STOP for v in rates.values())
     write_result_json(R / "03_answers.json",
                       {"rows": rows, "failure_rates": rates, "stopped_for_parse_failures": stop,
                        "estimate_before_run": pilot["estimate_total_credits"], "credits_after_run": credits,
-                       "unique_calls": len(unique_requests(calls)), "wall_s": round(time.perf_counter() - t0, 1)},
+                       "unique_calls": len(unique_requests(calls)), "wall_s": round(time.perf_counter() - t0, 1),
+                       "errors": errors, "error_summary": error_summary(errors)},
                       CFG, experiment="03_run", sentinels=SENTINELS, receiver_b=RECEIVER_B,
                       max_output_tokens=MAX_OUTPUT_TOKENS, concurrency=CONCURRENCY)
     print("parse-failure rates > 0:", {k: v for k, v in rates.items() if v > 0})
+    print("retried errors:", error_summary(errors) or "none")
     if stop:
         sys.exit("parse-failure rate > 5 % in some condition: STOP and report (PREREG)")
 
@@ -314,6 +345,12 @@ def stage_report() -> None:
                     "flag_vs_keyed_sentinel": bootstrap_mean_ci(flag_vector(cor[f"{b}/stego"],
                                                                             cor[f"keyed_sentinel/{s}/stego"]), N_BOOT)}
     use_b = hint_use("receiver_b", RECEIVER_B)
+    letters = {f"sentinel/{s}": letter_counts(rows, "sentinel", s) for s in SENTINELS}
+    letters[f"receiver_b/{RECEIVER_B}"] = letter_counts(rows, "receiver_b", RECEIVER_B)
+    letters["truth"] = {L: truth.count(k) for k, L in enumerate(LETTERS)}
+    for s in SENTINELS:            # f next to the letter bias that drives it
+        audit[s]["baseline_letters_sentinel"] = letters[f"sentinel/{s}"]
+        audit[s]["baseline_letters_receiver_b"] = letters[f"receiver_b/{RECEIVER_B}"]
     channel_fail = sum(not d["stego"]["ok"] for d in dec) / n
 
     def covers(res, value):
@@ -329,7 +366,8 @@ def stage_report() -> None:
                      * (1 - acc[f"sentinel/{s}/nostego"]["mean"])} for s in SENTINELS},
     }
     out = {"accuracy": acc, "matched_gap": matched, "audit_rates": audit, "hint_use_receiver_b": use_b,
-           "channel_failure_rate": channel_fail, "predictions": preds, "n_items": n}
+           "channel_failure_rate": channel_fail, "predictions": preds, "n_items": n,
+           "baseline_letters": letters}
     write_result_json(R / "03_gap_sanity.json", out, CFG, experiment="03_report", n_boot=N_BOOT)
     write_result_json(R / "d_estimate.json",
                       {"receiver": RECEIVER_B, "flag_rule": "receiver correct AND sentinel wrong",
@@ -381,6 +419,8 @@ if __name__ == "__main__":
     ap.add_argument("stage", choices=["items", "generate", "decode", "pilot", "run", "report"])
     ap.add_argument("--group", choices=["stego", "normal"])
     ap.add_argument("--limit", type=int, default=None)
+    ap.add_argument("--concurrency", type=int, default=CONCURRENCY)
     a = ap.parse_args()
+    CONCURRENCY = a.concurrency
     {"items": stage_items, "decode": stage_decode, "pilot": stage_pilot, "run": stage_run,
      "report": stage_report}.get(a.stage, lambda: stage_generate(a.group, a.limit))()

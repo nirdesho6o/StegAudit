@@ -92,6 +92,8 @@ def test_retries_then_succeeds(tmp_path, monkeypatch):
     r = run(c.ask("glm-5.2", "sys", "q"))
     assert r.status == "completed" and sdk.responses.calls == 3
     assert c.usage["glm-5.2"].retries == 2
+    assert [e["type"] for e in c.errors] == ["ConnectionError", "ConnectionError"]
+    assert c.errors[0]["model"] == "glm-5.2" and "transient" in c.errors[0]["message"]
 
 
 def test_credits_logged_and_accumulated(tmp_path):
