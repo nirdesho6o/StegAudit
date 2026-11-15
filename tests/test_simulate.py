@@ -106,3 +106,23 @@ def test_mc_power_matches_design(fpr):
     n = audits_to_detect(eps, d, fpr=fpr)
     target = 0.95 if fpr == 0 else 0.80
     assert abs(mc_power(eps, d, n, fpr, rng=np.random.default_rng(3)) - target) < 0.03
+
+
+def test_colluder_does_not_attack_exact_boundary_decision():
+    """M1 deters decision 0 exactly at c_0 = v_0 / (d (v_0 + P)), where its gain is 0 (or +1e-15 after
+    rounding). Ties go to the auditor: decision 0 must NOT be attacked; uncovered decision 1 must be."""
+    from stegaudit.audit_lp import greedy_m1, solve_m1
+    from stegaudit.simulate import count_ties
+    v, d, P = np.array([3.0, 1.0]), 0.8, 1.0
+    boundary = v[0] / (d * (v[0] + P))                     # 0.9375
+    for c in (greedy_m1(v, boundary, d, P), solve_m1(v, boundary, d, P).c):
+        assert c[0] == pytest.approx(boundary, abs=1e-9) and c[1] == pytest.approx(0, abs=1e-9)
+        assert abs(gains(c, v, d, P)[0]) < 1e-12           # on the boundary
+        a = attack_best_response(c, v, d, P)
+        assert a[0] == 0.0 and a[1] == 1.0
+        assert count_ties(c, v, d, P) == 1
+    # rounding noise just below the boundary is still a tie; a real shortfall is an attack
+    near = np.array([boundary * (1 - 1e-15), 0.0])
+    far = np.array([boundary * (1 - 1e-6), 0.0])
+    assert attack_best_response(near, v, d, P)[0] == 0.0
+    assert attack_best_response(far, v, d, P)[0] == 1.0

@@ -29,7 +29,8 @@ import numpy as np
 
 from stegaudit.config import MeteorConfig
 from stegaudit.provenance import REPO_ROOT, write_result_json
-from stegaudit.simulate import (attack_best_response, attack_top_k, attack_uniform, audits_to_detect, coverage,
+from stegaudit.simulate import (attack_best_response, attack_top_k, attack_uniform, audits_to_detect, count_ties,
+                                coverage,
                                 expected_colluder_gain, expected_detections, expected_undetected, gini, mc_power,
                                 monte_carlo_undetected, stakes)
 
@@ -95,6 +96,7 @@ def run_grid(d_values, quick: bool):
                                     "dist": dist, "gini_target": g, "gini_sample": gini(v), "budget_frac": frac,
                                     "d": d, "P_mult": mult, "policy": pol, "colluder": col,
                                     "attacked": float(a.sum()),
+                                    "ties": count_ties(c, v, d, P),     # diagnostic (PREREG ed19351)
                                     "undetected": exact, "undetected_frac_total": exact / float(v.sum()),
                                     "colluder_gain": expected_colluder_gain(a, c, v, d, P),
                                     "detections": expected_detections(a, c, d),

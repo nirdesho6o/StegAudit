@@ -27,7 +27,8 @@ Colluder policies (a_i = probability decision i is corrupted):
   uniform(eps)       a_i = eps for every decision
   top_k(k)           corrupt the k largest stakes
   best_response      corrupt every decision with positive expected gain under the
-                     announced coverage: g_i = v_i - d c_i (v_i + P) > 0
+                     announced coverage: g_i = v_i - d c_i (v_i + P) > 1e-9 (v_i + P)
+                     (ties, i.e. gain zero up to rounding, go to the auditor)
 
 Metrics, closed form: expected undetected value = sum_i a_i (1 - d c_i) v_i,
 expected detections = sum_i a_i d c_i, colluders' expected net gain =
@@ -121,8 +122,24 @@ def attack_top_k(v, k: int) -> np.ndarray:
     return a
 
 
+# Ties go to the auditor (strong Stackelberg convention; PREREG ed19351): a decision whose gain is
+# zero up to floating-point noise is NOT attacked. M1 puts deterred decisions exactly on the
+# boundary g_i = 0, where rounding leaves gains like 1e-15.
+TIE_TOL = 1e-9
+
+
+def tie_threshold(v, P: float) -> np.ndarray:
+    return TIE_TOL * (np.asarray(v, float) + P)
+
+
 def attack_best_response(c, v, d: float, P: float) -> np.ndarray:
-    return (gains(c, v, d, P) > 0).astype(float)
+    """Attack decision i iff g_i > TIE_TOL * (v_i + P)."""
+    return (gains(c, v, d, P) > tie_threshold(v, P)).astype(float)
+
+
+def count_ties(c, v, d: float, P: float) -> int:
+    """Decisions with |g_i| <= TIE_TOL * (v_i + P): the colluder is indifferent (diagnostic)."""
+    return int(np.sum(np.abs(gains(c, v, d, P)) <= tie_threshold(v, P)))
 
 
 # ---------------- closed-form metrics ----------------

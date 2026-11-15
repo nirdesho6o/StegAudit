@@ -36,6 +36,7 @@ The "Nirdesh verified / changed" column is filled in by Nirdesh, not by Claude.
 | 2026-11-15 | Phase 1 close | README experiment table with measured runtimes and credits; Phase 1 viva questions for detect.py / 02 (NOTES, committed earlier); Phase 1 summary in LOG.md. One wrong cost split in LOG.md was corrected (744a79a). | |
 | 2026-11-15 | 04 colluders | `04_audit_lp.py`: colluders = uniform ε ∈ {0.01, 0.05} + matched top-k (k = εT = 10, 50) + best response (`colluder_attacks`). The earlier proposed defaults (ε = 0.05, k = 10, unequal counts) are superseded. Smoke run: expected attack counts 10 / 10 and 50 / 50 as intended; best response attacked ~945–975 decisions. Estimated full-run time ~15–20 min. | Chose equal attack counts so that only targeting differs (PREREG 7a7fa45). |
 | 2026-11-15 | 04 penalty grid | `04_audit_lp.py`: `P_MULTS` gets 100 (PREREG 56cbaf3). Before that, Claude computed best-response attack counts over the full grid (closed form, scratchpad) at Nirdesh's request: deterrence bound in 85 / 1440 instance cells, only at P = 10·mean(v), B/T ≥ 5 %. Estimated 04 runtime now ~20–27 min. | Decided to add P = 100·mean(v), with the reason (detection = shutdown / retraining) and the disclosure. |
+| 2026-11-15 | 04 tie rule | `simulate.py`: `TIE_TOL = 1e-9`; `attack_best_response` attacks only if g_i > 1e-9·(v_i + P); `count_ties` diagnostic; 04 rows get `ties`. Test: a constructed instance where M1 (greedy and LP) puts decision 0 exactly on the boundary; the colluder must not attack it, must attack the uncovered one, and noise of 1e-15 is a tie while a shortfall of 1e-6 is an attack. Found by Claude in the one-cell smoke check Nirdesh asked for. | Chose the tie rule (option A), its justification, the diagnostic and the test; decided 04 runs once after Phase 2. |
 
 ## Design decisions (proposed by Claude Code, approved by Nirdesh on 2026-11-15)
 
@@ -178,3 +179,7 @@ Each one is a choice CLAUDE.md left open or that the plain spec would get wrong.
 ### Remote calls: timeouts
 56. **SDK timeout raised to 600 s; a call that fails after all retries is a logged failure, not a crash; credits are always saved.**
     Why: the SDK's default 60 s timeout is shorter than some deepseek reasoning times (one call took 179.5 s, i.e. three 60 s attempts). A timed-out request can never succeed on retry, and the server may still bill it, so about 18 attempts on one item may have been billed without any usage reported (worst case about 0.02 credits). Treating the failure as a parse failure keeps the item in the denominator, so the > 5 % stop rule still applies.
+
+### Phase 3: ties
+57. **Best-response colluder attacks only if g_i > 10⁻⁹·(v_i + P)** (strong Stackelberg convention; PREREG ed19351). The tolerance is relative to v_i + P, the scale of the two terms that cancel in g_i, so it works at P = 0 and at P = 100·mean(v) alike.
+    Why: M1 puts deterred decisions exactly on g_i = 0. With `g_i > 0`, floating-point noise (≤ 3.6·10⁻¹⁵) turned those into "attacks" and added hundreds of undetected value to M1 alone. That would have decided P3c by a rounding artefact.
