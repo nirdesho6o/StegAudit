@@ -6,7 +6,7 @@ import torch
 import transformers
 
 from stegaudit.config import MeteorConfig
-from stegaudit.provenance import run_metadata, write_result_json
+from stegaudit.provenance import dirty_from_porcelain, run_metadata, write_result_json
 
 
 def test_metadata_fields():
@@ -31,3 +31,26 @@ def test_write_result_json_roundtrip(tmp_path):
     assert d["results"] == {"acc": 1.0}
     assert d["meta"]["model_revision"] == cfg.model_revision
     assert d["meta"]["params"] == {"k": 5}
+
+
+def test_dirty_ignores_results_dir_but_lists_it():
+    assert dirty_from_porcelain("") == (False, [])
+    out = "?? results/01_meteor_roundtrip.json\n?? results/figs/a.png\n"
+    assert dirty_from_porcelain(out) == (False, ["results/01_meteor_roundtrip.json", "results/figs/a.png"])
+    assert dirty_from_porcelain(" M src/stegaudit/meteor.py\n?? results/x.json\n")[0] is True
+    assert dirty_from_porcelain("?? experiments/new.py\n")[0] is True     # untracked code counts
+    assert dirty_from_porcelain("unknown") == (True, ["unknown"])
+
+
+def test_metadata_lists_changed_paths():
+    assert isinstance(run_metadata(MeteorConfig())["git_changed_paths"], list)
+
+
+def test_git_keeps_leading_space_of_porcelain(monkeypatch):
+    """Regression: ' M path' must keep its leading space or the path gets cut wrongly."""
+    import subprocess
+    from stegaudit import provenance
+    fake = subprocess.CompletedProcess([], 0, stdout=" M src/stegaudit/meteor.py\n?? results/x.json\n")
+    monkeypatch.setattr(provenance.subprocess, "run", lambda *a, **k: fake)
+    dirty, paths = dirty_from_porcelain(provenance._git("status", "--porcelain"))
+    assert paths == ["src/stegaudit/meteor.py", "results/x.json"] and dirty
