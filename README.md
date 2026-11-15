@@ -30,13 +30,27 @@ The first run also includes the model download. Remote tests use a fake SDK clie
 
 ## Experiments
 
-| Script | What it does | Remote calls | CPU time |
+Run from the repo root with the venv active. Times are measured on this machine (CPU, 1 thread per process).
+
+| Script | What it does | Remote calls (credits) | Time |
 |---|---|---|---|
-| `python experiments/00_adaption_check.py [--max-output-tokens N]` | Lists hosted Adaption models; one tiny chat call; prints its cost | 1 (cached afterwards) | seconds |
+| `experiments/00_adaption_check.py [--max-output-tokens N]` | Lists hosted Adaption models; one tiny chat call; prints its cost | 1 | seconds |
+| `experiments/01_meteor_roundtrip.py` | 200 Meteor messages at β = 32 (full texts) + β = 8/12/16 (payload only); round trip, capacity, vanishing, EOS masking | 0 | 88 min |
+| `experiments/01b_redecode.py` | Fresh-process re-decode of all 800 messages from disk (independent check of 01) | 0 | 58 min |
+| `experiments/01c_entropy_explore.py` | *Exploratory:* per-step entropy and bits/entropy on 30 messages per β | 0 | ~4 min |
+| `experiments/01d_followups.py` | *Exploratory:* top-1 p at cover-vanishing steps; payload-only retokenisation rate | 0 | ~2 min |
+| `experiments/02_detectability.py generate --group normal` | 200 normal (non-stego) samples | 0 | 37 min |
+| `experiments/02_detectability.py score` | Local detectors (log-prob + KS, vanishing, EOS, outside top-k), whole text + prefix | 0 | 12 min |
+| `experiments/02_detectability.py judge-pilot` | 10 LLM-judge calls + cost estimate | 10 (~0.003) | ~2 min |
+| `experiments/02_detectability.py judge [--max-credits 0.5]` | LLM judge (deepseek-v4-flash) on 400 whole texts; refuses to run if the pilot estimate exceeds the limit | 400 (~0.10) | ~20 min |
+| `experiments/02_detectability.py report` | Summary JSON + AUROC figure | 0 | seconds |
+| `experiments/02b_prefix_check.py` | *Exploratory:* is the prefix log-prob signal a payload-boundary artefact? | 0 | 5 min |
+| `experiments/04_audit_lp.py [--d-estimate X] [--fpr-phase2 F] [--quick]` | Audit LPs vs colluders on synthetic stakes; P3a audits-vs-ε | 0 | ~10–15 min (estimated; not yet run) |
+
+Rule for this project: any single run expected to take more than 45 minutes is announced and approved first. 01 and 01b ran before that rule existed.
 
 Every result JSON has a `meta` block: git commit and dirty flag, seed, local model and revision, config, library versions, timestamp. Remote answers are cached in `cache/` (gitignored); rerunning a script reads the cache and costs nothing.
 
-More experiments are added here as they land.
 
 ## Future work (cut for the course deadline, 2026-11-15)
 These were planned but cut to meet the deadline. None of them has been started.
