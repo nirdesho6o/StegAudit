@@ -27,6 +27,7 @@ The "Nirdesh verified / changed" column is filled in by Nirdesh, not by Claude.
 | 2026-11-15 | Phase 1, experiment 02 code | `experiments/02_detectability.py` (stages generate / score / judge-pilot / judge / report; design as in PREREG Deviations 2026-11-15; cost gate refuses the full judge run if the pilot estimate ≥ --max-credits or the pilot had incomplete/unparsed calls; stops on > 5 % parse failures). Smoke-tested the local stages on 2 texts per group into the scratchpad. | Set the judge models, temperature 0, the 0.5-credit auto-proceed limit and the parse-failure rule. |
 | 2026-11-15 | Scope change | Edited CLAUDE.md (scope, 4-day plan, 45-minute rule, CUT list, 02 detectors at β = 32 only, Phase 2 = 100 questions) and added "Future work" to README.md. | Set the deadline, the plan, the cuts, the Phase 2 size and the 45-minute rule. |
 | 2026-11-15 | 02 scope cut + incident | `02_detectability.py`: detectors at β = 32 only (`BETAS = [32]`); report skips the β figure. Incident (Claude's error): while stopping the cut β = 8/12/16 generation, Claude's watcher used `pgrep -f "generate --group 1[26]"`. That pattern also matched the job's own shell command line, so it killed the job chain. That broke the output pipe of the still-running normal-text generation, which was then stopped too. About 30 min of CPU lost, no data or credits lost; the normal texts are regenerated from the same seed. Lesson: never `pkill -f` on text that also appears in a parent shell's command line; write background run logs straight to a file, not through a pipe. | Set the cut. |
+| 2026-11-15 | Phase 3, audit_lp.py | `audit_lp.py` (gains, M1 and M2 LPs on sparse matrices with HiGHS, closed-form `greedy_m1`), `tests/test_audit_lp.py` (99 tests: brute-force grid search for T = 5 / step 0.1 and T = 8 / step 0.25 against the provable rounding bound, one exact on-grid case, greedy = LP on 40 random instances, audit-everything sanity, M2 equalisation structure). | |
 
 ## Design decisions (proposed by Claude Code, approved by Nirdesh on 2026-11-15)
 
@@ -150,3 +151,11 @@ Each one is a choice CLAUDE.md left open or that the plain spec would get wrong.
     Why: only the Receiver needs bit-identical numbers; low-bit differences (about 1e-5) cannot change a detector's ranking in any meaningful way. One pass is about 10× faster.
 48. **Judge output must end in `PROBABILITY: <0-100>`. Anything else, or status ≠ completed, is a parse failure (PREREG: > 5 % in a condition → stop).**
     Why: a strict format makes parsing unambiguous and stops a free-text number (e.g. a percentage mentioned while reasoning) from being read as the answer.
+
+### Phase 3: audit_lp.py
+49. **M2 is implemented exactly as in CLAUDE.md, without a `z >= 0` ("do not attack") constraint; callers read max(z, 0).**
+    Why: not inventing model details. Without the constraint, a negative z just means every decision has negative gain under the optimal coverage. The coverage is still optimal for the colluders' best target.
+50. **Brute-force check uses a provable tolerance, not an arbitrary one:** rounding each c_i down to the grid keeps the budget feasible and raises M1 by at most step · Σ d(v_i + P), and M2 by at most step · max d(v_i + P). The test asserts LP ≤ grid optimum ≤ LP + bound, plus one instance where the optimum lies on the grid (exact match).
+    Why: an "outside judge" with a hand-picked tolerance could hide a real mismatch.
+51. **M1 objective = Σ max(0, g_i) = expected undetected value minus expected penalty (exactly the undetected value when P = 0).**
+    Why: this is what CLAUDE.md's LP minimises; the docstring says so, so the viva answer about "what M1 minimises" is precise.
