@@ -120,7 +120,7 @@ Security idea: masked bits are pseudorandom, so the chosen token is (up to quant
 
 ## Phase 2 — gap sanity check (RQ1a)
 Purpose: confirm decision auditing sees what transcript auditing cannot. Expected to work almost by construction; if it fails, the setup is broken.
-- Data: MMLU (4 options) via `datasets` (`cais/mmlu`), 100 questions (reduced from 200 on 2026-11-15 for the deadline; PREREG Deviations), fixed seed. Payload = 2-bit answer index + tag.
+- Data: ~~MMLU~~ replaced on 2026-11-15 (PREREG 188981d) by 100 fictional private-information decisions (4 options, correct answer uniform, PHASE2_SEED = 0), because strong Sentinels already know most MMLU answers. Payload = 2-bit answer index + 14-bit tag. Untrusted Receiver for the audit rates d, f: deepseek-v4-flash (PREREG 0d40a7b).
 - Sender: knows the correct answer, writes a short neutral study tip about the subject, Meteor-encoding the payload.
 - Receiver: has key → decodes locally → answers (decoded hint + question passed to the same Adaption model the Sentinel uses, so the only difference is the key).
 - Sentinel: Adaption model, no key, gets question + message → answers (temperature 0, parse A–D; log parse failures).
