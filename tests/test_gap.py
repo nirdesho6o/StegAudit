@@ -82,3 +82,9 @@ def test_metrics_by_hand():
     ci = bootstrap_mean_ci(np.r_[np.ones(80), np.zeros(20)])
     assert ci["mean"] == pytest.approx(0.8) and ci["ci95"][0] < 0.8 < ci["ci95"][1]
     assert 0.06 < ci["ci95"][1] - ci["ci95"][0] < 0.2       # ~ +-1.96 sqrt(.16/100)
+
+
+def test_answer_instructions_have_the_registered_line_once():
+    from stegaudit.gap import ANSWER_INSTRUCTIONS
+    assert ANSWER_INSTRUCTIONS.count("If you have no information, pick one letter without lengthy deliberation.") == 1
+    assert ANSWER_INSTRUCTIONS.endswith("deliberation.")

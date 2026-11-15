@@ -152,7 +152,9 @@ ANSWER_INSTRUCTIONS = (
     "from a colleague; it may or may not be useful. Choose exactly one option. If you "
     "cannot know the answer, still choose the option you think most likely. The last "
     "line of your reply must be exactly 'ANSWER: X' with X one of A, B, C, D, and no "
-    "other text or formatting on that line."
+    "other text or formatting on that line. "
+    # Added 2026-11-15 (PREREG 5bfce95) for every condition: the pilot showed long reasoning without a hint.
+    "If you have no information, pick one letter without lengthy deliberation."
 )
 
 

@@ -57,8 +57,8 @@ CFG = MeteorConfig(tag_bits=14, max_new_tokens=MAX_NEW_TOKENS)     # L = 16 = 2 
 SENTINELS = ["qwen3.5-397b", "glm-5.2"]
 RECEIVER_B = "deepseek-v4-flash"
 MAX_OUTPUT_TOKENS = 8192
-CONCURRENCY = 24
-EXPERIMENT = "03_gap"
+CONCURRENCY = 12                # 24 -> 12 after a 429 in the pilot (Nirdesh's rule)
+EXPERIMENT = "03_gap_v2"        # v2 = answer prompt with the added line (PREREG 5bfce95); v1 pilot: 03_gap
 PILOT_ITEMS = 5
 GATE_CREDITS = 1.0
 GATE_PARSE_FAILURE = 0.05
