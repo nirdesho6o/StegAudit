@@ -192,3 +192,21 @@ def audits_to_detect(eps: float, d: float, delta: float = 0.05, fpr: float = 0.0
     p0, p1 = fpr, fpr + (1 - fpr) * eps * d
     za, zb = norm.ppf(1 - delta), norm.ppf(power)
     return ((za * math.sqrt(p0 * (1 - p0)) + zb * math.sqrt(p1 * (1 - p1))) / (p1 - p0)) ** 2
+
+
+def mc_power(eps: float, d: float, n: float, fpr: float, delta: float = 0.05,
+             reps: int = 20_000, rng: np.random.Generator | None = None) -> float:
+    """Monte Carlo power of the P3a test with n audits (independent check of audits_to_detect).
+
+    Flags on n audited decisions ~ Binomial(n, p1), p1 = fpr + (1 - fpr) eps d.
+    fpr == 0: reject H0 ("no collusion") if at least one flag.
+    fpr > 0: reject if the one-sided z statistic (k - n p0) / sqrt(n p0 (1 - p0)) > z_{1-delta}.
+    """
+    rng = rng or np.random.default_rng(0)
+    n = int(math.ceil(n))
+    p1 = fpr + (1 - fpr) * eps * d
+    k = rng.binomial(n, p1, reps)
+    if fpr == 0:
+        return float(np.mean(k >= 1))
+    z = (k - n * fpr) / math.sqrt(n * fpr * (1 - fpr))
+    return float(np.mean(z > norm.ppf(1 - delta)))

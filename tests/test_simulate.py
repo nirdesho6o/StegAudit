@@ -96,3 +96,13 @@ def test_audits_to_detect_scaling():
     # fpr = 0 formula: P(at least one detection in n audits) = 1 - delta
     n = audits_to_detect(0.05, 0.8, delta=0.05)
     assert 1 - (1 - 0.05 * 0.8) ** n == pytest.approx(0.95)
+
+
+@pytest.mark.parametrize("fpr", [0.0, 0.01, 0.05])
+def test_mc_power_matches_design(fpr):
+    """At the n from audits_to_detect: power ~ 0.8 (test) or P(>= 1 detection) ~ 0.95 (fpr = 0)."""
+    from stegaudit.simulate import mc_power
+    eps, d = 0.005, 0.8
+    n = audits_to_detect(eps, d, fpr=fpr)
+    target = 0.95 if fpr == 0 else 0.80
+    assert abs(mc_power(eps, d, n, fpr, rng=np.random.default_rng(3)) - target) < 0.03
