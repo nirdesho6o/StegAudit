@@ -121,3 +121,17 @@ def test_every_tab_opens_in_demo_mode(tab):
     at.query_params["tab"] = tab
     at.run()
     assert not at.exception
+
+
+@pytest.mark.slow
+def test_tab1_live_encodes_and_decodes_with_qwen():
+    """Demo mode off: tab 1 loads Qwen, encodes the typed secret live, right key decodes it, Eve's is rejected."""
+    from streamlit.testing.v1 import AppTest
+    at = AppTest.from_file(str(REPO_ROOT / "app" / "streamlit_app.py"), default_timeout=600)
+    at.query_params["tab"] = "1"
+    at.run()
+    at.sidebar.toggle[0].set_value(False).run()
+    at.text_input(key="m_secret").set_value("Hi").run()
+    assert not at.exception
+    assert any("secret “Hi”" in s.value for s in at.success)
+    assert any("tag_mismatch" in e.value for e in at.error)
