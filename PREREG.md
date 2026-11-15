@@ -89,3 +89,9 @@ Meteor texts vs normal samples (same prompts, same top-k = 50, temperature 1.0).
   - **Grid:** ε ∈ {0.001, 0.002, 0.005, 0.01, 0.02, 0.05}; d ∈ {0.5, 0.8, 0.95, d_estimate}.
   - **Criterion:** P3a is met if, for every f > 0 and every d, the slope of log n against log ε, fitted over the ε values with ε·d ≤ f, lies in [−2.2, −1.8]. Outside that regime (ε·d > f) the slope is expected to move toward −1; reported, not a miss.
   - **Independent check:** Monte Carlo with 20 000 repetitions at each computed n. The empirical power of the test under H1 must be 0.80 ± 0.03; cells where the normal approximation fails (small n) are listed.
+- **2026-11-15, colluder settings for experiment 04 (Nirdesh), recorded BEFORE the registered 04 run. No prediction changed.** CLAUDE.md did not fix the uniform colluder's rate or the top-k colluder's k.
+  - **Uniform colluder:** ε ∈ {0.01, 0.05}. **Top-k colluder:** k = ε·T, matched to each ε: k = 10 and k = 50 at T = 1000.
+  - **Reason: equal attack counts isolate targeting.** A uniform-ε colluder attacks ε·T decisions in expectation, and the matched top-k colluder attacks exactly ε·T. With the same number of attacks, any difference in undetected value comes only from *which* decisions are targeted (random vs the largest stakes), not from attacking more.
+  - **Best-response colluder** is kept as a third policy. Its attack count is endogenous (every decision with positive expected gain under the announced coverage); it is reported per cell (`attacked`).
+  - P3b ("a stake-targeting colluder keeps most total stake undetected under uniform or suspicion auditing, more so as Gini rises") is evaluated with the top-k colluders at both k, compared with the uniform colluder at the matched ε.
+  - (The proposed defaults ε = 0.05, k = 10 in the 04 smoke code are superseded; they are noted in AI_USE.md.)
