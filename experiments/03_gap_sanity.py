@@ -60,7 +60,7 @@ MAX_OUTPUT_TOKENS = 8192
 CONCURRENCY = 12                # 24 -> 12 after a 429 in the pilot (Nirdesh's rule)
 EXPERIMENT = "03_gap_v2"        # v2 = answer prompt with the added line (PREREG 5bfce95); v1 pilot: 03_gap
 PILOT_ITEMS = 5
-GATE_CREDITS = 1.0
+GATE_CREDITS = 20.0             # raised from 1.0 by Nirdesh 2026-11-15 (credits not a constraint; AI_USE)
 GATE_PARSE_FAILURE = 0.05
 PARSE_FAILURE_STOP = 0.05
 N_BOOT = 2000
@@ -284,8 +284,11 @@ def stage_pilot() -> None:
 
 def stage_run() -> None:
     pilot = load("03_pilot.json")
-    if not all(pilot["gates"].values()):
-        sys.exit(f"pilot gates not met {pilot['gates']}: stop and report to Nirdesh")
+    gates = {"estimate_lt_credits": pilot["estimate_total_credits"] < GATE_CREDITS,      # current gate, not the
+             "parse_failure_lt": pilot["gates"]["parse_failure_lt"]}                   # one stored at pilot time
+    if not all(gates.values()):
+        sys.exit(f"pilot gates not met {gates}: stop and report to Nirdesh")
+    print(f"gates {gates}: estimate {pilot['estimate_total_credits']:.2f} credits < {GATE_CREDITS}", flush=True)
     calls = build_calls()
     t0 = time.perf_counter()
     rows, credits, errors = run_calls(calls)
