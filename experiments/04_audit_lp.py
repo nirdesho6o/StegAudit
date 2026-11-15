@@ -4,7 +4,8 @@ Grid (CLAUDE.md): stakes lognormal / Pareto with Gini in {0.2, 0.4, 0.6, 0.8}, T
 budget B/T in {1 %, 2 %, 5 %, 10 %}, detection power d in {0.5, 0.8, 0.95} (+ d_estimate
 from Phase 2 via --d-estimate), penalty P in {0, mean(v), 10 mean(v)}.
 Auditor policies: uniform, suspicion (= B random audits), stake_proportional, m1, m2.
-Colluders: uniform rate EPS, top-K stakes, best response to the announced coverage.
+Colluders (PREREG 7a7fa45): uniform rate eps in EPS_VALUES and top-k with matched k = eps*T
+(equal attack counts isolate targeting), plus best response to the announced coverage.
 For every cell x policy x colluder: closed-form expected undetected value (and as a
 fraction of total stake), colluders' expected net gain, expected detections, and a
 Monte Carlo check with MC_DRAWS draws.
@@ -40,9 +41,10 @@ BUDGET_FRACS = [0.01, 0.02, 0.05, 0.10]
 D_VALUES = [0.5, 0.8, 0.95]
 P_MULTS = [0.0, 1.0, 10.0]                      # P = mult * mean(v)
 POLICIES = ["uniform", "suspicion", "stake_proportional", "m1", "m2"]
-COLLUDERS = ["uniform_eps", "top_k", "best_response"]
-EPS = 0.05                                      # uniform colluder rate   (to be fixed in PREREG before the run)
-TOP_K = 10                                      # top-k colluder: k = 1 % of T (to be fixed in PREREG before the run)
+EPS_VALUES = [0.01, 0.05]                       # uniform colluder rates (PREREG 7a7fa45)
+# top-k colluders matched to each eps: k = eps * T (10 and 50 at T = 1000), so attack counts are equal
+COLLUDERS = ([f"uniform_eps{e}" for e in EPS_VALUES] + [f"top_k{round(e * T)}" for e in EPS_VALUES]
+             + ["best_response"])
 MC_DRAWS = 10_000
 P3A_EPS = [0.001, 0.002, 0.005, 0.01, 0.02, 0.05]
 P3A_FPR = [0.0, 0.01, 0.05]
@@ -51,6 +53,17 @@ P3A_DELTA, P3A_POWER = 0.05, 0.8
 
 def seed_for(*parts) -> int:
     return zlib.crc32("/".join(map(str, (SEED,) + parts)).encode())
+
+
+def colluder_attacks(name: str, c, v, d: float, P: float) -> np.ndarray:
+    """Attack probabilities a_i for a colluder named in COLLUDERS."""
+    if name.startswith("uniform_eps"):
+        return attack_uniform(T, float(name.removeprefix("uniform_eps")))
+    if name.startswith("top_k"):
+        return attack_top_k(v, int(name.removeprefix("top_k")))
+    if name == "best_response":
+        return attack_best_response(c, v, d, P)
+    raise ValueError(name)
 
 
 def run_grid(d_values, quick: bool):
@@ -71,8 +84,7 @@ def run_grid(d_values, quick: bool):
                         for pol in POLICIES:
                             c = coverage(pol, v, B, d, P)
                             for col in COLLUDERS:
-                                a = {"uniform_eps": attack_uniform(T, EPS), "top_k": attack_top_k(v, TOP_K),
-                                     "best_response": attack_best_response(c, v, d, P)}[col]
+                                a = colluder_attacks(col, c, v, d, P)
                                 exact = expected_undetected(a, c, v, d)
                                 mc = monte_carlo_undetected(
                                     a, c, v, d, draws,
@@ -223,7 +235,7 @@ def main(d_estimate, fpr_phase2, quick, out, figdir):
     write_result_json(out, {"summary": summary, "rows": rows, "p3a": p3a, "beyond_4se": beyond4},
                       MeteorConfig(), experiment="04_audit_lp", T=T, dists=DISTS, ginis=GINIS,
                       budget_fracs=BUDGET_FRACS, d_values=d_values, P_mults=P_MULTS, policies=POLICIES,
-                      colluders=COLLUDERS, eps=EPS, top_k=TOP_K, mc_draws=MC_DRAWS, seed=SEED,
+                      colluders=COLLUDERS, eps_values=EPS_VALUES, mc_draws=MC_DRAWS, seed=SEED,
                       p3a_eps=P3A_EPS, p3a_fpr=P3A_FPR, p3a_delta=P3A_DELTA, p3a_power=P3A_POWER)
     figures(rows, p3a, figdir)
     print(f"wrote {out} and figures in {figdir}")
