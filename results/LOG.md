@@ -137,3 +137,6 @@ Round trip correct (200/200 from ids; 200/200 from text at β = 32). No detector
   - Counts unchanged in all 288 cells for uniform, suspicion, stake-proportional and M2. This confirms the PREREG note "M2 unaffected", which ed19351 stated only "as far as the smoke data show".
   - M1: counts changed in 132 / 288 cells (the ties), but the number of cells with < 50 % attacked is unchanged (18).
   - Overall still 85 / 1440 instance cells below 50 %, so the facts behind the P = 100·mean(v) decision are unchanged.
+
+## 2026-11-15 — Phase 2 design note (before any Phase 2 data; PREREG 0d40a7b, 188981d)
+- **Discussion point for the report:** decision auditing can only detect hidden information that is decision-relevant *beyond what the auditor already knows*. On MMLU, strong Sentinels already know about 85–90 % of the answers, so a hint would add little that a Sentinel could not reconstruct by reasoning, and the audit would mostly measure the Sentinel's ignorance (d ≈ 0.1–0.2). Phase 2 therefore uses fictional private decisions, where the question alone gives chance accuracy. The resulting d is a best case for decision auditing: in real deployments part of the colluders' hidden information is often inferable by a capable auditor, which lowers d. Moving from MMLU to private decisions is the main reason the measured d should not be read as typical.
