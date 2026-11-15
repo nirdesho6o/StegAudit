@@ -1,0 +1,173 @@
+{
+  "meta": {
+    "git_commit": "8a6fc733c1fa844baf34a4bb60ea812094c14b04",
+    "git_dirty": false,
+    "git_changed_paths": [
+      "results/02_local.json",
+      "results/02_texts_normal.json",
+      "results/figs/02_auroc_beta32.png"
+    ],
+    "timestamp_utc": "2026-11-15T10:54:51.816292+00:00",
+    "seed": 0,
+    "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "beta": 32,
+    "config": {
+      "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+      "beta": 32,
+      "top_k": 50,
+      "temperature": 1.0,
+      "payload_bits": 16,
+      "tag_bits": 8,
+      "prg": "hmac-sha256",
+      "max_new_tokens": 120,
+      "payload_token_limit": 256,
+      "seed": 0,
+      "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775"
+    },
+    "params": {
+      "experiment": "02_report"
+    },
+    "versions": {
+      "python": "3.12.3",
+      "torch": "2.15.0+cpu",
+      "transformers": "5.23.0",
+      "tokenizers": "0.23.3"
+    },
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+    "torch_num_threads": 12
+  },
+  "results": {
+    "local": {
+      "beta32/whole/mean_logprob": {
+        "auroc": 0.52205,
+        "ci95": [
+          0.46509500000000004,
+          0.5790274999999999
+        ],
+        "covers_0.5": true,
+        "n_pos": 200,
+        "n_neg": 200,
+        "ks_stat": 0.08000000000000002,
+        "p_value": 0.5452713464323318,
+        "mean_meteor": -1.3827236973999857,
+        "mean_normal": -1.407463296341478,
+        "nonzero_meteor": 200,
+        "nonzero_normal": 200
+      },
+      "beta32/whole/vanishing_count": {
+        "auroc": 0.5,
+        "ci95": [
+          0.5,
+          0.5
+        ],
+        "covers_0.5": true,
+        "n_pos": 200,
+        "n_neg": 200,
+        "ks_stat": 0.0,
+        "p_value": 1.0,
+        "mean_meteor": 0.0,
+        "mean_normal": 0.0,
+        "nonzero_meteor": 0,
+        "nonzero_normal": 0
+      },
+      "beta32/whole/eos_sum": {
+        "auroc": 0.4979,
+        "ci95": [
+          0.43987375,
+          0.5556324999999999
+        ],
+        "covers_0.5": true,
+        "n_pos": 200,
+        "n_neg": 200,
+        "ks_stat": 0.06000000000000005,
+        "p_value": 0.8655265369450457,
+        "mean_meteor": 0.06768244388036197,
+        "mean_normal": 0.040864243399050856,
+        "nonzero_meteor": 200,
+        "nonzero_normal": 200
+      },
+      "beta32/whole/outside_topk_count": {
+        "auroc": 0.5,
+        "ci95": [
+          0.5,
+          0.5
+        ],
+        "covers_0.5": true,
+        "n_pos": 200,
+        "n_neg": 200,
+        "ks_stat": 0.0,
+        "p_value": 1.0,
+        "mean_meteor": 0.0,
+        "mean_normal": 0.0,
+        "nonzero_meteor": 0,
+        "nonzero_normal": 0
+      },
+      "beta32/prefix/mean_logprob": {
+        "auroc": 0.44715,
+        "ci95": [
+          0.39092249999999995,
+          0.5046799999999999
+        ],
+        "covers_0.5": true,
+        "n_pos": 200,
+        "n_neg": 200,
+        "ks_stat": 0.15000000000000002,
+        "p_value": 0.0220923622208589,
+        "mean_meteor": -1.4358861166978676,
+        "mean_normal": -1.292171311446421,
+        "nonzero_meteor": 200,
+        "nonzero_normal": 200
+      },
+      "beta32/prefix/vanishing_count": {
+        "auroc": 0.5,
+        "ci95": [
+          0.5,
+          0.5
+        ],
+        "covers_0.5": true,
+        "n_pos": 200,
+        "n_neg": 200,
+        "ks_stat": 0.0,
+        "p_value": 1.0,
+        "mean_meteor": 0.0,
+        "mean_normal": 0.0,
+        "nonzero_meteor": 0,
+        "nonzero_normal": 0
+      },
+      "beta32/prefix/eos_sum": {
+        "auroc": 0.5328999999999999,
+        "ci95": [
+          0.474799375,
+          0.588355
+        ],
+        "covers_0.5": true,
+        "n_pos": 200,
+        "n_neg": 200,
+        "ks_stat": 0.11000000000000001,
+        "p_value": 0.17793352788293415,
+        "mean_meteor": 2.073312767336169e-06,
+        "mean_normal": 1.7891431488641815e-06,
+        "nonzero_meteor": 200,
+        "nonzero_normal": 200
+      },
+      "beta32/prefix/outside_topk_count": {
+        "auroc": 0.5,
+        "ci95": [
+          0.5,
+          0.5
+        ],
+        "covers_0.5": true,
+        "n_pos": 200,
+        "n_neg": 200,
+        "ks_stat": 0.0,
+        "p_value": 1.0,
+        "mean_meteor": 0.0,
+        "mean_normal": 0.0,
+        "nonzero_meteor": 0,
+        "nonzero_normal": 0
+      }
+    },
+    "judge": {}
+  }
+}

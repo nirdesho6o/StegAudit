@@ -72,3 +72,21 @@ What was seen, in plain sentences:
 - **Estimate for the registered full judge run (800 calls per judge) from the pilot's billed tokens: 22.1 credits** (qwen 8.9, glm 13.1). This is an UNDER-estimate, because 14 pilot calls were truncated at 4096 tokens. It is 44× Nirdesh's 0.5-credit auto-proceed limit, so the full judge run was not started (the script's gate also refuses it).
 - The `adaption` 0.19.0 SDK has no parameter to limit or switch off reasoning (checked `response_create_params`). Raising max_output_tokens is the only lever, and it raises cost.
 - Local detectors (no credits) are not affected and go ahead as registered.
+
+## 2026-11-15 — Experiment 02, local detectors at β = 32 (code 024038a; texts and scores made at 8a6fc73, clean tree)
+Files: `results/02_texts_normal.json`, `results/02_local.json`, `results/02_detectability.json`, `results/figs/02_auroc_beta32.png`.
+200 Meteor texts (from 01) vs 200 normal samples (`sample_plain`, seed 1; mean 115 tokens). Whole text, and payload prefix (first n_payload tokens; normal text cut to the paired length). AUROC with a stratified bootstrap of 2000 resamples; positive class = Meteor.
+
+| detector | whole text AUROC [95 % CI] | prefix AUROC [95 % CI] |
+|---|---|---|
+| mean log-prob (full vocab, T = 1) | 0.522 [0.465, 0.579], KS p = 0.55 | **0.447 [0.391, 0.505], KS p = 0.022** |
+| vanishing count (p < 2^-32) | 0.500 (0 events in either group) | 0.500 (0 events) |
+| EOS sum | 0.498 [0.440, 0.556] | 0.533 [0.475, 0.588] |
+| tokens outside unmasked top-k | 0.500 (0 events in either group) | 0.500 (0 events) |
+
+- **P1b (log-prob AUROC ≈ 0.5, CI covers 0.5, whole and prefix): MET by the registered criterion, with a warning on the prefix.** Whole text is clearly null. On the prefix the CI covers 0.5 only just (upper end 0.505), and the KS test rejects equal distributions at the 5 % level (p = 0.022). Meteor prefixes have a lower mean log-prob (−1.436 vs −1.292 nats per token). A possible explanation is a prefix-boundary artefact (the payload ends on the step that sends the last bits, and steps that send many bits tend to be low-probability tokens). It is tested as an exploratory check below; it is NOT assumed.
+- **P1c, detector at β = 32 (AUROC ≈ 0.5): MET, trivially.** Neither group had a single token with p < 2^-32 in the unmasked top-k, so the detector has nothing to work with. As expected from 01/01d: the only such tokens sit at top-1 p > 0.999 steps, and normal sampling emits them with probability < 2^-32.
+- **P1c, β = 8 / 12 detector part: UNTESTED** (cut on 2026-11-15; PREREG Deviations).
+- **EOS-masking signal: no detectable effect at β = 32.** No Meteor token fell outside the unmasked top-k, and the EOS-sum AUROC covers 0.5 on whole text and prefix. Consistent with 01, where EOS was never in the top-k during a β = 32 payload.
+- **LLM judge: not run** (pilot estimate 22.1 credits; decision pending, see earlier entry).
+- Runtime: normal-text generation 37 min; scoring 12 min (one forward pass per text).
