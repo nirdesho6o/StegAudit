@@ -132,7 +132,7 @@ Round trip correct (200/200 from ids; 200/200 from text at β = 32). No detector
   - Coverage within [0, 1] and the budget for all 5 policies.
   - Greedy M1 = LP M1.
   - Monte Carlo vs closed form: max |z| = 2.21 over 75 combinations.
-  - **Found:** M1 puts deterred decisions exactly on the boundary g_i = 0, and rounding (g ≤ 3.6·10⁻¹⁵) made the `g > 0` best response "attack" them. Fixed with the tie rule (PREREG ed19351; code 2 commits after this entry).
+  - **Found:** M1 puts deterred decisions exactly on the boundary g_i = 0, and rounding (g ≤ 3.6·10⁻¹⁵) made the `g > 0` best response "attack" them. Fixed with the tie rule (PREREG ed19351; code 1d23155).
 - **Attack-count diagnostic recomputed under the tie rule** (same grid as the 56cbaf3 table, P ≤ 10·mean(v), 288 instance cells per policy):
   - Counts unchanged in all 288 cells for uniform, suspicion, stake-proportional and M2. This confirms the PREREG note "M2 unaffected", which ed19351 stated only "as far as the smoke data show".
   - M1: counts changed in 132 / 288 cells (the ties), but the number of cells with < 50 % attacked is unchanged (18).
