@@ -125,3 +125,15 @@ Files: `results/02_judge.json`, `results/02_judge_pilot_deepseek.json`, `results
 
 ### Phase 1 summary (experiments 01 + 02, β = 32)
 Round trip correct (200/200 from ids; 200/200 from text at β = 32). No detector separates Meteor from normal text on whole texts: log-prob 0.522, EOS 0.498, vanishing 0.500, outside-top-k 0.500, LLM judge 0.452 (all CIs cover 0.5). The only signal found was the payload-prefix log-prob (0.447), explained by the payload boundary (02b), which is not visible in real transcripts. Untested: the β = 8/12 detector part of P1c (cut).
+
+## 2026-11-15 — Experiment 04 pre-run checks (scratchpad only; no registered 04 results yet)
+- **One-cell smoke check at P = 100·mean(v)** (lognormal, Gini 0.6, B/T = 2 %, d ∈ {0.5, 0.8, 0.95}):
+  - LP status HiGHS "Optimal" for M1 and M2.
+  - Coverage within [0, 1] and the budget for all 5 policies.
+  - Greedy M1 = LP M1.
+  - Monte Carlo vs closed form: max |z| = 2.21 over 75 combinations.
+  - **Found:** M1 puts deterred decisions exactly on the boundary g_i = 0, and rounding (g ≤ 3.6·10⁻¹⁵) made the `g > 0` best response "attack" them. Fixed with the tie rule (PREREG ed19351; code 2 commits after this entry).
+- **Attack-count diagnostic recomputed under the tie rule** (same grid as the 56cbaf3 table, P ≤ 10·mean(v), 288 instance cells per policy):
+  - Counts unchanged in all 288 cells for uniform, suspicion, stake-proportional and M2. This confirms the PREREG note "M2 unaffected", which ed19351 stated only "as far as the smoke data show".
+  - M1: counts changed in 132 / 288 cells (the ties), but the number of cells with < 50 % attacked is unchanged (18).
+  - Overall still 85 / 1440 instance cells below 50 %, so the facts behind the P = 100·mean(v) decision are unchanged.
