@@ -13,6 +13,10 @@ Each entry is marked **[VERIFIED]** (Nirdesh checked it against the PDF), **[VER
   Used for: Phase 3 audit LPs.
 - **[VERIFY]** Kiekintveld, C., Jain, M., Tsai, J., Pita, J., Ordóñez, F., Tambe, M. (2009). *Computing Optimal Randomized Resource Allocations for Massive Security Games.* AAMAS 2009.
   Used for: the M2 single-target security game in Phase 3.
+- **[VERIFY]** Nozaki, J., Murawaki, Y. (2022). Tokenization ambiguity in linguistic steganography (prefix-removal disambiguation). AACL-IJCNLP 2022. Exact title, authors and page numbers to be checked against the PDF.
+  Used for: candidate fix for retokenisation mismatches, only if the kill rule in PREREG.md (P1d) fires. Reported to remove ambiguous tokens from the candidate set, which changes the distribution; check against the paper whether this breaks provable security.
+- **[VERIFY]** Qi et al. (2024). *SyncPool* (tokenization-ambiguity handling for provably secure steganography). Exact title, venue and authors to be checked against the PDF.
+  Used for: second candidate fix for retokenisation mismatches; claims to preserve security. Not implemented; only if the P1d kill rule fires.
 - **TODO** *Breaking the Provable Security* (ACL Findings 2026): authors and full title not yet recorded.
   Used for: the low-probability vanishing phenomenon in `quantize.py`.
 

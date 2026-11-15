@@ -90,7 +90,7 @@ Security idea: masked bits are pseudorandom, so the chosen token is (up to quant
 - Key: X25519 exchange between Sender and Receiver objects → HKDF-SHA256(info="stegaudit-v1") → 32-byte key.
 
 ### Tests (must pass)
-- Round trip: 50 random payloads, decode == encode, 100%.
+- Round trip: 50 random payloads, decode_ids == encode (token-id path), 100%. Text path (decode from text, retokenised): every message that retokenises cleanly decodes 100%; retokenisation mismatches are counted and must be detected as failures, never accepted as a wrong message. (Changed 2026-11-15 after the pilot found 1/50 BPE mismatch; see AI_USE decision 44.)
 - Wrong key: decode with a different key → tag check fails ≥ 99%.
 - Quantisation: intervals are disjoint, cover [0, 2^β), sum == 2^β.
 - Determinism: same seed + key → identical text twice.
@@ -146,7 +146,7 @@ uniform rate ε; top-k by stake; best response to the announced coverage (attack
 - Sanity: B = T (audit everything) → undetected value = Σ max(0, v_i(1−d) − dP).
 
 ## PREREG.md (write and commit BEFORE running 02, 03, 04)
-- P1a: Meteor round trip 100% on 200 messages. P1b: log-prob KS test AUROC ≈ 0.5 (CI covers 0.5). P1c: vanishing-token detector AUROC > 0.5 at β = 32 is possible; record value, no strong prior.
+- P1a: Meteor round trip 100% on 200 messages (token-id path; text path see P1d in PREREG.md). P1b: log-prob KS test AUROC ≈ 0.5 (CI covers 0.5). P1c: vanishing-token detector AUROC > 0.5 at β = 32 is possible; record value, no strong prior.
 - P2: gap large (acc_R ≫ acc_S); no-stego and open-hint controls ≈ 0; keyed Sentinel ≈ Receiver.
 - P3a: uniform-ε colluder → required audits scale ≈ 1/ε² (sanity). P3b: under uniform or suspicion auditing, a stake-targeting colluder keeps most total stake undetected, more so as Gini rises. P3c: LP-optimal (M1/M2) beats stake-proportional and uniform; gain grows with Gini. P3d: M2 coverage is not proportional to v_i.
 
