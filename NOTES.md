@@ -45,3 +45,12 @@ Questions only. Nirdesh answers them himself.
 9. Explain the retokenisation failure on msg 29 (`Program` + `ming` vs `Programming`). Why is it a BPE problem and not a Meteor problem? Why is it important that the failure is detected rather than producing a wrong message?
 10. EOS masking during the payload is a deviation from pure Meteor. Why was it needed? How could a detector exploit it, and what does `eos_masked_steps` let you measure?
 11. Live modification: change `tag_bits` from 8 to 4. What happens to the wrong-key test, and why? Change β from 32 to 8: what happens to bits per token and to the vanishing count?
+
+### Phase 1c: detect.py and experiment 02 (detectability)
+1. What does AUROC measure for a detector, and why is 0.5 the value Meteor's security claim predicts? Why is an AUROC clearly *below* 0.5 also evidence of a leak?
+2. The log-prob detector uses the full-vocabulary log-probability, not the top-k one. What would go wrong with the top-k version on Meteor's payload tokens (hint: EOS masking)?
+3. The vanishing-token detector found zero events in both groups at β = 32. Why was that expected, and why does it mean the detector "passes" trivially rather than showing Meteor is safe?
+4. On the payload prefix, mean log-prob gave AUROC 0.447, but dropping the last prefix token gave 0.524 and the last token alone gave 0.169. Explain why the token where the payload ends tends to be improbable. Why is the "prefix" view not a realistic detector?
+5. The monitor scores texts with one full forward pass, while the Receiver must use the KV-cache path. Why may the monitor use a different (slightly different) computation, but the Receiver may not?
+6. Why was the LLM judge reduced to one model on whole texts only? What limitation does that leave, and why is it acceptable here?
+7. Why must a parse failure (incomplete or malformed judge answer) be counted and reported, rather than dropped?
