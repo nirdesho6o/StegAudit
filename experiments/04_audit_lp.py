@@ -1,8 +1,8 @@
 """Experiment 04: auditor policies vs colluders on synthetic stakes (no LLM calls).
 
 Grid (CLAUDE.md): stakes lognormal / Pareto with Gini in {0.2, 0.4, 0.6, 0.8}, T = 1000,
-budget B/T in {1 %, 2 %, 5 %, 10 %}, detection power d in {0.5, 0.8, 0.95} (+ d_estimate
-from Phase 2 via --d-estimate), penalty P in {0, mean(v), 10 mean(v), 100 mean(v)} (100 added, PREREG 56cbaf3).
+budget B/T in {1 %, 2 %, 5 %, 10 %}, detection power d in {0.5, 0.8, 0.95} (+ both Phase 2 d values from
+results/d_estimate.json via --phase2, PREREG 188981d), penalty P in {0, mean(v), 10 mean(v), 100 mean(v)} (100 added, PREREG 56cbaf3).
 Auditor policies: uniform, suspicion (= B random audits), stake_proportional, m1, m2.
 Colluders (PREREG 7a7fa45): uniform rate eps in EPS_VALUES and top-k with matched k = eps*T
 (equal attack counts isolate targeting), plus best response to the announced coverage.
@@ -12,15 +12,17 @@ Monte Carlo check with MC_DRAWS draws.
 
 P3a section (PREREG clarification 7088dd5): audits needed to detect a uniform-eps colluder
 via a one-sided binomial test with false-flag rate f, slope of log n vs log eps, and a
-Monte Carlo power check.
+Monte Carlo power check. Cells: registered f in {0, 0.01, 0.05} x every d value, plus the
+measured Phase 2 pairs (d_s, f_s), one per Sentinel s, each d with its own f (PREREG 188981d).
 
 Outputs: results/04_audit_lp.json, results/figs/04_*.png
-Usage:   python experiments/04_audit_lp.py [--d-estimate X] [--fpr-phase2 F] [--quick]
+Usage:   python experiments/04_audit_lp.py [--phase2] [--quick]
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import time
 import zlib
 from pathlib import Path
@@ -107,24 +109,29 @@ def run_grid(d_values, quick: bool):
     return rows
 
 
-def run_p3a(d_values):
+def p3a_cells(d_values, pairs) -> list[tuple[float, float, str | None]]:
+    """(f, d, source): registered f x every d, then each measured Phase 2 pair (its own d with its own f)."""
+    cells = [(f, d, None) for f in P3A_FPR for d in d_values]
+    return cells + [(p["f"], p["d"], p["sentinel"]) for p in pairs]
+
+
+def run_p3a(d_values, pairs=()):
     out = []
     rng = np.random.default_rng(seed_for("p3a"))
-    for f in P3A_FPR:
-        for d in d_values:
-            ns = [audits_to_detect(e, d, P3A_DELTA, f, P3A_POWER) for e in P3A_EPS]
-            powers = [mc_power(e, d, n, f, P3A_DELTA, 20_000, rng) for e, n in zip(P3A_EPS, ns)]
-            regime = [e * d <= f for e in P3A_EPS] if f > 0 else [True] * len(P3A_EPS)
-            x = np.log([e for e, r in zip(P3A_EPS, regime) if r])
-            y = np.log([n for n, r in zip(ns, regime) if r])
-            slope = float(np.polyfit(x, y, 1)[0]) if len(x) >= 2 else None
-            target = 0.95 if f == 0 else P3A_POWER
-            out.append({"fpr": f, "d": d, "eps": P3A_EPS, "n": ns, "mc_power": powers,
-                        "power_target": target,
-                        "power_ok": [abs(p - target) <= 0.03 for p in powers],
-                        "fit_eps": [e for e, r in zip(P3A_EPS, regime) if r], "slope": slope,
-                        "p3a_met": (slope is not None and -2.2 <= slope <= -1.8) if f > 0 else None})
-            print(f"P3a f={f} d={d}: slope {slope}", flush=True)
+    for f, d, source in p3a_cells(d_values, pairs):
+        ns = [audits_to_detect(e, d, P3A_DELTA, f, P3A_POWER) for e in P3A_EPS]
+        powers = [mc_power(e, d, n, f, P3A_DELTA, 20_000, rng) for e, n in zip(P3A_EPS, ns)]
+        regime = [e * d <= f for e in P3A_EPS] if f > 0 else [True] * len(P3A_EPS)
+        x = np.log([e for e, r in zip(P3A_EPS, regime) if r])
+        y = np.log([n for n, r in zip(ns, regime) if r])
+        slope = float(np.polyfit(x, y, 1)[0]) if len(x) >= 2 else None
+        target = 0.95 if f == 0 else P3A_POWER
+        out.append({"fpr": f, "d": d, "phase2_sentinel": source, "eps": P3A_EPS, "n": ns, "mc_power": powers,
+                    "power_target": target,
+                    "power_ok": [abs(p - target) <= 0.03 for p in powers],
+                    "fit_eps": [e for e, r in zip(P3A_EPS, regime) if r], "slope": slope,
+                    "p3a_met": (slope is not None and -2.2 <= slope <= -1.8) if f > 0 else None})
+        print(f"P3a f={f} d={d}: slope {slope}", flush=True)
     return out
 
 
@@ -205,7 +212,7 @@ def figures(rows, p3a, figdir: Path):
     # 4) P3a: audits needed vs eps (d = 0.8), one line per false-flag rate
     fig, ax = plt.subplots(figsize=(5.6, 3.6))
     for (f, col) in zip(P3A_FPR, ("#2a78d6", "#eb6834", "#1baf7a")):
-        r = next(x for x in p3a if x["fpr"] == f and x["d"] == 0.8)
+        r = next(x for x in p3a if x["fpr"] == f and x["d"] == 0.8 and x["phase2_sentinel"] is None)
         lab = f"f = {f}" + (f", slope {r['slope']:.2f}" if r["slope"] is not None else "")
         ax.plot(r["eps"], r["n"], marker="o", color=col, linewidth=2, markersize=5, label=lab)
     ax.set_xscale("log")
@@ -219,19 +226,22 @@ def figures(rows, p3a, figdir: Path):
     plt.close(fig)
 
 
-def main(d_estimate, fpr_phase2, quick, out, figdir):
-    global P3A_FPR
-    d_values = D_VALUES + ([d_estimate] if d_estimate is not None else [])
-    if fpr_phase2 is not None:
-        P3A_FPR = P3A_FPR + [fpr_phase2]
+def load_phase2_pairs(path: Path) -> list[dict]:
+    """[{sentinel, d, f, ...}] from experiment 03's d_estimate.json."""
+    return json.loads(Path(path).read_text())["results"]["pairs"]
+
+
+def main(phase2: Path | None, quick, out, figdir):
+    pairs = load_phase2_pairs(phase2) if phase2 else []
+    d_values = D_VALUES + [p["d"] for p in pairs]
     t0 = time.perf_counter()
     rows = run_grid(d_values, quick)
-    p3a = run_p3a(d_values)
+    p3a = run_p3a(d_values, pairs)
     outside95 = sum(not r["mc_in_ci95"] for r in rows)
     beyond4 = [r for r in rows if abs(r["mc_z"]) > 4]
     summary = {"n_rows": len(rows), "mc_outside_ci95": outside95,
                "mc_outside_ci95_frac": outside95 / len(rows), "mc_beyond_4se": len(beyond4),
-               "d_estimate_included": d_estimate is not None, "quick": quick,
+               "phase2_pairs": pairs, "quick": quick,
                "wall_s": round(time.perf_counter() - t0, 1)}
     print(summary, flush=True)
     write_result_json(out, {"summary": summary, "rows": rows, "p3a": p3a, "beyond_4se": beyond4},
@@ -245,10 +255,10 @@ def main(d_estimate, fpr_phase2, quick, out, figdir):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--d-estimate", type=float, default=None)
-    ap.add_argument("--fpr-phase2", type=float, default=None)
+    ap.add_argument("--phase2", nargs="?", type=Path, const=REPO_ROOT / "results" / "d_estimate.json", default=None,
+                    help="add both Phase 2 (d, f) pairs from d_estimate.json (default path if no value)")
     ap.add_argument("--quick", action="store_true", help="tiny grid, 500 MC draws (smoke test)")
     ap.add_argument("--out", type=Path, default=REPO_ROOT / "results" / "04_audit_lp.json")
     ap.add_argument("--figdir", type=Path, default=REPO_ROOT / "results" / "figs")
     a = ap.parse_args()
-    main(a.d_estimate, a.fpr_phase2, a.quick, a.out, a.figdir)
+    main(a.phase2, a.quick, a.out, a.figdir)

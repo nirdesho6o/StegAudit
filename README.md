@@ -45,7 +45,7 @@ Run from the repo root with the venv active. Times are measured on this machine 
 | `experiments/02_detectability.py judge [--max-credits 0.5]` | LLM judge (deepseek-v4-flash) on 400 whole texts; refuses to run if the pilot estimate exceeds the limit | 400 (~0.10) | ~20 min |
 | `experiments/02_detectability.py report` | Summary JSON + AUROC figure | 0 | seconds |
 | `experiments/02b_prefix_check.py` | *Exploratory:* is the prefix log-prob signal a payload-boundary artefact? | 0 | 5 min |
-| `experiments/04_audit_lp.py [--d-estimate X] [--fpr-phase2 F] [--quick]` | Audit LPs vs colluders on synthetic stakes; P3a audits-vs-ε | 0 | ~10–15 min (estimated; not yet run) |
+| `experiments/04_audit_lp.py [--phase2] [--quick]` | Audit LPs vs colluders on synthetic stakes; P3a audits-vs-ε; `--phase2` adds both (d, f) pairs from `results/d_estimate.json` | 0 | ~25–34 min (estimated) |
 
 Rule for this project: any single run expected to take more than 45 minutes is announced and approved first. 01 and 01b ran before that rule existed.
 
