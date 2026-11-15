@@ -25,7 +25,7 @@ def render(demo: bool) -> None:
     left, right = st.columns([1, 2.4], gap="large")
     with left:
         dist = st.radio("Stake distribution", ["lognormal", "pareto"], horizontal=True)
-        gini = st.slider("Stake inequality (Gini)", 0.1, 0.9, 0.6, 0.05)
+        gini = st.slider("Stake inequality (Gini)", 0.1, 0.9, 0.6, 0.05, key="a_gini")
         b_pct = st.slider("Budget B/T (%)", 0.5, 20.0, 2.0, 0.5)
         source = st.radio("d and f from", ["sliders"] + [f"Phase 2, Sentinel {p['sentinel']}" for p in pairs],
                           help="Phase 2 options appear once results/d_estimate.json exists.")
@@ -37,7 +37,7 @@ def render(demo: bool) -> None:
             d, f = float(p["d"]), float(p["f"])
             st.write(f"d = {d:.3f}, f = {f:.3f} (95 % CIs: d {np.round(p['d_ci95'], 3)}, f {np.round(p['f_ci95'], 3)})")
         p_mult = st.select_slider("Penalty P (× mean stake)", options=P_MULTS, value=10)
-        policy = st.selectbox("Policy in detail", POLICIES, index=3, format_func=POLICY_LABELS.get)
+        policy = st.selectbox("Policy in detail", POLICIES, index=3, format_func=POLICY_LABELS.get, key="a_policy")
         colluder = st.selectbox("Colluder for the comparison", colluder_labels())
         seed = st.number_input("Stake seed", 0, 10_000, 0)
 

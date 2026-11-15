@@ -65,9 +65,9 @@ def test_app_starts_and_tab4_renders():
     at = AppTest.from_file(str(REPO_ROOT / "app" / "streamlit_app.py"), default_timeout=120).run()
     assert not at.exception
     assert any("Best response attacks" in m.label for m in at.metric)
-    at.slider[0].set_value(0.8).run()                               # Gini slider -> recompute
+    at.slider(key="a_gini").set_value(0.8).run()                    # Gini slider -> recompute
     assert not at.exception
-    at.selectbox[0].set_value("m2").run()                           # policy selector
+    at.selectbox(key="a_policy").set_value("m2").run()            # policy selector (by key: other tabs add widgets)
     assert not at.exception and any("M2" in str(df.value) for df in at.dataframe)
 
 
