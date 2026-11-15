@@ -4,10 +4,12 @@ Stages (run in this order):
   generate --group normal|8|12|16   local texts -> results/02_texts_<group>.json
   score                             local detectors (a)-(c), whole text + prefix, every beta
                                     -> results/02_local.json
-  judge-pilot                       20 Adaption calls (5 whole + 5 prefix beta-32 Meteor texts x 2
-                                    judges) -> results/02_judge_pilot.json + cost estimate
-  judge [--max-credits 0.5]         full LLM-judge set (800 texts x 2 judges), only if the
-                                    estimate is below --max-credits -> results/02_judge.json
+  judge-pilot                       10 Adaption calls (5 Meteor + 5 normal whole texts, deepseek-v4-flash)
+                                    -> results/02_judge_pilot_deepseek.json + cost estimate
+  judge [--max-credits 0.5]         full LLM-judge set (400 whole texts), only if the estimate is
+                                    below --max-credits -> results/02_judge.json
+  (Judge design changed 2026-11-15, PREREG Deviations: one judge, whole texts only. The earlier
+   qwen/glm pilot is kept in results/02_judge_pilot.json and is not used for any AUROC.)
   report                            summary + figures -> results/02_detectability.json, figs
 
 Meteor texts at beta = 32 come from experiment 01 (results/01_meteor_roundtrip.json).
@@ -42,8 +44,10 @@ MAX_NEW_TOKENS = 120
 # Detector beta sweep (8, 12, 16) CUT on 2026-11-15 for the deadline (PREREG Deviations).
 # The generate stage still accepts --group 8|12|16 for future work, but score/report use BETAS only.
 BETAS = [32]
-JUDGES = ["qwen3.5-397b", "glm-5.2"]
-JUDGE_MAX_OUTPUT_TOKENS = 4096
+JUDGES = ["deepseek-v4-flash"]
+JUDGE_MAX_OUTPUT_TOKENS = 8192
+JUDGE_VIEWS = ("whole",)          # prefix judge dropped: it leaks the payload boundary (02b)
+PILOT_PATH_NAME = "02_judge_pilot_deepseek.json"
 JUDGE_EXPERIMENT = "02_judge"
 PARSE_FAILURE_STOP = 0.05
 N_BOOT = 2000
@@ -145,7 +149,7 @@ def stage_score() -> None:
 # ---------------- LLM judge ----------------
 
 def judge_items(include_normal: bool = True):
-    """(condition, i, prompt, reply) for beta-32 Meteor and normal, whole + prefix."""
+    """(condition, i, prompt, reply) for beta-32 Meteor and normal texts, views in JUDGE_VIEWS."""
     from stegaudit.lm import LocalLM  # tokenizer only would suffice; LocalLM keeps one code path
     lm = LocalLM()
     _, runs = load01()
@@ -153,12 +157,15 @@ def judge_items(include_normal: bool = True):
     items = []
     for r in met:
         items.append(("meteor/whole", r["i"], r["prompt"], r["text"]))
-        items.append(("meteor/prefix", r["i"], r["prompt"], lm.ids_to_text(r["ids"][:r["n_payload_tokens"]])))
+        if "prefix" in JUDGE_VIEWS:
+            items.append(("meteor/prefix", r["i"], r["prompt"], lm.ids_to_text(r["ids"][:r["n_payload_tokens"]])))
     if include_normal:
         nor = json.loads((R / "02_texts_normal.json").read_text())["results"]["texts"]
         for r, m in zip(nor, met):
             items.append(("normal/whole", r["i"], r["prompt"], r["text"]))
-            items.append(("normal/prefix", r["i"], r["prompt"], lm.ids_to_text(r["ids"][:m["n_payload_tokens"]])))
+            if "prefix" in JUDGE_VIEWS:
+                items.append(("normal/prefix", r["i"], r["prompt"],
+                              lm.ids_to_text(r["ids"][:m["n_payload_tokens"]])))
     return items
 
 
@@ -173,19 +180,19 @@ async def run_judges(items, client: AdaptionClient):
 
 
 def stage_judge_pilot() -> None:
-    items = judge_items(include_normal=False)
-    whole = [it for it in items if it[0] == "meteor/whole"][:5]
-    prefix = [it for it in items if it[0] == "meteor/prefix"][:5]
+    items = judge_items(include_normal=True)
+    pilot_items = ([it for it in items if it[0] == "meteor/whole"][:5]
+                   + [it for it in items if it[0] == "normal/whole"][:5])
+    n_full = len(items)
     client = AdaptionClient(JUDGE_EXPERIMENT)
 
     async def go():
         try:
-            return await run_judges(whole + prefix, client)
+            return await run_judges(pilot_items, client)
         finally:
             await client.close()
     rows = asyncio.run(go())
     client.save_credits()
-    n_full = 800
     est = {}
     for m in JUDGES:
         s = cached_token_stats(m, JUDGE_EXPERIMENT)
@@ -201,7 +208,7 @@ def stage_judge_pilot() -> None:
           + ", ".join(f"{m}: {v['estimate_credits']:.4f}" for m, v in est.items())
           + f"  TOTAL {total:.4f} credits")
     print(f"pilot incomplete: {len(incomplete)}/{len(rows)}, unparsed: {len(unparsed)}/{len(rows)}")
-    write_result_json(R / "02_judge_pilot.json",
+    write_result_json(R / PILOT_PATH_NAME,
                       {"rows": rows, "estimate": est, "estimate_total_credits": total,
                        "incomplete": len(incomplete), "unparsed": len(unparsed)},
                       MeteorConfig(), experiment="02_judge_pilot", judges=JUDGES,
@@ -209,7 +216,7 @@ def stage_judge_pilot() -> None:
 
 
 def stage_judge(max_credits: float) -> None:
-    pilot = json.loads((R / "02_judge_pilot.json").read_text())["results"]
+    pilot = json.loads((R / PILOT_PATH_NAME).read_text())["results"]
     est = pilot["estimate_total_credits"]
     if pilot["incomplete"] or pilot["unparsed"]:
         sys.exit(f"pilot had {pilot['incomplete']} incomplete / {pilot['unparsed']} unparsed calls: fix first")
@@ -234,7 +241,7 @@ def stage_judge(max_credits: float) -> None:
     table = {}
     if not stop:
         for m in JUDGES:
-            for view in ("whole", "prefix"):
+            for view in JUDGE_VIEWS:
                 pos = [r["score"] for r in rows if r["model"] == m and r["condition"] == f"meteor/{view}"]
                 neg = [r["score"] for r in rows if r["model"] == m and r["condition"] == f"normal/{view}"]
                 table[f"{m}/{view}"] = {**auroc_ci([p for p in pos if p is not None],
@@ -270,10 +277,12 @@ def stage_report() -> None:
     # Figure 1: AUROC with 95 % CI per detector at beta = 32, whole vs prefix
     rows = [(f"{n}", local[f"beta32/whole/{n}"], local[f"beta32/prefix/{n}"])
             for n in ("mean_logprob", "vanishing_count", "eos_sum", "outside_topk_count")]
-    rows += [(f"judge {m}", judge[f"{m}/whole"], judge[f"{m}/prefix"]) for m in JUDGES if f"{m}/whole" in judge]
+    rows += [(f"judge {m}", judge[f"{m}/whole"], judge.get(f"{m}/prefix")) for m in JUDGES if f"{m}/whole" in judge]
     fig, ax = plt.subplots(figsize=(7, 0.55 * len(rows) + 1.2))
     for k, (name, w, p) in enumerate(rows):
         for off, res, col, lab in ((-0.15, w, blue, "whole text"), (0.15, p, orange, "payload prefix")):
+            if res is None:                  # judge: whole text only
+                continue
             y = k + off
             ax.plot(res["ci95"], [y, y], color=col, linewidth=2)
             ax.plot(res["auroc"], y, "o", color=col, markersize=6, label=lab if k == 0 else None)
