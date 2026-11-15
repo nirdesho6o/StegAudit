@@ -1,0 +1,71 @@
+{
+  "meta": {
+    "git_commit": "fdb3cda4287555c74703f427cb80e329d5ea2c8e",
+    "git_dirty": true,
+    "timestamp_utc": "2026-11-15T08:50:15.386420+00:00",
+    "seed": 0,
+    "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "beta": 32,
+    "config": {
+      "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+      "beta": 32,
+      "top_k": 50,
+      "temperature": 1.0,
+      "payload_bits": 16,
+      "tag_bits": 8,
+      "prg": "hmac-sha256",
+      "max_new_tokens": 120,
+      "payload_token_limit": 256,
+      "seed": 0,
+      "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775"
+    },
+    "params": {
+      "experiment": "01b_redecode"
+    },
+    "versions": {
+      "python": "3.12.3",
+      "torch": "2.15.0+cpu",
+      "transformers": "5.23.0",
+      "tokenizers": "0.23.3"
+    },
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+    "torch_num_threads": 1
+  },
+  "results": {
+    "source": "results/01_meteor_roundtrip.json",
+    "source_git_commit": "fdb3cda4287555c74703f427cb80e329d5ea2c8e",
+    "per_beta": {
+      "32": {
+        "n": 200,
+        "ids_ok": 200,
+        "text_ok": 200,
+        "text_wrong_accepted": 0,
+        "agree_with_01": 200
+      },
+      "8": {
+        "n": 200,
+        "ids_ok": 200,
+        "text_ok": 200,
+        "text_wrong_accepted": 0,
+        "agree_with_01": 200
+      },
+      "12": {
+        "n": 200,
+        "ids_ok": 200,
+        "text_ok": 200,
+        "text_wrong_accepted": 0,
+        "agree_with_01": 200
+      },
+      "16": {
+        "n": 200,
+        "ids_ok": 200,
+        "text_ok": 199,
+        "text_wrong_accepted": 0,
+        "agree_with_01": 200
+      }
+    },
+    "disagreements": [],
+    "wall_s": 3447.3
+  }
+}

@@ -16,3 +16,28 @@ Plain-sentence outcome of every run vs its pre-registered prediction, including 
 - Reasoning length varies between calls: at least 16 tokens in the first run (cut off at the cap), 21 here, for the same prompt. Phase 2 cost estimates therefore use billed token totals from cached calls, not visible text length.
 - **Phase 0 total spend:** 1.34e-05 credits over 2 calls (`results/credits.json`).
 - **Phase 0 done criteria:** `import stegaudit` ✔, local model loads on CPU (bit-identical across loads and processes) ✔, one Adaption test call succeeds ✔ (on the second try), `pytest -q` ✔.
+
+## 2026-11-15 — Experiment 01: Meteor round trip (code fdb3cda, PREREG ee63376)
+
+Files: `results/01_meteor_roundtrip.json`, `results/01b_redecode.json`, `results/figs/01_tokens_for_payload.png`, `results/figs/01_vanishing_and_capacity.png`.
+Setup as pre-registered: Qwen2.5-0.5B-Instruct @ 7ae5576, CPU, top-k 50, T = 1.0, 200 messages (20 prompts × 10), L = 16 bits (8 message + 8 tag). β = 32 with cover text up to 120 tokens; β = 8, 12, 16 payload only. Total run time 88 min (01) + 58 min (01b).
+
+### Outcomes vs predictions
+- **P1a (ids-path round trip 200/200 at every β): MET.** 200/200 at β = 32, 8, 12 and 16.
+- **Independent check (fresh-process re-decode, 01b): MET.** All 800 messages re-decoded from disk with keys re-derived from the logged seed. Both paths agree with experiment 01 on every message (0 disagreements).
+- **P1d (text-path retokenisation mismatch low but nonzero): MET, with a caveat.**
+  - At β = 32: **5/200 = 2.5 %** of full texts do not retokenise to the Sender's ids. Exact 95 % CI **[0.8 %, 5.7 %]**.
+  - **All 5 mismatches are in the cover text**, after the payload (first difference at tokens 18–89; the payload ended at tokens 10–23). Examples: `At`+`oms` → `Atoms`; `:`+`**` → `:**`; `-f`+`ace` → `-face`. So **text-path decoding still succeeded 200/200 at β = 32**.
+  - At β = 8 / 12: 0/200. At β = 16: 1/200 (msg 91), inside the payload (`Program`+`ming` → `Programming`, the same split as the pilot). It was detected (`tag_mismatch`); text path 199/200.
+  - **Wrong messages accepted on the text path: 0 of 800.**
+- **Kill rule (> 5 % mismatches at β = 32): did NOT fire** (point estimate 2.5 %). Stated plainly: the CI's upper end (5.7 %) is above 5 %, so a rate above the threshold is not ruled out by 200 messages. The decode-relevant rate (mismatches inside the payload) was 0/200 at β = 32 and 1/800 over all runs. Proceeding to Phase 2 as the rule allows. Phase 2 counts any text-decode failure as a channel failure (PREREG).
+- **P1c, vanishing (≈ 0 at β = 32; non-increasing as β grows; clearly nonzero at β = 8): PARTLY MISSED.**
+  - Payload steps: 40.1 (β = 8) ≥ 22.7 (β = 12) ≥ 10.0 (β = 16) ≥ 0 (β = 32) vanished tokens per step, out of 50. Monotone and clearly nonzero at β = 8, as predicted.
+  - **Miss:** PREREG said "we expect zero vanished tokens in all 200 texts" at β = 32. In the **cover text**, 84 vanished tokens occurred in 9 of 200 messages (0.0043 per cover step, 19 658 cover steps). Likely reason (not tested): some cover steps have extremely peaked distributions, where the 50th-best token has p < 2^-32. The payload phase (start of the reply) had none.
+  - Consequence for 02: a vanished token is one Meteor can never emit and normal sampling emits with probability < 2^-32 per step, so the vanishing-token detector is still expected to see nothing at β = 32 in 200 texts. That prediction (P1c detector, AUROC ≈ 0.5) stands as registered.
+- **EOS masking (small fraction of payload steps; no strong prior): MET.** β = 32: 0 of 3 427 payload steps had EOS in the top-k (0 messages). β = 8 / 12 / 16: 0.19 % / 0.06 % / 0.06 % of steps (4 / 2 / 2 messages); mean EOS mass removed per message ≤ 0.015. For these prompts the EOS-masking deviation barely ever acted.
+- **Capacity (weak prior "roughly 5–12 payload tokens at β = 32"): MISSED.** Median **16** payload tokens at β = 32 (mean 17.1, range 3–42). That is **1.02 bits per payload token** (raw common-prefix bits) or 0.93 effective (16 bits ÷ tokens, not counting overshoot past L). The prior came from a handful of pilot tests and was too optimistic. β = 12 and 16 are the same as β = 32 (1.03 bits/token); β = 8 is lower (0.85 bits/token, median 19.5 tokens).
+- **Wall time (CPU, 1 thread):** β = 32 encode 11.2 s per message (payload + ~98 cover tokens); text decode 2.1 s. Payload-only runs: about 2.0–2.4 s encode and decode each.
+
+### Provenance note: `git_dirty: true` in both JSONs
+Both result files record `git_dirty: true`. Cause: experiment 01 writes a checkpoint of its own result file after each β run. That new untracked file in `results/` made the next metadata stamp count the tree as dirty, and 01b likewise saw 01's outputs. Evidence that the code that ran is exactly commit fdb3cda: `git status` lists only the four untracked result files, and `git diff --stat fdb3cda` is empty. The result files are committed as produced, unedited. `provenance.py` is fixed in the next code commit to ignore `results/` and to record the list of changed paths.
