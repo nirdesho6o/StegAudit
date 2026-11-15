@@ -135,3 +135,8 @@ def test_tab1_live_encodes_and_decodes_with_qwen():
     assert not at.exception
     assert any("secret “Hi”" in s.value for s in at.success)
     assert any("tag_mismatch" in e.value for e in at.error)
+
+
+def test_gap_helpers_report_missing_results(tmp_path):
+    from stegaudit.appcore import gap_available
+    assert not gap_available(tmp_path)

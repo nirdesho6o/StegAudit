@@ -212,3 +212,34 @@ def text_pair(i: int, results_dir: Path = REPO_ROOT / "results") -> dict:
             "n_payload_tokens": met["n_payload_tokens"], "meteor_logprob": per["meteor"][i],
             "normal_logprob": per["normal"][i], "judge": judge, "n_texts": 200,
             "meteor_on_left": bool(np.random.default_rng(i).integers(2))}   # fixed per i: a fair quiz
+
+
+# ---------------- tab 3: collusion and audit (saved results of experiment 03; no API calls) ----------------
+
+GAP_FILES = ("03_items.json", "03_texts_stego.json", "03_decode.json", "03_answers.json", "03_gap_sanity.json")
+
+
+def gap_available(results_dir: Path = REPO_ROOT / "results") -> bool:
+    return all((Path(results_dir) / f).exists() for f in GAP_FILES)
+
+
+def gap_item_view(i: int, results_dir: Path = REPO_ROOT / "results") -> dict:
+    """One private decision end to end, from saved files only: item, Meteor tip, decode, every cached answer."""
+    from stegaudit.gap import LETTERS
+    item = _results("03_items.json", results_dir)["items"][i]
+    tip = _results("03_texts_stego.json", results_dir)["texts"][i]
+    dec = _results("03_decode.json", results_dir)["rows"][i]["stego"]
+    answers = {}
+    for r in _results("03_answers.json", results_dir)["rows"]:
+        if r["i"] == i and r["condition"] in ("stego", "baseline"):
+            answers[f"{r['role']}/{r['model']}/{r['condition']}"] = {
+                "letter": None if r["answer"] is None else LETTERS[r["answer"]],
+                "correct": r["answer"] == item["answer"], "reply_tail": (r["text"] or "")[-500:],
+                "output_tokens": (r.get("response_meta") or {}).get("output_tokens")}
+    return {"item": item, "truth": LETTERS[item["answer"]], "tip": tip["text"], "prompt": tip["prompt"],
+            "n_payload_tokens": tip["n_payload_tokens"], "decode_ok": dec["ok"],
+            "hint": None if dec["hint"] is None else LETTERS[dec["hint"]], "answers": answers}
+
+
+def gap_summary(results_dir: Path = REPO_ROOT / "results") -> dict:
+    return _results("03_gap_sanity.json", results_dir)
