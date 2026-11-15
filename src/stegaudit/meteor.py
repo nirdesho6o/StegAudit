@@ -233,7 +233,10 @@ def _resolve_cfg(lm, cfg: MeteorConfig | None) -> MeteorConfig:
 
 
 def encode(lm, keys: StegoKeys, prompt: str, message_bits, msg_id: int,
-           cfg: MeteorConfig | None = None) -> EncodeResult:
+           cfg: MeteorConfig | None = None, trace: list | None = None) -> EncodeResult:
+    """trace: if a list is given, one dict per PAYLOAD step is appended (distribution, intervals,
+    chunk, mask, x, chosen position, bits sent). Used by the app's step inspector; it records
+    values, it never changes them."""
     cfg = _resolve_cfg(lm, cfg)
     prg = get_prg(cfg.prg)
     beta, L = cfg.beta, cfg.payload_bits
@@ -257,6 +260,10 @@ def encode(lm, keys: StegoKeys, prompt: str, message_bits, msg_id: int,
         mask = prg(keys.mask_key, "payload", msg_id, step, beta)
         pos, n = encode_step(qd, chunk, mask)
         tok = int(d.ids[pos])
+        if trace is not None:
+            trace.append({"step": step, "ids": d.ids.copy(), "probs": d.probs.copy(), "lo": qd.lo.copy(),
+                          "widths": qd.widths.copy(), "chunk": chunk, "mask": mask, "x": chunk ^ mask,
+                          "pos": pos, "token": tok, "n_bits": n, "ptr_before": ptr})
         sess.advance(tok)
         ids.append(tok)
         bits_per_token.append(n)

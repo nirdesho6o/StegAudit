@@ -214,3 +214,25 @@ def test_vanished_split_payload_vs_cover():
         assert 0 <= enc.n_vanished_payload <= enc.n_vanished
         tot, pay = tot + enc.n_vanished, pay + enc.n_vanished_payload
     assert tot > pay > 0                                       # both phases see vanishing at beta = 4
+
+
+def test_trace_records_payload_steps_without_changing_output():
+    """The app's step inspector reads `trace`; it must describe exactly what encode did."""
+    from stegaudit.quantize import QuantizedDist
+    lm = toy()
+    msg = rand_msg(lm.cfg)
+    trace: list = []
+    with_trace = encode(lm, KEYS, "p", msg, msg_id=11, trace=trace)
+    plain = encode(lm, KEYS, "p", msg, msg_id=11)
+    assert with_trace.ids == plain.ids                         # recording changes nothing
+    assert len(trace) == plain.n_payload_tokens
+    assert [t["token"] for t in trace] == plain.ids[:plain.n_payload_tokens]
+    assert [t["n_bits"] for t in trace] == plain.bits_per_token
+    for t in trace:
+        lo, hi = int(t["lo"][t["pos"]]), int(t["lo"][t["pos"]] + t["widths"][t["pos"]])
+        assert lo <= t["x"] < hi and t["x"] == t["chunk"] ^ t["mask"]
+        assert t["n_bits"] == common_prefix_len(lo, hi - 1, lm.cfg.beta)
+        # what the Receiver recovers at this step = the leading n bits of the Sender's chunk
+        qd = QuantizedDist(lm.cfg.beta, t["widths"], t["lo"], 0, 0)
+        n, bits = decode_step(qd, t["pos"], t["mask"])
+        assert bits == t["chunk"] >> (lm.cfg.beta - n)
