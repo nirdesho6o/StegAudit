@@ -1,0 +1,102 @@
+{
+  "meta": {
+    "git_commit": "9e23058215158ab3a0376fabbca7495bd0714446",
+    "git_dirty": false,
+    "git_changed_paths": [],
+    "timestamp_utc": "2026-11-15T11:00:05.006118+00:00",
+    "seed": 0,
+    "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "beta": 32,
+    "config": {
+      "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+      "beta": 32,
+      "top_k": 50,
+      "temperature": 1.0,
+      "payload_bits": 16,
+      "tag_bits": 8,
+      "prg": "hmac-sha256",
+      "max_new_tokens": 120,
+      "payload_token_limit": 256,
+      "seed": 0,
+      "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775"
+    },
+    "params": {
+      "experiment": "02b_prefix_check",
+      "fixed_window": 10
+    },
+    "versions": {
+      "python": "3.12.3",
+      "torch": "2.15.0+cpu",
+      "transformers": "5.23.0",
+      "tokenizers": "0.23.3"
+    },
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+    "torch_num_threads": 1
+  },
+  "results": {
+    "exploratory": true,
+    "preregistered": false,
+    "table": {
+      "prefix_all": {
+        "auroc": 0.44791798186914467,
+        "ci95": [
+          0.3912274942551956,
+          0.500124996843514
+        ],
+        "covers_0.5": true,
+        "n_pos": 199,
+        "n_neg": 199,
+        "ks_stat": 0.14572864321608048,
+        "p_value": 0.029090075404250418,
+        "mean_meteor": -1.438233668678041,
+        "mean_normal": -1.2946028075148224
+      },
+      "prefix_without_last": {
+        "auroc": 0.5236483927173556,
+        "ci95": [
+          0.4668973005732178,
+          0.5779494204691802
+        ],
+        "covers_0.5": true,
+        "n_pos": 199,
+        "n_neg": 199,
+        "ks_stat": 0.13567839195979897,
+        "p_value": 0.0511888963746706,
+        "mean_meteor": -1.2855553919354474,
+        "mean_normal": -1.2843626793579996
+      },
+      "last_token": {
+        "auroc": 0.1687331128001818,
+        "ci95": [
+          0.13082434787000327,
+          0.21089050781545912
+        ],
+        "covers_0.5": false,
+        "n_pos": 199,
+        "n_neg": 199,
+        "ks_stat": 0.5628140703517588,
+        "p_value": 2.1899947217142595e-29,
+        "mean_meteor": -3.5213562290499247,
+        "mean_normal": -1.4219735515495902
+      },
+      "first10": {
+        "auroc": 0.5022095401631271,
+        "ci95": [
+          0.44575484204944316,
+          0.5572583394358728
+        ],
+        "covers_0.5": true,
+        "n_pos": 199,
+        "n_neg": 199,
+        "ks_stat": 0.06030150753768848,
+        "p_value": 0.8635378022877606,
+        "mean_meteor": -1.198680636496497,
+        "mean_normal": -1.188356110983115
+      }
+    },
+    "pairs_used": 199,
+    "pairs_skipped_too_short": 1,
+    "wall_s": 271.9
+  }
+}

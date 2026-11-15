@@ -90,3 +90,17 @@ Files: `results/02_texts_normal.json`, `results/02_local.json`, `results/02_dete
 - **EOS-masking signal: no detectable effect at β = 32.** No Meteor token fell outside the unmasked top-k, and the EOS-sum AUROC covers 0.5 on whole text and prefix. Consistent with 01, where EOS was never in the top-k during a β = 32 payload.
 - **LLM judge: not run** (pilot estimate 22.1 credits; decision pending, see earlier entry).
 - Runtime: normal-text generation 37 min; scoring 12 min (one forward pass per text).
+
+## Exploratory (not pre-registered) — 02b: is the prefix log-prob signal a boundary artefact? (code: `experiments/02b_prefix_check.py`)
+Same 200 + 200 texts and pairing as 02; 199 pairs used (1 normal text shorter than its paired window was skipped).
+
+| window | AUROC [95 % CI] | KS p | mean log-prob Meteor / normal |
+|---|---|---|---|
+| prefix, all tokens (reproduces 02) | 0.448 [0.391, 0.500] | 0.029 | −1.438 / −1.295 |
+| prefix without its last token | 0.524 [0.467, 0.578] | 0.051 | −1.286 / −1.284 |
+| **last prefix token only** | **0.169 [0.131, 0.211]** | 2e-29 | **−3.52 / −1.42** |
+| first 10 tokens (boundary-free) | 0.502 [0.446, 0.557] | 0.86 | −1.199 / −1.188 |
+
+- **Hypothesis supported:** the prefix signal in 02 comes from the LAST payload token. With it removed, or with a fixed window that ignores the payload boundary, the means are equal and the AUROC CI covers 0.5. (Without the last token, KS p = 0.051, borderline; the means differ by 0.002 nats.)
+- **Why:** the payload ends at the step that sends its final bits, and a step sends many bits only when its interval is narrow, i.e. the token is unlikely. So "the token where the payload ended" is selected to be improbable (mean log-prob −3.5 vs −1.4 nats).
+- **What this does and does not mean.** A monitor that knew where the payload ends could use that token; but the boundary is not visible in the text, because Meteor continues with cover text. Whole-text log-prob and the boundary-free window show no signal (AUROC 0.522 and 0.502). The registered "prefix" view gives the detector oracle knowledge of the boundary; that should be stated when quoting the prefix numbers.
