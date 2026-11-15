@@ -1,0 +1,6 @@
+[theme]
+# Figures are styled for a light surface, so the app is pinned to light.
+base = "light"
+
+[browser]
+gatherUsageStats = false

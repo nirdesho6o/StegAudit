@@ -8,7 +8,7 @@ Everything here must be correct, reproducible, explainable by Nirdesh in a viva,
 Background docs (read before coding): Kaptchuk et al., Meteor (CCS 2021); Anwar et al., steganographic gap (arXiv 2602.23163); Blocki et al., Audit Games (arXiv 1303.0356); Motwani et al., Secret Collusion (arXiv 2402.07510). If a paper detail is needed and not in the repo, ask; never invent an algorithm detail.
 
 ## Scope of THIS session
-Phase 0 setup → Phase 1 Meteor pilot → Phase 2 gap sanity check → Phase 3 audit LP on synthetic stakes → Streamlit app tabs (Component B).
+Phase 0 setup → Phase 1 Meteor pilot → Phase 2 gap sanity check → Phase 3 audit LP on synthetic stakes → Phase 4 Streamlit app tabs (Component B).
 
 ### Deadline and plan (set by Nirdesh 2026-11-15; deadline in 4 days)
 - Nov 15: experiment 02 (local detectors at β = 32; LLM-judge decision pending, see LOG.md) + Phase 3 LP code and tests (no Qwen needed, runs alongside 02).
@@ -155,6 +155,15 @@ uniform rate ε; top-k by stake; best response to the announced coverage (attack
 - Closed form: M1 must match greedy fractional allocation by d(v_i + P) order; test it.
 - Monte Carlo vs closed form agree within CI in every cell.
 - Sanity: B = T (audit everything) → undetected value = Σ max(0, v_i(1−d) − dP).
+
+## Phase 4 — Streamlit app (Component B; added by Nirdesh 2026-11-15)
+- `app/streamlit_app.py`, 4 tabs: (1) Meteor channel, (2) detectability, (3) gap / audit rates, (4) audit game.
+- **All logic is imported from `stegaudit`** (`stegaudit.appcore` for app-only helpers). The app file only lays out widgets and plots; no algorithm lives in it.
+- Expensive objects (local model, solved LPs) via `st.cache_resource` / `st.cache_data`.
+- **Demo mode** (default on): tabs show saved results from `results/` and never load Qwen or call Adaption. Tab 4 is cheap (LPs on synthetic stakes) and computes live in every mode, without Qwen.
+- Tests: unit tests for the `appcore` helpers + a startup smoke test (`streamlit.testing.v1.AppTest`: the app starts without an exception and tab 4 renders).
+- Screenshots of each tab go to `results/figs/` for the report.
+- Tab 4 (audit game): sliders for budget B/T, Gini, d, f, P; policy selector; coverage-vs-stake plot per policy; undetected-value comparison across policies; best-response attack count with the tie rule (PREREG ed19351); audits needed for a uniform-ε colluder at (d, f) (P3a definition).
 
 ## PREREG.md (write and commit BEFORE running 02, 03, 04)
 - P1a: Meteor round trip 100% on 200 messages (token-id path; text path see P1d in PREREG.md). P1b: log-prob KS test AUROC ≈ 0.5 (CI covers 0.5). P1c: vanishing-token detector AUROC > 0.5 at β = 32 is possible; record value, no strong prior.
