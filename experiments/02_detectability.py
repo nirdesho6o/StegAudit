@@ -172,8 +172,12 @@ def judge_items(include_normal: bool = True):
 async def run_judges(items, client: AdaptionClient):
     async def one(model, it):
         cond, i, prompt, reply = it
-        res = await client.ask(model, JUDGE_INSTRUCTIONS, judge_input(prompt, reply),
-                               max_output_tokens=JUDGE_MAX_OUTPUT_TOKENS, temperature=0.0)
+        try:
+            res = await client.ask(model, JUDGE_INSTRUCTIONS, judge_input(prompt, reply),
+                                   max_output_tokens=JUDGE_MAX_OUTPUT_TOKENS, temperature=0.0)
+        except RuntimeError as err:          # all retries failed: a logged failure, never a crash
+            return {"model": model, "condition": cond, "i": i, "score": None, "status": "error",
+                    "error": str(err)[:300], "cached": False, "response_meta": {}}
         return {"model": model, "condition": cond, "i": i, "score": parse_judge(res.text, res.status),
                 "status": res.status, "cached": res.cached, "response_meta": res.meta}
     return await asyncio.gather(*[one(m, it) for m in JUDGES for it in items])
@@ -231,8 +235,10 @@ def stage_judge(max_credits: float) -> None:
         finally:
             await client.close()
     t0 = time.perf_counter()
-    rows = asyncio.run(go())
-    credits = client.save_credits()[JUDGE_EXPERIMENT]
+    try:
+        rows = asyncio.run(go())
+    finally:
+        credits = client.save_credits()[JUDGE_EXPERIMENT]   # saved even if the run crashes
     conds = sorted({r["condition"] for r in rows})
     failures = {m: {c: sum(r["score"] is None for r in rows if r["model"] == m and r["condition"] == c)
                     / sum(1 for r in rows if r["model"] == m and r["condition"] == c) for c in conds}

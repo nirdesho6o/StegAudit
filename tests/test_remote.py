@@ -149,3 +149,17 @@ def test_cost_estimate_uses_billed_tokens_including_reasoning(tmp_path):
     # other experiments' entries are ignored; no pilot -> None (never a silent 0)
     assert cached_token_stats("glm-5.2", experiment="other", cache_dir=tmp_path / "cache")["n"] == 0
     assert estimate_cost_from_cache("glm-5.2", 10, experiment="other", cache_dir=tmp_path / "cache") is None
+
+
+def test_real_client_gets_long_timeout(monkeypatch, tmp_path):
+    """The SDK default (60 s) is too short for reasoning models; we pass DEFAULT_TIMEOUT_S."""
+    import adaption
+    seen = {}
+
+    class Spy:
+        def __init__(self, **kw):
+            seen.update(kw)
+    monkeypatch.setattr(adaption, "AsyncAdaption", Spy)
+    monkeypatch.setenv("ADAPTION_API_KEY", "test-key")
+    AdaptionClient("x", cache_dir=tmp_path, credits_path=tmp_path / "c.json")
+    assert seen["timeout"] == remote.DEFAULT_TIMEOUT_S >= 300

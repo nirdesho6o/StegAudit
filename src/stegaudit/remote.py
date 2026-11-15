@@ -71,6 +71,9 @@ COST_PER_M: dict[str, tuple[float, float]] = {
 }
 
 CONFIRM_THRESHOLD_CALLS = 500
+# The SDK's default timeout is 60 s. Reasoning models can think for longer; a timed-out request may
+# still be billed by the server, and retrying it can never succeed. Found 2026-11-15 in the 02 judge run.
+DEFAULT_TIMEOUT_S = 600.0
 MAX_RETRIES = 5
 
 
@@ -119,6 +122,7 @@ class AdaptionClient:
 
     def __init__(self, experiment: str, concurrency: int = 8,
                  cache_dir: Path = CACHE_DIR, credits_path: Path = CREDITS_PATH,
+                 timeout_s: float = DEFAULT_TIMEOUT_S,
                  sdk_client: Any = None):
         self.experiment = experiment
         self.cache_dir = Path(cache_dir)
@@ -131,7 +135,7 @@ class AdaptionClient:
             if not api_key:
                 raise RuntimeError("ADAPTION_API_KEY not set (put it in .env)")
             from adaption import AsyncAdaption
-            sdk_client = AsyncAdaption(api_key=api_key)
+            sdk_client = AsyncAdaption(api_key=api_key, timeout=timeout_s)
         self._client = sdk_client
 
     # ---------- cache ----------
