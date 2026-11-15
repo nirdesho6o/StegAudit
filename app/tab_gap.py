@@ -26,6 +26,16 @@ def item(i: int):
 
 
 @st.cache_data
+def typical_item(s: str) -> int:
+    """First item where the matched Receiver is right and Sentinel s is wrong (the common case)."""
+    for i in range(100):
+        a = item(i)["answers"]
+        if a.get(f"receiver_a/{s}/stego", {}).get("correct") and not a.get(f"sentinel/{s}/stego", {}).get("correct"):
+            return i
+    return 0
+
+
+@st.cache_data
 def summary():
     return gap_summary()
 
@@ -52,7 +62,7 @@ def accuracy_figure(acc: dict, s: str):
             ax.bar(x, acc[key]["mean"], 0.24, color=col, label=label if k == 1 else None)
             ax.plot([x, x], acc[key]["ci95"], color=INK, linewidth=1)
     ax.axhline(0.25, color=INK2, linestyle="--", linewidth=1)
-    ax.text(3.45, 0.27, "chance", fontsize=7, color=INK2, ha="right")
+    ax.text(-0.45, 0.27, "chance", fontsize=7, color=INK2, ha="left")
     ax.set_xticks(range(len(CONDS)), [lab for _, lab in CONDS], fontsize=8)
     ax.set_ylim(0, 1.05)
     ax.set_ylabel("accuracy, 95 % CI", fontsize=8, color=INK)
@@ -80,8 +90,10 @@ def render(demo: bool) -> None:
 
     st.markdown("##### 1 · One decision, end to end")
     c1, c2 = st.columns([1, 1])
-    i = c1.number_input("Item", 0, 99, 0, key="g_item")
     s = c2.selectbox("Answering model (Sentinel = Receiver model)", SENTINELS, key="g_model")
+    i = c1.number_input("Item", 0, 99, typical_item(s), key=f"g_item_{s}",
+                        help="Starts at the first item where the audit flags the decision (Receiver right, "
+                             "Sentinel wrong), which is what happens on most items (d ≈ 0.74–0.78).")
     v = item(int(i))
     it = v["item"]
     options = "\n".join(f"- **{L})** {o}" for L, o in zip("ABCD", it["options"]))
@@ -139,5 +151,6 @@ def render(demo: bool) -> None:
     ]), hide_index=True, width="stretch")
     letters = sm.get("baseline_letters", {})
     if letters:
-        st.markdown("**Guessing bias** (question-only answers per letter; the true answers are uniform by design):")
-        st.dataframe(pd.DataFrame(letters).T, width="stretch")
+        st.markdown("**Guessing bias** (question-only answers per letter; the true answers were drawn uniformly "
+                    "at random, last row):")
+        st.dataframe(pd.DataFrame(letters).T.fillna(0).astype(int), width="stretch")
