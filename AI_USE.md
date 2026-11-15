@@ -23,6 +23,7 @@ The "Nirdesh verified / changed" column is filled in by Nirdesh, not by Claude.
 | 2026-11-15 | Phase 1, provenance fix | `provenance.dirty_from_porcelain` (ignore `results/`, record `git_changed_paths`); `_git` keeps leading spaces; 3 new tests. Bug found in experiment 01's metadata (its own checkpoint file set `git_dirty`); while fixing it, Claude introduced and caught a second bug (`strip()` cut porcelain paths). | |
 | 2026-11-15 | Phase 1, experiment 01c code | `experiments/01c_entropy_explore.py`: exploratory per-step entropy and bits/entropy ratio on 30 messages per β, by replaying 01's saved ids (no new encoding); PREREG "Deviations" entry. | Asked for the metric, and asked that it be labelled exploratory and not touch the running job. |
 | 2026-11-15 | Phase 1, experiment 01d code | `experiments/01d_followups.py` (exploratory): top-1 p and entropy at the β = 32 cover steps with vanished tokens, with a count check against 01; payload-only retokenisation mismatch rate with exact CI. | Asked for both follow-ups; kill rule unchanged. |
+| 2026-11-15 | Phase 1, detect.py | `detect.py` (normal-sampling baseline `sample_plain`, `token_scores` via one forward pass, detector statistics, `auroc_ci` with stratified bootstrap, `ks`, LLM-judge instructions and strict `PROBABILITY:` parser; RRNs-HT left as TODO), `tests/test_detect.py` (log-probs checked against an independent per-prefix computation; sampler frequencies chi-square checked). | |
 
 ## Design decisions (proposed by Claude Code, approved by Nirdesh on 2026-11-15)
 
@@ -138,3 +139,11 @@ Each one is a choice CLAUDE.md left open or that the plain spec would get wrong.
 ### Phase 1: provenance
 45. **`git_dirty` ignores paths under `results/`; every changed path is still listed in `git_changed_paths`.**
     Why: an experiment's own outputs (checkpoints, figures) are not code. Before the fix, experiment 01's result files said `git_dirty: true` although the code was exactly commit fdb3cda (`git diff --stat fdb3cda` empty; explained in LOG.md). Listing all paths keeps the check transparent: a reader can see what was in the tree.
+
+### Phase 1: detect.py
+46. **Log-prob detector uses the full-vocabulary log-softmax at T = 1, not the top-k distribution.**
+    Why: a Meteor payload token comes from the EOS-masked top-k and may lie outside the unmasked top-k, which would give log p = −∞ under top-k. The full-vocab log-prob is always finite and is what a monitor with the model would compute. Tokens outside the unmasked top-k are counted separately (an EOS-masking signal).
+47. **The monitor scores with one full forward pass, not the KV-cache path.**
+    Why: only the Receiver needs bit-identical numbers; low-bit differences (about 1e-5) cannot change a detector's ranking in any meaningful way. One pass is about 10× faster.
+48. **Judge output must end in `PROBABILITY: <0-100>`. Anything else, or status ≠ completed, is a parse failure (PREREG: > 5 % in a condition → stop).**
+    Why: a strict format makes parsing unambiguous and stops a free-text number (e.g. a percentage mentioned while reasoning) from being read as the answer.
