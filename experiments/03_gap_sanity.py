@@ -410,8 +410,9 @@ def figure(acc) -> None:
         for sp in ("top", "right"):
             ax.spines[sp].set_visible(False)
     axes[0].set_ylabel("accuracy, 95 % CI (dashed: chance)")
-    axes[-1].legend(frameon=False, fontsize=8, loc="upper right")
-    fig.tight_layout()
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, frameon=False, fontsize=8, loc="lower center", ncol=3)
+    fig.tight_layout(rect=(0, 0.08, 1, 1))
     (R / "figs").mkdir(parents=True, exist_ok=True)
     fig.savefig(R / "figs" / "03_gap.png", dpi=150)
     plt.close(fig)
