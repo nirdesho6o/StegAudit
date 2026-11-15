@@ -1,13 +1,13 @@
 {
   "meta": {
-    "git_commit": "8a6fc733c1fa844baf34a4bb60ea812094c14b04",
+    "git_commit": "a954aba8f25767c0a1b3a2eede7a41bc4aa6a2eb",
     "git_dirty": false,
     "git_changed_paths": [
-      "results/02_local.json",
-      "results/02_texts_normal.json",
-      "results/figs/02_auroc_beta32.png"
+      "results/credits.json",
+      "results/figs/02_auroc_beta32.png",
+      "results/02_judge.json"
     ],
-    "timestamp_utc": "2026-11-15T10:54:51.816292+00:00",
+    "timestamp_utc": "2026-11-15T13:15:34.498914+00:00",
     "seed": 0,
     "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
     "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
@@ -168,6 +168,19 @@
         "nonzero_normal": 0
       }
     },
-    "judge": {}
+    "judge": {
+      "deepseek-v4-flash/whole": {
+        "auroc": 0.4517211055276382,
+        "ci95": [
+          0.39836871859296485,
+          0.5064962311557789
+        ],
+        "covers_0.5": true,
+        "n_pos": 199,
+        "n_neg": 200,
+        "mean_meteor": 34.68341708542714,
+        "mean_normal": 39.375
+      }
+    }
   }
 }

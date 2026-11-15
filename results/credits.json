@@ -33,14 +33,27 @@
       "unpriced_calls": 0
     },
     "deepseek-v4-flash": {
-      "calls": 10,
-      "cache_hits": 0,
-      "retries": 6,
-      "input_tokens": 3201,
-      "output_tokens": 22113,
-      "reasoning_tokens": 21466,
-      "credits": 0.0030818730000000006,
+      "calls": 14,
+      "cache_hits": 395,
+      "retries": 23,
+      "input_tokens": 4488,
+      "output_tokens": 34993,
+      "reasoning_tokens": 33997,
+      "credits": 0.004851541000000001,
       "unpriced_calls": 0
+    }
+  },
+  "02_judge_crashed_run_reconstructed": {
+    "deepseek-v4-flash": {
+      "calls": 385,
+      "cache_hits": 0,
+      "retries": null,
+      "input_tokens": 121992,
+      "output_tokens": 673597,
+      "reasoning_tokens": 647850,
+      "credits": 0.094956049,
+      "unpriced_calls": 0,
+      "note": "Run crashed before save_credits; reconstructed from the 385 cached completed responses. Timed-out attempts (~18 on one item) returned no usage and may have been billed: unknown, worst case ~0.02 credits."
     }
   }
 }
