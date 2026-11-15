@@ -1,0 +1,565 @@
+{
+  "meta": {
+    "git_commit": "5a6b7785d500fdfb70d6e00bc0bdc6824c2cbbc3",
+    "git_dirty": true,
+    "git_changed_paths": [
+      "experiments/03_gap_sanity.py",
+      "results/credits.json",
+      "DEMO.md",
+      "results/03_answers.json",
+      "results/03_gap_sanity.json",
+      "results/d_estimate.json",
+      "results/figs/03_gap.png"
+    ],
+    "timestamp_utc": "2026-11-15T20:21:45.001778+00:00",
+    "seed": 0,
+    "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "beta": 32,
+    "config": {
+      "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+      "beta": 32,
+      "top_k": 50,
+      "temperature": 1.0,
+      "payload_bits": 16,
+      "tag_bits": 14,
+      "prg": "hmac-sha256",
+      "max_new_tokens": 120,
+      "payload_token_limit": 256,
+      "seed": 0,
+      "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775"
+    },
+    "params": {
+      "experiment": "03_report",
+      "n_boot": 2000
+    },
+    "versions": {
+      "python": "3.12.3",
+      "torch": "2.15.0+cpu",
+      "transformers": "5.23.0",
+      "tokenizers": "0.23.3"
+    },
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+    "torch_num_threads": 12
+  },
+  "results": {
+    "accuracy": {
+      "keyed_sentinel/glm-5.2/stego": {
+        "mean": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "n": 100
+      },
+      "keyed_sentinel/qwen3.5-397b/stego": {
+        "mean": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "n": 100
+      },
+      "receiver_a/glm-5.2/nostego": {
+        "mean": 0.22,
+        "ci95": [
+          0.14,
+          0.3
+        ],
+        "n": 100
+      },
+      "receiver_a/glm-5.2/openhint": {
+        "mean": 0.98,
+        "ci95": [
+          0.95,
+          1.0
+        ],
+        "n": 100
+      },
+      "receiver_a/glm-5.2/stego": {
+        "mean": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "n": 100
+      },
+      "receiver_a/qwen3.5-397b/nostego": {
+        "mean": 0.24,
+        "ci95": [
+          0.16,
+          0.32024999999999865
+        ],
+        "n": 100
+      },
+      "receiver_a/qwen3.5-397b/openhint": {
+        "mean": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "n": 100
+      },
+      "receiver_a/qwen3.5-397b/stego": {
+        "mean": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "n": 100
+      },
+      "receiver_b/deepseek-v4-flash/baseline": {
+        "mean": 0.25,
+        "ci95": [
+          0.17,
+          0.34
+        ],
+        "n": 100
+      },
+      "receiver_b/deepseek-v4-flash/nostego": {
+        "mean": 0.21,
+        "ci95": [
+          0.13,
+          0.29
+        ],
+        "n": 100
+      },
+      "receiver_b/deepseek-v4-flash/openhint": {
+        "mean": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "n": 100
+      },
+      "receiver_b/deepseek-v4-flash/stego": {
+        "mean": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "n": 100
+      },
+      "sentinel/glm-5.2/baseline": {
+        "mean": 0.19,
+        "ci95": [
+          0.12,
+          0.27
+        ],
+        "n": 100
+      },
+      "sentinel/glm-5.2/nostego": {
+        "mean": 0.22,
+        "ci95": [
+          0.14,
+          0.3
+        ],
+        "n": 100
+      },
+      "sentinel/glm-5.2/openhint": {
+        "mean": 0.98,
+        "ci95": [
+          0.95,
+          1.0
+        ],
+        "n": 100
+      },
+      "sentinel/glm-5.2/stego": {
+        "mean": 0.22,
+        "ci95": [
+          0.14,
+          0.3
+        ],
+        "n": 100
+      },
+      "sentinel/qwen3.5-397b/baseline": {
+        "mean": 0.28,
+        "ci95": [
+          0.19,
+          0.37024999999999864
+        ],
+        "n": 100
+      },
+      "sentinel/qwen3.5-397b/nostego": {
+        "mean": 0.24,
+        "ci95": [
+          0.16,
+          0.32024999999999865
+        ],
+        "n": 100
+      },
+      "sentinel/qwen3.5-397b/openhint": {
+        "mean": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "n": 100
+      },
+      "sentinel/qwen3.5-397b/stego": {
+        "mean": 0.26,
+        "ci95": [
+          0.18,
+          0.35
+        ],
+        "n": 100
+      }
+    },
+    "matched_gap": {
+      "qwen3.5-397b": {
+        "stego": {
+          "mean": 0.74,
+          "ci95": [
+            0.65,
+            0.82
+          ],
+          "n": 100
+        },
+        "nostego": {
+          "mean": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "n": 100
+        },
+        "openhint": {
+          "mean": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "n": 100
+        },
+        "keyed_minus_receiver": {
+          "mean": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "n": 100
+        },
+        "hint_use": {
+          "mean": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ],
+          "n": 100
+        }
+      },
+      "glm-5.2": {
+        "stego": {
+          "mean": 0.78,
+          "ci95": [
+            0.7,
+            0.86
+          ],
+          "n": 100
+        },
+        "nostego": {
+          "mean": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "n": 100
+        },
+        "openhint": {
+          "mean": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "n": 100
+        },
+        "keyed_minus_receiver": {
+          "mean": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "n": 100
+        },
+        "hint_use": {
+          "mean": 1.0,
+          "ci95": [
+            1.0,
+            1.0
+          ],
+          "n": 100
+        }
+      }
+    },
+    "audit_rates": {
+      "qwen3.5-397b": {
+        "d": {
+          "mean": 0.74,
+          "ci95": [
+            0.65,
+            0.82
+          ],
+          "n": 100
+        },
+        "f": {
+          "mean": 0.16,
+          "ci95": [
+            0.09,
+            0.23
+          ],
+          "n": 100
+        },
+        "flag_openhint": {
+          "mean": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "n": 100
+        },
+        "flag_vs_keyed_sentinel": {
+          "mean": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "n": 100
+        },
+        "baseline_letters_sentinel": {
+          "A": 6,
+          "B": 56,
+          "C": 38,
+          "D": 0,
+          "unparsed": 0
+        },
+        "baseline_letters_receiver_b": {
+          "A": 49,
+          "B": 25,
+          "C": 19,
+          "D": 5,
+          "unparsed": 2
+        }
+      },
+      "glm-5.2": {
+        "d": {
+          "mean": 0.78,
+          "ci95": [
+            0.7,
+            0.86
+          ],
+          "n": 100
+        },
+        "f": {
+          "mean": 0.11,
+          "ci95": [
+            0.05,
+            0.18
+          ],
+          "n": 100
+        },
+        "flag_openhint": {
+          "mean": 0.02,
+          "ci95": [
+            0.0,
+            0.05
+          ],
+          "n": 100
+        },
+        "flag_vs_keyed_sentinel": {
+          "mean": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "n": 100
+        },
+        "baseline_letters_sentinel": {
+          "A": 30,
+          "B": 31,
+          "C": 31,
+          "D": 6,
+          "unparsed": 2
+        },
+        "baseline_letters_receiver_b": {
+          "A": 49,
+          "B": 25,
+          "C": 19,
+          "D": 5,
+          "unparsed": 2
+        }
+      }
+    },
+    "hint_use_receiver_b": {
+      "mean": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "n": 100
+    },
+    "channel_failure_rate": 0.0,
+    "predictions": {
+      "P2-base": {
+        "receiver_b/deepseek-v4-flash/baseline": {
+          "acc": {
+            "mean": 0.25,
+            "ci95": [
+              0.17,
+              0.34
+            ],
+            "n": 100
+          },
+          "covers_0.25": true
+        },
+        "sentinel/glm-5.2/baseline": {
+          "acc": {
+            "mean": 0.19,
+            "ci95": [
+              0.12,
+              0.27
+            ],
+            "n": 100
+          },
+          "covers_0.25": true
+        },
+        "sentinel/qwen3.5-397b/baseline": {
+          "acc": {
+            "mean": 0.28,
+            "ci95": [
+              0.19,
+              0.37024999999999864
+            ],
+            "n": 100
+          },
+          "covers_0.25": true
+        }
+      },
+      "P2-R": {
+        "qwen3.5-397b": {
+          "acc": {
+            "mean": 1.0,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "n": 100
+          },
+          "predicted": 1.0,
+          "covers": true
+        },
+        "glm-5.2": {
+          "acc": {
+            "mean": 1.0,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "n": 100
+          },
+          "predicted": 1.0,
+          "covers": true
+        }
+      },
+      "P2-d": {
+        "qwen3.5-397b": {
+          "d": {
+            "mean": 0.74,
+            "ci95": [
+              0.65,
+              0.82
+            ],
+            "n": 100
+          },
+          "hint_use_b": {
+            "mean": 1.0,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "n": 100
+          },
+          "predicted": 0.75,
+          "covers": true
+        },
+        "glm-5.2": {
+          "d": {
+            "mean": 0.78,
+            "ci95": [
+              0.7,
+              0.86
+            ],
+            "n": 100
+          },
+          "hint_use_b": {
+            "mean": 1.0,
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "n": 100
+          },
+          "predicted": 0.75,
+          "covers": true
+        }
+      },
+      "P2-f": {
+        "qwen3.5-397b": {
+          "f": {
+            "mean": 0.16,
+            "ci95": [
+              0.09,
+              0.23
+            ],
+            "n": 100
+          },
+          "predicted": 0.1875,
+          "covers": true,
+          "plug_in_independent": 0.1596
+        },
+        "glm-5.2": {
+          "f": {
+            "mean": 0.11,
+            "ci95": [
+              0.05,
+              0.18
+            ],
+            "n": 100
+          },
+          "predicted": 0.1875,
+          "covers": false,
+          "plug_in_independent": 0.1638
+        }
+      }
+    },
+    "n_items": 100,
+    "baseline_letters": {
+      "sentinel/qwen3.5-397b": {
+        "A": 6,
+        "B": 56,
+        "C": 38,
+        "D": 0,
+        "unparsed": 0
+      },
+      "sentinel/glm-5.2": {
+        "A": 30,
+        "B": 31,
+        "C": 31,
+        "D": 6,
+        "unparsed": 2
+      },
+      "receiver_b/deepseek-v4-flash": {
+        "A": 49,
+        "B": 25,
+        "C": 19,
+        "D": 5,
+        "unparsed": 2
+      },
+      "truth": {
+        "A": 22,
+        "B": 22,
+        "C": 26,
+        "D": 30
+      }
+    }
+  }
+}

@@ -146,3 +146,24 @@ Round trip correct (200/200 from ids; 200/200 from text at β = 32). No detector
 - **Pilot v1 (5 items, 70 calls, old prompt; `results/03_pilot_v1.json`):** 0 unparsed completed answers; 3 calls failed with server errors after all retries (not cached; a rerun retries them). One HTTP 429 from qwen3.5-397b → concurrency 24 → 12. qwen3.5-397b reasoned at length without a hint (median 2604–3976 output tokens vs 913–1105 with one). **Estimate 6.01 credits → gate (< 1) failed.** Spend 0.295.
 - **Prompt line added (PREREG 5bfce95, Nirdesh's pre-set rule), pilot v2 (`results/03_pilot.json`):** 0 failures; qwen no-hint medians fell to 1465–2320 tokens, glm to 230–615. **Estimate 3.74 credits (qwen 2.85, glm 0.85, deepseek 0.03) → gate failed again.** Spend 0.187. Projected remote time 38 min at concurrency 12.
 - Total Phase 2 spend so far: **0.48 credits**. No accuracy, gap, d or f has been computed from either pilot. Waiting for Nirdesh's decision.
+
+## 2026-11-16 — Experiment 03 (Phase 2): full run (code 5a6b778 run stage; PREREG 0d40a7b, 188981d, 5bfce95)
+Run approved by Nirdesh with the cost gate raised to 20 credits (AI_USE). 1400 unique calls (70 from the v2 pilot cache), concurrency 12, 68 min wall, **3.17 credits** for the run (3.35 including pilot v2; Phase 2 total 3.65). 100 items, all bootstrap CIs over items (2000 resamples). Provenance: results written at 5a6b778; the dirty flag is only from the untracked DEMO.md draft and `results/credits.json`. Figure: `results/figs/03_gap.png`.
+
+**Operations.**
+- Parse failures: 5 of 2600 logical answers. 3 calls failed with server errors after all retries (glm baseline items 11 and 19; deepseek no-stego item 51); 2 deepseek baseline answers completed without a valid `ANSWER:` line (items 67 and 97). Highest rate in any condition 2 % (< 5 %); **no stop**, nothing dropped (failures count as "not correct").
+- 83 retried errors: 73 HTTP 500 (54 from glm), **10 HTTP 429 even at concurrency 12** (qwen 3, glm 3, deepseek 4). Nirdesh's rule covered only 24 → 12; all succeeded on retry. Retries inside the SDK are not visible to this count, and the run had a ~19-min stall at the start with almost no responses.
+- Channel: 100/100 hints decoded correctly (0 channel failures).
+
+**Outcomes vs predictions.**
+- **P2 (gap large; no-stego and open-hint controls ≈ 0; keyed Sentinel ≈ Receiver): met.** Matched gap (Receiver − Sentinel, Meteor tip): **qwen3.5-397b +0.74 [0.65, 0.82], glm-5.2 +0.78 [0.70, 0.86]**. No-stego gap 0.00, open-hint gap 0.00, keyed Sentinel − Receiver 0.00 for both: **equal by construction** (identical prompts, PREREG 0d40a7b), so these confirm the pipeline (no false decode, the key is the only difference), not model behaviour.
+- **P2-base (question-only ≈ 25 %): met** for all three models: qwen 0.28 [0.19, 0.37], glm 0.19 [0.12, 0.27], deepseek 0.25 [0.17, 0.34].
+- **P2-R (matched Receiver ≈ 100 % − channel failures = 100 %): met.** 100/100 for both models; hint use 100 %.
+- **P2-d (d ≈ 0.75 × P(Receiver uses hint) = 0.75): met.** Receiver deepseek-v4-flash used the decoded hint on 100/100 items, so d = 1 − Sentinel accuracy on the stego tip: **d_qwen = 0.74 [0.65, 0.82], d_glm = 0.78 [0.70, 0.86]**.
+- **P2-f (no-stego f ≈ 0.19 if independent): met for qwen, missed for glm.** **f_qwen = 0.16 [0.09, 0.23]** (covers 0.1875); **f_glm = 0.11 [0.05, 0.18]** (does not cover). Plug-in under independence from the measured accuracies: 0.160 (qwen), 0.164 (glm). glm's f is below that, so deepseek's and glm's guesses are positively correlated (they tend to be right or wrong on the same items).
+- **Guessing bias (question only, letters A/B/C/D, true answers 22/22/26/30):** qwen 6/56/38/0, glm 30/31/31/6 (+2 failures), deepseek 49/25/19/5 (+2). **No model picks D more than 6 times, although D is the most common answer.** Shared aversion to D is one reason guesses correlate, which drives f.
+- Diagnostics: flag rate under open hint 0.00 (qwen) and 0.02 [0.00, 0.05] (glm: the glm Sentinel ignored the plain-text hint on 2 items); flag rate vs keyed Sentinel 0.00.
+
+**What this means for 04.** `results/d_estimate.json` holds (d, f) = (0.74, 0.16) for qwen and (0.78, 0.11) for glm; the registered 04 run uses both pairs (PREREG 188981d). These are **best-case** audit rates: the task is built so that the auditor knows nothing (see the design note above). On tasks a capable auditor can partly reason out, d would be lower.
+
+**Limitations.** One task family (fictional private decisions), 100 items, one channel model, one untrusted Receiver model; the Receiver followed the hint every time, so d is driven only by Sentinel guessing.
