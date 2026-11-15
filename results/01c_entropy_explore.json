@@ -1,0 +1,117 @@
+{
+  "meta": {
+    "git_commit": "6bb27abe002bc22dbdbd72d73f8c9ca859d23bce",
+    "git_dirty": false,
+    "git_changed_paths": [
+      "results/figs/01c_bits_vs_entropy.png"
+    ],
+    "timestamp_utc": "2026-11-15T09:05:23.150937+00:00",
+    "seed": 0,
+    "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "beta": 32,
+    "config": {
+      "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+      "beta": 32,
+      "top_k": 50,
+      "temperature": 1.0,
+      "payload_bits": 16,
+      "tag_bits": 8,
+      "prg": "hmac-sha256",
+      "max_new_tokens": 120,
+      "payload_token_limit": 256,
+      "seed": 0,
+      "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775"
+    },
+    "params": {
+      "experiment": "01c_entropy_explore",
+      "n_per_beta": 30,
+      "L": 16
+    },
+    "versions": {
+      "python": "3.12.3",
+      "torch": "2.15.0+cpu",
+      "transformers": "5.23.0",
+      "tokenizers": "0.23.3"
+    },
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+    "torch_num_threads": 1
+  },
+  "results": {
+    "exploratory": true,
+    "preregistered": false,
+    "source": "results/01_meteor_roundtrip.json",
+    "source_git_commit": "fdb3cda4287555c74703f427cb80e329d5ea2c8e",
+    "per_beta": {
+      "32": {
+        "n_messages": 30,
+        "payload_steps": 527,
+        "entropy_mean_bits": 1.6799944382632792,
+        "entropy_median_bits": 1.4488667800568054,
+        "bits_mean": 0.9791271347248577,
+        "efficiency_raw": 0.5828157001144872,
+        "efficiency_capped": 0.5421541396413835,
+        "ratio_n_over_H": {
+          "mean": 0.7087614956143464,
+          "median": 0.0,
+          "p10": 0.0,
+          "p90": 1.3159071477901507
+        },
+        "steps_with_H_zero": 0,
+        "pearson_n_H": 0.3706736522315763
+      },
+      "8": {
+        "n_messages": 30,
+        "payload_steps": 582,
+        "entropy_mean_bits": 1.6609755364684515,
+        "entropy_median_bits": 1.4017094742902758,
+        "bits_mean": 0.8780068728522337,
+        "efficiency_raw": 0.5286091538223631,
+        "efficiency_capped": 0.4965408881305954,
+        "ratio_n_over_H": {
+          "mean": 0.40103668135113857,
+          "median": 0.0,
+          "p10": 0.0,
+          "p90": 1.3438716481981536
+        },
+        "steps_with_H_zero": 0,
+        "pearson_n_H": 0.44054413195638165
+      },
+      "12": {
+        "n_messages": 30,
+        "payload_steps": 529,
+        "entropy_mean_bits": 1.6556458079729635,
+        "entropy_median_bits": 1.4036825277989087,
+        "bits_mean": 1.0340264650283555,
+        "efficiency_raw": 0.6245456969412633,
+        "efficiency_capped": 0.5480474123067759,
+        "ratio_n_over_H": {
+          "mean": 0.5424397628862991,
+          "median": 0.0,
+          "p10": 0.0,
+          "p90": 1.3390969906953563
+        },
+        "steps_with_H_zero": 0,
+        "pearson_n_H": 0.46506234701936916
+      },
+      "16": {
+        "n_messages": 30,
+        "payload_steps": 625,
+        "entropy_mean_bits": 1.6909796005788975,
+        "entropy_median_bits": 1.4368867338448943,
+        "bits_mean": 0.8384,
+        "efficiency_raw": 0.49580728218896214,
+        "efficiency_capped": 0.45417460963874395,
+        "ratio_n_over_H": {
+          "mean": 0.36605130215626913,
+          "median": 0.0,
+          "p10": 0.0,
+          "p90": 1.1643114155262138
+        },
+        "steps_with_H_zero": 0,
+        "pearson_n_H": 0.4599388093373935
+      }
+    },
+    "wall_s": 277.8
+  }
+}

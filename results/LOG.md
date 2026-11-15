@@ -41,3 +41,22 @@ Setup as pre-registered: Qwen2.5-0.5B-Instruct @ 7ae5576, CPU, top-k 50, T = 1.0
 
 ### Provenance note: `git_dirty: true` in both JSONs
 Both result files record `git_dirty: true`. Cause: experiment 01 writes a checkpoint of its own result file after each β run. That new untracked file in `results/` made the next metadata stamp count the tree as dirty, and 01b likewise saw 01's outputs. Evidence that the code that ran is exactly commit fdb3cda: `git status` lists only the four untracked result files, and `git diff --stat fdb3cda` is empty. The result files are committed as produced, unedited. `provenance.py` is fixed in the next code commit to ignore `results/` and to record the list of changed paths.
+
+## Exploratory (not pre-registered) — 01c: per-step entropy and efficiency (code 6bb27ab)
+
+Requested by Nirdesh after experiment 01 had started; see PREREG.md → Deviations. No prediction was made. Files: `results/01c_entropy_explore.json`, `results/figs/01c_bits_vs_entropy.png`.
+Method: the first 30 messages of each β run in 01. The model was replayed over 01's saved token ids (no new encoding); every saved token was found in the replayed top-k. H = entropy (bits) of the renormalised top-k (k = 50) distribution Meteor sampled from at each payload step, with EOS masked. That is the entropy of the top-k distribution, not of the full-vocabulary model. "Efficiency" is this project's own ratio, sum(bits) / sum(H); it is not claimed to match any definition in the Meteor paper (not checked against the PDF).
+
+| β | payload steps | mean H (bits) | mean bits/step | efficiency raw | efficiency capped at 16 bits | corr(bits, H) |
+|---|---|---|---|---|---|---|
+| 32 | 527 | 1.68 | 0.98 | **0.58** | 0.54 | 0.37 |
+| 8 | 582 | 1.66 | 0.88 | 0.53 | 0.50 | 0.44 |
+| 12 | 529 | 1.66 | 1.03 | 0.62 | 0.55 | 0.47 |
+| 16 | 625 | 1.69 | 0.84 | 0.50 | 0.45 | 0.46 |
+
+What was seen, in plain sentences:
+- At β = 32, Meteor carried about **0.58 bits per bit of top-k entropy** (0.54 counting only the 16 payload bits).
+- **About 60 % of payload steps carried 0 bits** (61.7 % in these 30 messages; 60.4 % over all 200 at β = 32 from 01's saved data). On those steps the chosen interval straddled a high-bit boundary, so no prefix was fixed. The bits come in bursts: up to 11–12 bits on one step when a low-probability token was chosen.
+- Bits carried rise with entropy (binned means go from ~0.2 bits at H < 0.5 to ~2 bits at H > 2.5; Pearson 0.37), but most low-entropy steps carry nothing.
+- Mean top-k entropy at the start of a study-tip reply is low (~1.7 bits/step). That, together with the ~0.58 ratio, explains most of the capacity miss in experiment 01: ~1 bit per token, so ~16 tokens for 16 bits.
+- Differences between β values here (0.50–0.62) come from 30 messages and different texts; no claim is made about a β effect on efficiency.
