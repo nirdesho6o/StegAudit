@@ -204,3 +204,13 @@ def test_cfg_must_match_model():
     # beta / token limits may differ from the loaded model's cfg
     enc = encode(lm, KEYS, "p", rand_msg(lm.cfg), 0, cfg=MeteorConfig(top_k=20, beta=16, max_new_tokens=0))
     assert decode(lm, KEYS, "p", enc.text, 0, cfg=MeteorConfig(top_k=20, beta=16)).ok
+
+def test_vanished_split_payload_vs_cover():
+    """Small beta + flat-ish toy dist so that some tokens vanish; payload count <= total."""
+    lm = toy(beta=4, max_new_tokens=40)
+    tot = pay = 0
+    for i in range(20):
+        enc = encode(lm, KEYS, "p", rand_msg(lm.cfg), msg_id=i)
+        assert 0 <= enc.n_vanished_payload <= enc.n_vanished
+        tot, pay = tot + enc.n_vanished, pay + enc.n_vanished_payload
+    assert tot > pay > 0                                       # both phases see vanishing at beta = 4

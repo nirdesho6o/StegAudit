@@ -208,6 +208,7 @@ class EncodeResult:
     eos_masked_steps: int              # payload steps where EOS would have been in the top-k
     eos_mass_removed: float            # sum over payload steps of EOS probability removed
     n_vanished: int                    # vanished tokens summed over ALL steps (payload + cover)
+    n_vanished_payload: int            # ... over payload steps only
     n_cover_tokens: int
     stop_reason: str                   # "eos" or "max_new_tokens"
 
@@ -264,6 +265,7 @@ def encode(lm, keys: StegoKeys, prompt: str, message_bits, msg_id: int,
         vanished += qd.n_vanished
         ptr = min(L, ptr + n)
     n_payload = len(ids)
+    vanished_payload = vanished
 
     # cover phase: ordinary keyed sampling until EOS or max_new_tokens
     stop_reason = "max_new_tokens"
@@ -281,7 +283,8 @@ def encode(lm, keys: StegoKeys, prompt: str, message_bits, msg_id: int,
         cstep += 1
 
     return EncodeResult(ids, lm.ids_to_text(ids), msg_id, payload, n_payload, bits_per_token,
-                        int(eos_steps), eos_mass, vanished, len(ids) - n_payload, stop_reason)
+                        int(eos_steps), eos_mass, vanished, vanished_payload,
+                        len(ids) - n_payload, stop_reason)
 
 
 def read_intervals(lm, prompt: str, ids, cfg: MeteorConfig | None = None):
