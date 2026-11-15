@@ -55,5 +55,37 @@
       "unpriced_calls": 0,
       "note": "Run crashed before save_credits; reconstructed from the 385 cached completed responses. Timed-out attempts (~18 on one item) returned no usage and may have been billed: unknown, worst case ~0.02 credits."
     }
+  },
+  "03_gap": {
+    "deepseek-v4-flash": {
+      "calls": 19,
+      "cache_hits": 0,
+      "retries": 7,
+      "input_tokens": 6170,
+      "output_tokens": 14241,
+      "reasoning_tokens": 14126,
+      "credits": 0.0021655330000000003,
+      "unpriced_calls": 0
+    },
+    "glm-5.2": {
+      "calls": 23,
+      "cache_hits": 0,
+      "retries": 12,
+      "input_tokens": 6124,
+      "output_tokens": 14545,
+      "reasoning_tokens": 13224,
+      "credits": 0.064634896,
+      "unpriced_calls": 0
+    },
+    "qwen3.5-397b": {
+      "calls": 25,
+      "cache_hits": 0,
+      "retries": 3,
+      "input_tokens": 6621,
+      "output_tokens": 64091,
+      "reasoning_tokens": 61848,
+      "credits": 0.22796004999999997,
+      "unpriced_calls": 0
+    }
   }
 }

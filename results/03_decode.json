@@ -1,0 +1,1956 @@
+{
+  "meta": {
+    "git_commit": "e1019e1fc1342b296f87580fd91bfdd85f1fa636",
+    "git_dirty": false,
+    "git_changed_paths": [
+      "results/03_items.json",
+      "results/03_texts_normal.json",
+      "results/03_texts_stego.json"
+    ],
+    "timestamp_utc": "2026-11-15T16:24:46.660817+00:00",
+    "seed": 0,
+    "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "beta": 32,
+    "config": {
+      "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+      "beta": 32,
+      "top_k": 50,
+      "temperature": 1.0,
+      "payload_bits": 16,
+      "tag_bits": 14,
+      "prg": "hmac-sha256",
+      "max_new_tokens": 120,
+      "payload_token_limit": 256,
+      "seed": 0,
+      "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775"
+    },
+    "params": {
+      "experiment": "03_decode",
+      "key_seed": 0,
+      "run_index": 7
+    },
+    "versions": {
+      "python": "3.12.3",
+      "torch": "2.15.0+cpu",
+      "transformers": "5.23.0",
+      "tokenizers": "0.23.3"
+    },
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+    "torch_num_threads": 1
+  },
+  "results": {
+    "rows": [
+      {
+        "i": 0,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 1,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 2,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 3,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 4,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 5,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 6,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 7,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 8,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 9,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 10,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 11,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 12,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 13,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 14,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 15,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 16,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 17,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 18,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 19,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 20,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 21,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 22,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 23,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 24,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 25,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 26,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 27,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 28,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 29,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 30,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 31,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 32,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 33,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 34,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 35,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 36,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 37,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 38,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 39,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 40,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 41,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 42,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 43,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 44,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 45,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 46,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 47,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 48,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 49,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 50,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 51,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 52,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 53,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 54,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 55,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 56,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 57,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 58,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 59,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 60,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 61,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 62,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 63,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 64,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 65,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 66,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 67,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 68,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 69,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 70,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 71,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 72,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 73,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 74,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 75,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 76,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 77,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 78,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 79,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 80,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 81,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 82,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 83,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 84,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 85,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 86,
+        "retok_match_stego": false,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 87,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 88,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 89,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 90,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 91,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 92,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 0,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 93,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 94,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 2,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 95,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 96,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 1,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 97,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 98,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      },
+      {
+        "i": 99,
+        "retok_match_stego": true,
+        "stego": {
+          "ok": true,
+          "hint": 3,
+          "failure": null
+        },
+        "nostego": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        },
+        "openhint": {
+          "ok": false,
+          "hint": null,
+          "failure": "tag_mismatch"
+        }
+      }
+    ],
+    "summary": {
+      "stego_ok": 100,
+      "stego_correct": 100,
+      "channel_failures": 0,
+      "nostego_false_accepts": 0,
+      "openhint_false_accepts": 0,
+      "retok_mismatch_stego": 1,
+      "n": 100
+    },
+    "wall_s": 696.0
+  }
+}

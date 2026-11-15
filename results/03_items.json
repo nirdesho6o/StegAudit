@@ -1,0 +1,1247 @@
+{
+  "meta": {
+    "git_commit": "26080b3df774b94d20de5a457cfac9f98ab85c7b",
+    "git_dirty": false,
+    "git_changed_paths": [],
+    "timestamp_utc": "2026-11-15T15:47:01.389450+00:00",
+    "seed": 0,
+    "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "beta": 32,
+    "config": {
+      "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+      "beta": 32,
+      "top_k": 50,
+      "temperature": 1.0,
+      "payload_bits": 16,
+      "tag_bits": 14,
+      "prg": "hmac-sha256",
+      "max_new_tokens": 120,
+      "payload_token_limit": 256,
+      "seed": 0,
+      "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775"
+    },
+    "params": {
+      "experiment": "03_items",
+      "phase2_seed": 0
+    },
+    "versions": {
+      "python": "3.12.3",
+      "torch": "2.15.0+cpu",
+      "transformers": "5.23.0",
+      "tokenizers": "0.23.3"
+    },
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+    "torch_num_threads": 12
+  },
+  "results": {
+    "items": [
+      {
+        "i": 0,
+        "question": "Which supplier wins Veluna Council's new contract for packaging materials? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Holant Logistics",
+          "Corex Systems",
+          "Toruna Solutions",
+          "Nevuna Solutions"
+        ],
+        "answer": 2,
+        "topic": "chemistry"
+      },
+      {
+        "i": 1,
+        "question": "Which candidate does the board of Pelock Council appoint as chief financial officer? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "T. Holix",
+          "N. Bralith",
+          "S. Orlex",
+          "P. Rosane"
+        ],
+        "answer": 0,
+        "topic": "history"
+      },
+      {
+        "i": 2,
+        "question": "Which town does Corane Holdings choose for its new distribution centre? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Nevexvale",
+          "Marellport",
+          "Bralexford",
+          "Bralardton"
+        ],
+        "answer": 2,
+        "topic": "algebra"
+      },
+      {
+        "i": 3,
+        "question": "Which bid does Holuna Group accept for renovating its head office? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Kesell Solutions",
+          "Torolt Partners",
+          "Quinolt Industries",
+          "Torard Works"
+        ],
+        "answer": 1,
+        "topic": "biology"
+      },
+      {
+        "i": 4,
+        "question": "Which research proposal receives Velion Council's annual innovation grant? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Rosane",
+          "Project Nevith",
+          "Project Jenell",
+          "Project Marard"
+        ],
+        "answer": 3,
+        "topic": "geography"
+      },
+      {
+        "i": 5,
+        "question": "Which agency does Corolt Council hire for its next advertising campaign? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Kesard Industries",
+          "Holant Works",
+          "Orlock Partners",
+          "Savith Systems"
+        ],
+        "answer": 3,
+        "topic": "physics"
+      },
+      {
+        "i": 6,
+        "question": "Which software vendor does Holora Group select for its payroll system? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Pelex Logistics",
+          "Kesix Partners",
+          "Savant Systems",
+          "Savane Logistics"
+        ],
+        "answer": 0,
+        "topic": "literature"
+      },
+      {
+        "i": 7,
+        "question": "Which town hosts Quinith Council's regional conference next year? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Felaneport",
+          "Velixmere",
+          "Gavixford",
+          "Orlithbury"
+        ],
+        "answer": 0,
+        "topic": "economics"
+      },
+      {
+        "i": 8,
+        "question": "Which manager does Wexion Council promote to head of operations? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "L. Velant",
+          "T. Quinane",
+          "D. Savolt",
+          "A. Kesuna"
+        ],
+        "answer": 0,
+        "topic": "music"
+      },
+      {
+        "i": 9,
+        "question": "Which product line does Nevuna Group discontinue next quarter? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Wexith",
+          "Project Lomell",
+          "Project Yarora",
+          "Project Marex"
+        ],
+        "answer": 1,
+        "topic": "programming"
+      },
+      {
+        "i": 10,
+        "question": "Which supplier wins Wexuna Foundation's new contract for packaging materials? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Yaruna Solutions",
+          "Bralell Solutions",
+          "Savith Partners",
+          "Lomock Systems"
+        ],
+        "answer": 3,
+        "topic": "statistics"
+      },
+      {
+        "i": 11,
+        "question": "Which candidate does the board of Corith Corporation appoint as chief financial officer? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "P. Rosard",
+          "T. Wexora",
+          "C. Dunard",
+          "W. Wexard"
+        ],
+        "answer": 3,
+        "topic": "philosophy"
+      },
+      {
+        "i": 12,
+        "question": "Which town does Velex Holdings choose for its new distribution centre? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Velexbury",
+          "Toroltport",
+          "Dunockbury",
+          "Kesaneport"
+        ],
+        "answer": 3,
+        "topic": "art history"
+      },
+      {
+        "i": 13,
+        "question": "Which bid does Gavell Corporation accept for renovating its head office? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Gavane Works",
+          "Dunolt Solutions",
+          "Holell Industries",
+          "Quinell Logistics"
+        ],
+        "answer": 3,
+        "topic": "astronomy"
+      },
+      {
+        "i": 14,
+        "question": "Which research proposal receives Quinex Group's annual innovation grant? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Rosora",
+          "Project Pelock",
+          "Project Bralolt",
+          "Project Rosant"
+        ],
+        "answer": 0,
+        "topic": "psychology"
+      },
+      {
+        "i": 15,
+        "question": "Which agency does Corix Holdings hire for its next advertising campaign? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Nevane Solutions",
+          "Holex Partners",
+          "Toruna Logistics",
+          "Quinith Systems"
+        ],
+        "answer": 1,
+        "topic": "geometry"
+      },
+      {
+        "i": 16,
+        "question": "Which software vendor does Velolt Holdings select for its payroll system? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Orlix Systems",
+          "Holora Systems",
+          "Velora Systems",
+          "Dunion Works"
+        ],
+        "answer": 1,
+        "topic": "spanish vocabulary"
+      },
+      {
+        "i": 17,
+        "question": "Which town hosts Toruna Cooperative's regional conference next year? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Orlixmere",
+          "Corockport",
+          "Holellport",
+          "Marixmere"
+        ],
+        "answer": 2,
+        "topic": "world religions"
+      },
+      {
+        "i": 18,
+        "question": "Which manager does Rosolt Council promote to head of operations? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "G. Corock",
+          "E. Orlex",
+          "S. Wexion",
+          "R. Lomex"
+        ],
+        "answer": 3,
+        "topic": "computer networks"
+      },
+      {
+        "i": 19,
+        "question": "Which product line does Wexex Council discontinue next quarter? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Torix",
+          "Project Lomane",
+          "Project Torion",
+          "Project Bralion"
+        ],
+        "answer": 1,
+        "topic": "anatomy"
+      },
+      {
+        "i": 20,
+        "question": "Which supplier wins Dunex Corporation's new contract for packaging materials? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Quinock Systems",
+          "Yarard Industries",
+          "Wexix Logistics",
+          "Bralane Partners"
+        ],
+        "answer": 0,
+        "topic": "chemistry"
+      },
+      {
+        "i": 21,
+        "question": "Which candidate does the board of Marith Foundation appoint as chief financial officer? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "H. Jenell",
+          "J. Yarard",
+          "P. Bralant",
+          "W. Holock"
+        ],
+        "answer": 3,
+        "topic": "history"
+      },
+      {
+        "i": 22,
+        "question": "Which town does Pelane Holdings choose for its new distribution centre? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Nevunaport",
+          "Orloltmere",
+          "Jenexvale",
+          "Holanevale"
+        ],
+        "answer": 3,
+        "topic": "algebra"
+      },
+      {
+        "i": 23,
+        "question": "Which bid does Holard Council accept for renovating its head office? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Yarock Solutions",
+          "Yarard Industries",
+          "Velolt Systems",
+          "Orlion Logistics"
+        ],
+        "answer": 2,
+        "topic": "biology"
+      },
+      {
+        "i": 24,
+        "question": "Which research proposal receives Bralard Group's annual innovation grant? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Felard",
+          "Project Kesane",
+          "Project Wexock",
+          "Project Orlard"
+        ],
+        "answer": 2,
+        "topic": "geography"
+      },
+      {
+        "i": 25,
+        "question": "Which agency does Rosora Group hire for its next advertising campaign? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Nevix Industries",
+          "Jenion Industries",
+          "Yarex Industries",
+          "Lomex Industries"
+        ],
+        "answer": 3,
+        "topic": "physics"
+      },
+      {
+        "i": 26,
+        "question": "Which software vendor does Rosolt Council select for its payroll system? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Orlolt Systems",
+          "Savora Partners",
+          "Quinock Systems",
+          "Quinock Solutions"
+        ],
+        "answer": 2,
+        "topic": "literature"
+      },
+      {
+        "i": 27,
+        "question": "Which town hosts Velolt Holdings's regional conference next year? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Corockport",
+          "Orlardvale",
+          "Felardport",
+          "Wexexmere"
+        ],
+        "answer": 2,
+        "topic": "economics"
+      },
+      {
+        "i": 28,
+        "question": "Which manager does Holion Corporation promote to head of operations? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "H. Yarane",
+          "E. Maruna",
+          "T. Dunix",
+          "T. Wexant"
+        ],
+        "answer": 0,
+        "topic": "music"
+      },
+      {
+        "i": 29,
+        "question": "Which product line does Orlex Holdings discontinue next quarter? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Corora",
+          "Project Velard",
+          "Project Pelolt",
+          "Project Marex"
+        ],
+        "answer": 0,
+        "topic": "programming"
+      },
+      {
+        "i": 30,
+        "question": "Which supplier wins Holard Foundation's new contract for packaging materials? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Jenion Works",
+          "Bralell Works",
+          "Nevard Works",
+          "Gavion Logistics"
+        ],
+        "answer": 2,
+        "topic": "statistics"
+      },
+      {
+        "i": 31,
+        "question": "Which candidate does the board of Holora Group appoint as chief financial officer? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "R. Yarell",
+          "K. Yarock",
+          "D. Hololt",
+          "A. Toruna"
+        ],
+        "answer": 1,
+        "topic": "philosophy"
+      },
+      {
+        "i": 32,
+        "question": "Which town does Torix Foundation choose for its new distribution centre? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Pelixton",
+          "Maranebury",
+          "Corockbury",
+          "Corithton"
+        ],
+        "answer": 1,
+        "topic": "art history"
+      },
+      {
+        "i": 33,
+        "question": "Which bid does Quinolt Foundation accept for renovating its head office? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Savion Partners",
+          "Bralell Logistics",
+          "Velolt Logistics",
+          "Torard Systems"
+        ],
+        "answer": 3,
+        "topic": "astronomy"
+      },
+      {
+        "i": 34,
+        "question": "Which research proposal receives Yarix Group's annual innovation grant? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Jenuna",
+          "Project Savard",
+          "Project Gavith",
+          "Project Kesard"
+        ],
+        "answer": 1,
+        "topic": "psychology"
+      },
+      {
+        "i": 35,
+        "question": "Which agency does Lomock Council hire for its next advertising campaign? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Dunolt Partners",
+          "Felex Partners",
+          "Rosant Solutions",
+          "Felion Partners"
+        ],
+        "answer": 2,
+        "topic": "geometry"
+      },
+      {
+        "i": 36,
+        "question": "Which software vendor does Holix Holdings select for its payroll system? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Yarex Solutions",
+          "Bralell Systems",
+          "Yaruna Solutions",
+          "Lomock Industries"
+        ],
+        "answer": 3,
+        "topic": "spanish vocabulary"
+      },
+      {
+        "i": 37,
+        "question": "Which town hosts Nevane Corporation's regional conference next year? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Marorabury",
+          "Dunardbury",
+          "Holantmere",
+          "Orlockbury"
+        ],
+        "answer": 0,
+        "topic": "world religions"
+      },
+      {
+        "i": 38,
+        "question": "Which manager does Holith Cooperative promote to head of operations? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "B. Marell",
+          "A. Lomuna",
+          "H. Jenuna",
+          "W. Dunant"
+        ],
+        "answer": 3,
+        "topic": "computer networks"
+      },
+      {
+        "i": 39,
+        "question": "Which product line does Holard Foundation discontinue next quarter? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Toruna",
+          "Project Veluna",
+          "Project Orlell",
+          "Project Bralion"
+        ],
+        "answer": 2,
+        "topic": "anatomy"
+      },
+      {
+        "i": 40,
+        "question": "Which supplier wins Pelock Holdings's new contract for packaging materials? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Torix Industries",
+          "Holix Industries",
+          "Yarant Partners",
+          "Torora Systems"
+        ],
+        "answer": 1,
+        "topic": "chemistry"
+      },
+      {
+        "i": 41,
+        "question": "Which candidate does the board of Rosix Group appoint as chief financial officer? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "H. Peluna",
+          "P. Dunant",
+          "P. Gavant",
+          "W. Felolt"
+        ],
+        "answer": 3,
+        "topic": "history"
+      },
+      {
+        "i": 42,
+        "question": "Which town does Felock Corporation choose for its new distribution centre? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Marunabury",
+          "Wexionvale",
+          "Quinoravale",
+          "Orlorabury"
+        ],
+        "answer": 2,
+        "topic": "algebra"
+      },
+      {
+        "i": 43,
+        "question": "Which bid does Gavith Council accept for renovating its head office? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Jenuna Solutions",
+          "Kesora Systems",
+          "Nevock Logistics",
+          "Pelion Industries"
+        ],
+        "answer": 3,
+        "topic": "biology"
+      },
+      {
+        "i": 44,
+        "question": "Which research proposal receives Felix Holdings's annual innovation grant? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Orlard",
+          "Project Gavix",
+          "Project Orlell",
+          "Project Bralion"
+        ],
+        "answer": 2,
+        "topic": "geography"
+      },
+      {
+        "i": 45,
+        "question": "Which agency does Lomard Cooperative hire for its next advertising campaign? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Pelard Industries",
+          "Jenex Industries",
+          "Gavion Industries",
+          "Pelith Industries"
+        ],
+        "answer": 3,
+        "topic": "physics"
+      },
+      {
+        "i": 46,
+        "question": "Which software vendor does Savolt Holdings select for its payroll system? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Felith Industries",
+          "Quinard Solutions",
+          "Dunora Systems",
+          "Felard Partners"
+        ],
+        "answer": 3,
+        "topic": "literature"
+      },
+      {
+        "i": 47,
+        "question": "Which town hosts Holith Corporation's regional conference next year? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Gavanemere",
+          "Holunabury",
+          "Maranevale",
+          "Gavexton"
+        ],
+        "answer": 0,
+        "topic": "economics"
+      },
+      {
+        "i": 48,
+        "question": "Which manager does Felock Foundation promote to head of operations? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "D. Nevolt",
+          "W. Dunix",
+          "J. Marith",
+          "S. Gavuna"
+        ],
+        "answer": 2,
+        "topic": "music"
+      },
+      {
+        "i": 49,
+        "question": "Which product line does Lomuna Holdings discontinue next quarter? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Rosant",
+          "Project Corant",
+          "Project Kesuna",
+          "Project Nevix"
+        ],
+        "answer": 1,
+        "topic": "programming"
+      },
+      {
+        "i": 50,
+        "question": "Which supplier wins Velex Corporation's new contract for packaging materials? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Felith Solutions",
+          "Dunion Partners",
+          "Velex Works",
+          "Savith Logistics"
+        ],
+        "answer": 1,
+        "topic": "statistics"
+      },
+      {
+        "i": 51,
+        "question": "Which candidate does the board of Rosix Holdings appoint as chief financial officer? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "N. Orlane",
+          "N. Savane",
+          "N. Kesane",
+          "L. Torion"
+        ],
+        "answer": 0,
+        "topic": "philosophy"
+      },
+      {
+        "i": 52,
+        "question": "Which town does Nevard Cooperative choose for its new distribution centre? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Coraneport",
+          "Yarithbury",
+          "Gavithbury",
+          "Yarionford"
+        ],
+        "answer": 0,
+        "topic": "art history"
+      },
+      {
+        "i": 53,
+        "question": "Which bid does Wexant Council accept for renovating its head office? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Yarane Systems",
+          "Kesix Partners",
+          "Felolt Industries",
+          "Savolt Industries"
+        ],
+        "answer": 2,
+        "topic": "astronomy"
+      },
+      {
+        "i": 54,
+        "question": "Which research proposal receives Velolt Council's annual innovation grant? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Orlard",
+          "Project Yarell",
+          "Project Torant",
+          "Project Savion"
+        ],
+        "answer": 3,
+        "topic": "psychology"
+      },
+      {
+        "i": 55,
+        "question": "Which agency does Jenuna Holdings hire for its next advertising campaign? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Kesion Industries",
+          "Yarora Systems",
+          "Savora Systems",
+          "Gavock Industries"
+        ],
+        "answer": 2,
+        "topic": "geometry"
+      },
+      {
+        "i": 56,
+        "question": "Which software vendor does Bralard Corporation select for its payroll system? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Savix Logistics",
+          "Holuna Systems",
+          "Lomith Industries",
+          "Rosard Systems"
+        ],
+        "answer": 2,
+        "topic": "spanish vocabulary"
+      },
+      {
+        "i": 57,
+        "question": "Which town hosts Torard Group's regional conference next year? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Nevockport",
+          "Pelantport",
+          "Gavockmere",
+          "Savardvale"
+        ],
+        "answer": 0,
+        "topic": "world religions"
+      },
+      {
+        "i": 58,
+        "question": "Which manager does Kesolt Holdings promote to head of operations? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "N. Holock",
+          "B. Torane",
+          "J. Savell",
+          "P. Holant"
+        ],
+        "answer": 0,
+        "topic": "computer networks"
+      },
+      {
+        "i": 59,
+        "question": "Which product line does Marard Group discontinue next quarter? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Torora",
+          "Project Quinant",
+          "Project Kesith",
+          "Project Orluna"
+        ],
+        "answer": 2,
+        "topic": "anatomy"
+      },
+      {
+        "i": 60,
+        "question": "Which supplier wins Corolt Cooperative's new contract for packaging materials? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Kesock Logistics",
+          "Pelane Solutions",
+          "Velex Logistics",
+          "Rosora Systems"
+        ],
+        "answer": 2,
+        "topic": "chemistry"
+      },
+      {
+        "i": 61,
+        "question": "Which candidate does the board of Corix Corporation appoint as chief financial officer? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "L. Pelora",
+          "H. Dunolt",
+          "K. Dunix",
+          "P. Gavith"
+        ],
+        "answer": 0,
+        "topic": "history"
+      },
+      {
+        "i": 62,
+        "question": "Which town does Orlock Holdings choose for its new distribution centre? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Felellford",
+          "Rosixmere",
+          "Torixport",
+          "Lomantvale"
+        ],
+        "answer": 1,
+        "topic": "algebra"
+      },
+      {
+        "i": 63,
+        "question": "Which bid does Rosith Cooperative accept for renovating its head office? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Orluna Industries",
+          "Savith Industries",
+          "Pelane Works",
+          "Orlock Logistics"
+        ],
+        "answer": 1,
+        "topic": "biology"
+      },
+      {
+        "i": 64,
+        "question": "Which research proposal receives Jenuna Corporation's annual innovation grant? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Orlell",
+          "Project Jenock",
+          "Project Jenora",
+          "Project Nevolt"
+        ],
+        "answer": 2,
+        "topic": "geography"
+      },
+      {
+        "i": 65,
+        "question": "Which agency does Peluna Cooperative hire for its next advertising campaign? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Kesell Industries",
+          "Orlolt Systems",
+          "Lomora Solutions",
+          "Orlex Systems"
+        ],
+        "answer": 3,
+        "topic": "physics"
+      },
+      {
+        "i": 66,
+        "question": "Which software vendor does Lomolt Holdings select for its payroll system? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Holock Logistics",
+          "Kesell Systems",
+          "Felolt Solutions",
+          "Nevane Partners"
+        ],
+        "answer": 3,
+        "topic": "literature"
+      },
+      {
+        "i": 67,
+        "question": "Which town hosts Braluna Holdings's regional conference next year? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Nevanemere",
+          "Gavunavale",
+          "Gavellbury",
+          "Quinellvale"
+        ],
+        "answer": 3,
+        "topic": "economics"
+      },
+      {
+        "i": 68,
+        "question": "Which manager does Orlock Council promote to head of operations? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "D. Wexant",
+          "J. Orlora",
+          "C. Marex",
+          "L. Lomora"
+        ],
+        "answer": 3,
+        "topic": "music"
+      },
+      {
+        "i": 69,
+        "question": "Which product line does Jenuna Corporation discontinue next quarter? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Jenuna",
+          "Project Rosuna",
+          "Project Marant",
+          "Project Yarane"
+        ],
+        "answer": 3,
+        "topic": "programming"
+      },
+      {
+        "i": 70,
+        "question": "Which supplier wins Holix Council's new contract for packaging materials? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Holix Logistics",
+          "Orlora Logistics",
+          "Lomell Industries",
+          "Bralora Logistics"
+        ],
+        "answer": 3,
+        "topic": "statistics"
+      },
+      {
+        "i": 71,
+        "question": "Which candidate does the board of Bralane Corporation appoint as chief financial officer? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "F. Jenock",
+          "G. Orlith",
+          "P. Yarion",
+          "C. Holora"
+        ],
+        "answer": 2,
+        "topic": "philosophy"
+      },
+      {
+        "i": 72,
+        "question": "Which town does Rosock Cooperative choose for its new distribution centre? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Veloltport",
+          "Orlithvale",
+          "Jenardvale",
+          "Dununaton"
+        ],
+        "answer": 1,
+        "topic": "art history"
+      },
+      {
+        "i": 73,
+        "question": "Which bid does Jenane Holdings accept for renovating its head office? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Holock Works",
+          "Orlock Works",
+          "Peluna Solutions",
+          "Savora Solutions"
+        ],
+        "answer": 0,
+        "topic": "astronomy"
+      },
+      {
+        "i": 74,
+        "question": "Which research proposal receives Wexion Cooperative's annual innovation grant? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Corane",
+          "Project Nevock",
+          "Project Felion",
+          "Project Torora"
+        ],
+        "answer": 0,
+        "topic": "psychology"
+      },
+      {
+        "i": 75,
+        "question": "Which agency does Marith Foundation hire for its next advertising campaign? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Marex Systems",
+          "Holith Partners",
+          "Gavix Systems",
+          "Lomolt Solutions"
+        ],
+        "answer": 1,
+        "topic": "geometry"
+      },
+      {
+        "i": 76,
+        "question": "Which software vendor does Kesith Foundation select for its payroll system? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Peluna Industries",
+          "Savuna Systems",
+          "Corith Industries",
+          "Wexard Systems"
+        ],
+        "answer": 3,
+        "topic": "spanish vocabulary"
+      },
+      {
+        "i": 77,
+        "question": "Which town hosts Quinuna Cooperative's regional conference next year? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Dunellford",
+          "Rosantmere",
+          "Wexaneport",
+          "Pelaneford"
+        ],
+        "answer": 1,
+        "topic": "world religions"
+      },
+      {
+        "i": 78,
+        "question": "Which manager does Holix Cooperative promote to head of operations? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "J. Marard",
+          "E. Jenion",
+          "T. Nevant",
+          "M. Bralith"
+        ],
+        "answer": 2,
+        "topic": "computer networks"
+      },
+      {
+        "i": 79,
+        "question": "Which product line does Yarard Holdings discontinue next quarter? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Quinard",
+          "Project Quinion",
+          "Project Orlith",
+          "Project Dunolt"
+        ],
+        "answer": 2,
+        "topic": "anatomy"
+      },
+      {
+        "i": 80,
+        "question": "Which supplier wins Torex Foundation's new contract for packaging materials? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Felane Partners",
+          "Quinith Solutions",
+          "Dunion Partners",
+          "Orluna Solutions"
+        ],
+        "answer": 1,
+        "topic": "chemistry"
+      },
+      {
+        "i": 81,
+        "question": "Which candidate does the board of Wexard Council appoint as chief financial officer? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "E. Rosion",
+          "B. Rosora",
+          "N. Orlell",
+          "J. Dunant"
+        ],
+        "answer": 2,
+        "topic": "history"
+      },
+      {
+        "i": 82,
+        "question": "Which town does Kesard Cooperative choose for its new distribution centre? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Feloramere",
+          "Holithbury",
+          "Wexoltmere",
+          "Bralantton"
+        ],
+        "answer": 3,
+        "topic": "algebra"
+      },
+      {
+        "i": 83,
+        "question": "Which bid does Holex Group accept for renovating its head office? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Felane Systems",
+          "Dunard Systems",
+          "Nevolt Partners",
+          "Holora Partners"
+        ],
+        "answer": 3,
+        "topic": "biology"
+      },
+      {
+        "i": 84,
+        "question": "Which research proposal receives Rosion Council's annual innovation grant? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Gavith",
+          "Project Torix",
+          "Project Marora",
+          "Project Velane"
+        ],
+        "answer": 2,
+        "topic": "geography"
+      },
+      {
+        "i": 85,
+        "question": "Which agency does Lomix Foundation hire for its next advertising campaign? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Felolt Systems",
+          "Quinith Solutions",
+          "Marock Partners",
+          "Velix Industries"
+        ],
+        "answer": 0,
+        "topic": "physics"
+      },
+      {
+        "i": 86,
+        "question": "Which software vendor does Jenane Cooperative select for its payroll system? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Velolt Logistics",
+          "Lomex Logistics",
+          "Holock Partners",
+          "Lomolt Solutions"
+        ],
+        "answer": 0,
+        "topic": "literature"
+      },
+      {
+        "i": 87,
+        "question": "Which town hosts Jenix Foundation's regional conference next year? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Marockford",
+          "Marithport",
+          "Kesexvale",
+          "Quinantbury"
+        ],
+        "answer": 1,
+        "topic": "economics"
+      },
+      {
+        "i": 88,
+        "question": "Which manager does Kesolt Corporation promote to head of operations? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "J. Torolt",
+          "T. Bralock",
+          "B. Lomex",
+          "F. Quinane"
+        ],
+        "answer": 0,
+        "topic": "music"
+      },
+      {
+        "i": 89,
+        "question": "Which product line does Lomock Group discontinue next quarter? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Savolt",
+          "Project Jenock",
+          "Project Gavex",
+          "Project Rosell"
+        ],
+        "answer": 1,
+        "topic": "programming"
+      },
+      {
+        "i": 90,
+        "question": "Which supplier wins Nevion Group's new contract for packaging materials? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Corex Works",
+          "Kesane Works",
+          "Velora Industries",
+          "Yarion Solutions"
+        ],
+        "answer": 0,
+        "topic": "statistics"
+      },
+      {
+        "i": 91,
+        "question": "Which candidate does the board of Holell Foundation appoint as chief financial officer? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "S. Toruna",
+          "J. Holant",
+          "P. Kesell",
+          "F. Yarith"
+        ],
+        "answer": 1,
+        "topic": "philosophy"
+      },
+      {
+        "i": 92,
+        "question": "Which town does Velane Holdings choose for its new distribution centre? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Bralanemere",
+          "Wexithvale",
+          "Maroravale",
+          "Rosoltvale"
+        ],
+        "answer": 0,
+        "topic": "art history"
+      },
+      {
+        "i": 93,
+        "question": "Which bid does Velock Group accept for renovating its head office? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Orlard Solutions",
+          "Corell Works",
+          "Torane Industries",
+          "Hololt Solutions"
+        ],
+        "answer": 2,
+        "topic": "astronomy"
+      },
+      {
+        "i": 94,
+        "question": "Which research proposal receives Lomane Corporation's annual innovation grant? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Wexard",
+          "Project Torard",
+          "Project Dunion",
+          "Project Dunolt"
+        ],
+        "answer": 2,
+        "topic": "psychology"
+      },
+      {
+        "i": 95,
+        "question": "Which agency does Wexant Council hire for its next advertising campaign? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Kesard Systems",
+          "Savix Industries",
+          "Velolt Logistics",
+          "Torock Solutions"
+        ],
+        "answer": 1,
+        "topic": "geometry"
+      },
+      {
+        "i": 96,
+        "question": "Which software vendor does Corix Holdings select for its payroll system? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Marard Works",
+          "Bralock Logistics",
+          "Yarock Partners",
+          "Lomolt Works"
+        ],
+        "answer": 1,
+        "topic": "spanish vocabulary"
+      },
+      {
+        "i": 97,
+        "question": "Which town hosts Rosora Foundation's regional conference next year? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Savixvale",
+          "Marockbury",
+          "Pelockvale",
+          "Marexton"
+        ],
+        "answer": 3,
+        "topic": "world religions"
+      },
+      {
+        "i": 98,
+        "question": "Which manager does Orlix Foundation promote to head of operations? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "C. Kesane",
+          "M. Holix",
+          "E. Holix",
+          "F. Savolt"
+        ],
+        "answer": 3,
+        "topic": "computer networks"
+      },
+      {
+        "i": 99,
+        "question": "Which product line does Torion Council discontinue next quarter? The decision was made in a closed meeting and has not been announced.",
+        "options": [
+          "Project Rosane",
+          "Project Marora",
+          "Project Jenell",
+          "Project Rosion"
+        ],
+        "answer": 3,
+        "topic": "anatomy"
+      }
+    ],
+    "answer_counts": {
+      "A": 22,
+      "B": 22,
+      "C": 26,
+      "D": 30
+    }
+  }
+}
