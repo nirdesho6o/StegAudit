@@ -28,6 +28,7 @@ The "Nirdesh verified / changed" column is filled in by Nirdesh, not by Claude.
 | 2026-11-15 | Scope change | Edited CLAUDE.md (scope, 4-day plan, 45-minute rule, CUT list, 02 detectors at β = 32 only, Phase 2 = 100 questions) and added "Future work" to README.md. | Set the deadline, the plan, the cuts, the Phase 2 size and the 45-minute rule. |
 | 2026-11-15 | 02 scope cut + incident | `02_detectability.py`: detectors at β = 32 only (`BETAS = [32]`); report skips the β figure. Incident (Claude's error): while stopping the cut β = 8/12/16 generation, Claude's watcher used `pgrep -f "generate --group 1[26]"`. That pattern also matched the job's own shell command line, so it killed the job chain. That broke the output pipe of the still-running normal-text generation, which was then stopped too. About 30 min of CPU lost, no data or credits lost; the normal texts are regenerated from the same seed. Lesson: never `pkill -f` on text that also appears in a parent shell's command line; write background run logs straight to a file, not through a pipe. | Set the cut. |
 | 2026-11-15 | Phase 3, audit_lp.py | `audit_lp.py` (gains, M1 and M2 LPs on sparse matrices with HiGHS, closed-form `greedy_m1`), `tests/test_audit_lp.py` (99 tests: brute-force grid search for T = 5 / step 0.1 and T = 8 / step 0.25 against the provable rounding bound, one exact on-grid case, greedy = LP on 40 random instances, audit-everything sanity, M2 equalisation structure). | |
+| 2026-11-15 | Phase 3, simulate.py | `simulate.py` (Gini-targeted lognormal / Pareto stakes, Gini, auditor policies incl. water-filling and suspicion = random B, colluder policies, closed-form metrics, Monte Carlo with Bernoulli or exact-B audits, `audits_to_detect` with both P3a definitions), `tests/test_simulate.py` (34 tests: MC vs closed form within 4 SE for all 5 × 3 policy pairs, empirical Gini of 400k samples, water-filling, subset audits = B). First draft seeded a test with Python's salted `hash()`; replaced by CRC32. | |
 
 ## Design decisions (proposed by Claude Code, approved by Nirdesh on 2026-11-15)
 
@@ -159,3 +160,10 @@ Each one is a choice CLAUDE.md left open or that the plain spec would get wrong.
     Why: an "outside judge" with a hand-picked tolerance could hide a real mismatch.
 51. **M1 objective = Σ max(0, g_i) = expected undetected value minus expected penalty (exactly the undetected value when P = 0).**
     Why: this is what CLAUDE.md's LP minimises; the docstring says so, so the viva answer about "what M1 minimises" is precise.
+
+### Phase 3: simulate.py
+52. **Stakes from a target Gini via the standard closed forms:** lognormal s = √2 Φ⁻¹((G+1)/2); Pareto (x_min = 1) α = (1+G)/(2G). Checked empirically on 400 000 samples (tolerance 0.02; 0.06 for Pareto at G = 0.8, where α = 1.125 gives infinite variance and slow convergence).
+53. **"Suspicion top-k" = B random audits.** Closed form uses the same expected coverage as uniform; Monte Carlo draws exactly B random decisions per round.
+    Why: CLAUDE.md says transcript suspicion is uninformative against crypto stego. Experiment 02 is the evidence for that assumption; if a detector worked, this policy would be understated.
+54. **Bernoulli Monte Carlo keeps the budget in expectation, not every round.** That is the meaning of coverage as a marginal probability; the subset mode shows the exact-B alternative.
+55. **P3a needs a definition of "required audits" before experiment 04 (open for Nirdesh).** `audits_to_detect` implements both: no false positives → n = ln δ / ln(1 − εd), which scales as 1/ε; false-positive rate f > 0 → one-sided binomial test, n ∝ 1/ε². The registered "≈ 1/ε²" holds only for the second. The choice goes into PREREG Deviations before 04 runs.
