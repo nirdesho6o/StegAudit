@@ -66,4 +66,4 @@ Meteor texts vs normal samples (same prompts, same top-k = 50, temperature 1.0).
 ---
 
 ## Deviations
-(none yet)
+- **2026-11-15, exploratory metric added (no prediction changed).** While experiment 01 was running, Nirdesh asked for per-step entropy of the top-k distribution and efficiency = bits sent / entropy. 01 did not log entropy, and the running job was not touched. `experiments/01c_entropy_explore.py` computes it afterwards on the first 30 messages per β by replaying the model over 01's saved token ids. It is **exploratory, not pre-registered**: no prediction was made, and it is reported in `results/LOG.md` under "Exploratory".
