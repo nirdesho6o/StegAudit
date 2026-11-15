@@ -95,3 +95,8 @@ Meteor texts vs normal samples (same prompts, same top-k = 50, temperature 1.0).
   - **Best-response colluder** is kept as a third policy. Its attack count is endogenous (every decision with positive expected gain under the announced coverage); it is reported per cell (`attacked`).
   - P3b ("a stake-targeting colluder keeps most total stake undetected under uniform or suspicion auditing, more so as Gini rises") is evaluated with the top-k colluders at both k, compared with the uniform colluder at the matched ε.
   - (The proposed defaults ε = 0.05, k = 10 in the 04 smoke code are superseded; they are noted in AI_USE.md.)
+- **2026-11-15, penalty grid extended for experiment 04 (Nirdesh): P ∈ {0, mean(v), 10·mean(v), 100·mean(v)}, i.e. P = 100·mean(v) added. Recorded BEFORE the registered 04 run. No prediction changed.**
+  - **Reason:** in AI oversight, detection means shutdown or retraining, so the colluders lose the value of all their future decisions. A penalty much larger than one decision's stake is therefore realistic.
+  - **Disclosure:** this was added AFTER looking at the best-response colluder's attack counts on the 04 smoke grid (closed form, in the scratchpad; no undetected-value results were used for this decision). With P ≤ 10·mean(v), deterrence (attack count < 50 % of T) bound in only 85 of 1440 instance-level cells, all at P = 10·mean(v) and B/T ∈ {5 %, 10 %}. At B/T ≤ 2 % it never bound.
+  - **The original cells (P ∈ {0, mean, 10·mean}) are run and reported unchanged;** P = 100·mean(v) is an added column, reported separately as well as in the full grid.
+  - **Attack counts stay a diagnostic.** P3b and P3c are judged on expected undetected value (closed form, with the Monte Carlo check), not on attack counts.
