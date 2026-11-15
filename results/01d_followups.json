@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "git_commit": "fc649984b456e2099ef7b4699e949c83401abecb",
+    "git_dirty": false,
+    "git_changed_paths": [],
+    "timestamp_utc": "2026-11-15T09:19:40.857856+00:00",
+    "seed": 0,
+    "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "beta": 32,
+    "config": {
+      "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+      "beta": 32,
+      "top_k": 50,
+      "temperature": 1.0,
+      "payload_bits": 16,
+      "tag_bits": 8,
+      "prg": "hmac-sha256",
+      "max_new_tokens": 120,
+      "payload_token_limit": 256,
+      "seed": 0,
+      "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775"
+    },
+    "params": {
+      "experiment": "01d_followups",
+      "near_deterministic_threshold": 0.999
+    },
+    "versions": {
+      "python": "3.12.3",
+      "torch": "2.15.0+cpu",
+      "transformers": "5.23.0",
+      "tokenizers": "0.23.3"
+    },
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+    "torch_num_threads": 1
+  },
+  "results": {
+    "exploratory": true,
+    "preregistered": false,
+    "cover_vanishing_beta32": {
+      "messages": 9,
+      "steps_with_vanishing": 10,
+      "vanished_tokens_replayed": 84,
+      "vanished_tokens_recorded_in_01": 84,
+      "counts_match": true,
+      "top1_p": {
+        "min": 0.9993681020917871,
+        "median": 0.9999120460948592,
+        "max": 0.9999992413920213
+      },
+      "entropy_bits": {
+        "min": 1.805387923824779e-05,
+        "median": 0.0014196559915100014,
+        "max": 0.007730703315923149
+      },
+      "steps_with_top1_above_0.999": 10,
+      "claim_near_deterministic_all_steps": true,
+      "steps": [
+        {
+          "i": 2,
+          "cover_step": 49,
+          "token_index": 65,
+          "n_vanished": 9,
+          "top1_p": 0.9996633285951825,
+          "entropy_bits": 0.00440734346068939,
+          "min_p": 1.6853017011139486e-10
+        },
+        {
+          "i": 2,
+          "cover_step": 68,
+          "token_index": 84,
+          "n_vanished": 16,
+          "top1_p": 0.999928962855703,
+          "entropy_bits": 0.0012155334281250389,
+          "min_p": 9.916561880564225e-11
+        },
+        {
+          "i": 27,
+          "cover_step": 96,
+          "token_index": 115,
+          "n_vanished": 1,
+          "top1_p": 0.9999987218023716,
+          "entropy_bits": 2.8919952846269608e-05,
+          "min_p": 2.2863291076581992e-10
+        },
+        {
+          "i": 42,
+          "cover_step": 3,
+          "token_index": 28,
+          "n_vanished": 10,
+          "top1_p": 0.9999992413920213,
+          "entropy_bits": 1.805387923824779e-05,
+          "min_p": 1.2529227240770216e-10
+        },
+        {
+          "i": 44,
+          "cover_step": 12,
+          "token_index": 37,
+          "n_vanished": 9,
+          "top1_p": 0.9998699375978182,
+          "entropy_bits": 0.0021138472602705467,
+          "min_p": 1.5107547541084238e-10
+        },
+        {
+          "i": 53,
+          "cover_step": 72,
+          "token_index": 88,
+          "n_vanished": 15,
+          "top1_p": 0.9999856007112863,
+          "entropy_bits": 0.00029008897075837254,
+          "min_p": 1.0393700544041598e-10
+        },
+        {
+          "i": 58,
+          "cover_step": 18,
+          "token_index": 25,
+          "n_vanished": 6,
+          "top1_p": 0.9998355867887887,
+          "entropy_bits": 0.002586518020333392,
+          "min_p": 1.7187849773218462e-10
+        },
+        {
+          "i": 76,
+          "cover_step": 8,
+          "token_index": 23,
+          "n_vanished": 7,
+          "top1_p": 0.9993681020917871,
+          "entropy_bits": 0.007730703315923149,
+          "min_p": 1.377039172869434e-10
+        },
+        {
+          "i": 86,
+          "cover_step": 26,
+          "token_index": 42,
+          "n_vanished": 8,
+          "top1_p": 0.9999672489421748,
+          "entropy_bits": 0.0006031875154759577,
+          "min_p": 1.1794665475786098e-10
+        },
+        {
+          "i": 148,
+          "cover_step": 68,
+          "token_index": 92,
+          "n_vanished": 3,
+          "top1_p": 0.9998951293340154,
+          "entropy_bits": 0.001623778554894964,
+          "min_p": 1.659347764365001e-10
+        }
+      ]
+    },
+    "payload_retok_mismatch": {
+      "32": {
+        "n": 200,
+        "mismatches_all": 5,
+        "mismatches_in_payload": 0,
+        "payload_mismatch_rate": 0.0,
+        "ci95_exact": [
+          0.0,
+          0.01827534035513624
+        ],
+        "payload_mismatch_ids": []
+      },
+      "8": {
+        "n": 200,
+        "mismatches_all": 0,
+        "mismatches_in_payload": 0,
+        "payload_mismatch_rate": 0.0,
+        "ci95_exact": [
+          0.0,
+          0.01827534035513624
+        ],
+        "payload_mismatch_ids": []
+      },
+      "12": {
+        "n": 200,
+        "mismatches_all": 0,
+        "mismatches_in_payload": 0,
+        "payload_mismatch_rate": 0.0,
+        "ci95_exact": [
+          0.0,
+          0.01827534035513624
+        ],
+        "payload_mismatch_ids": []
+      },
+      "16": {
+        "n": 200,
+        "mismatches_all": 1,
+        "mismatches_in_payload": 1,
+        "payload_mismatch_rate": 0.005,
+        "ci95_exact": [
+          0.00012658102786701839,
+          0.02754189845720563
+        ],
+        "payload_mismatch_ids": [
+          91
+        ]
+      },
+      "all_betas": {
+        "n": 800,
+        "mismatches_in_payload": 1,
+        "rate": 0.00125,
+        "ci95_exact": [
+          3.164675921111291e-05,
+          0.006944687132371448
+        ]
+      }
+    },
+    "source_git_commit": "fdb3cda4287555c74703f427cb80e329d5ea2c8e",
+    "wall_s": 112.1
+  }
+}

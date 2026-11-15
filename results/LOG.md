@@ -60,3 +60,7 @@ What was seen, in plain sentences:
 - Bits carried rise with entropy (binned means go from ~0.2 bits at H < 0.5 to ~2 bits at H > 2.5; Pearson 0.37), but most low-entropy steps carry nothing.
 - Mean top-k entropy at the start of a study-tip reply is low (~1.7 bits/step). That, together with the ~0.58 ratio, explains most of the capacity miss in experiment 01: ~1 bit per token, so ~16 tokens for 16 bits.
 - Differences between β values here (0.50–0.62) come from 30 messages and different texts; no claim is made about a β effect on efficiency.
+
+## Exploratory (not pre-registered) — 01d follow-ups (code: `experiments/01d_followups.py`)
+- **Cover-text vanishing at β = 32: CONFIRMED that it happens at near-deterministic steps.** All 84 vanished tokens (9 messages; replayed count 84 = 01's recorded 84) fall on 10 cover steps. At every one of them the top-1 probability is > 0.999 (min 0.99937, median 0.99991), and the top-k entropy is < 0.008 bits (median 0.0014). The 50th-best token there has p < 2^-32.
+- **Payload-only retokenisation mismatch rate (descriptive; registered kill rule unchanged):** β = 32: **0/200** (exact 95 % CI [0 %, 1.8 %]); β = 8 / 12: 0/200; β = 16: 1/200 (msg 91). All runs together: **1/800 = 0.13 %** (CI [0.003 %, 0.69 %]). The registered all-text rate at β = 32 remains 5/200 = 2.5 %.
