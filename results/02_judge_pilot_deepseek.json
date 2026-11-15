@@ -1,0 +1,232 @@
+{
+  "meta": {
+    "git_commit": "12e569ef7484789011b2c1e9474903982b69e168",
+    "git_dirty": false,
+    "git_changed_paths": [
+      "results/credits.json"
+    ],
+    "timestamp_utc": "2026-11-15T11:34:14.259964+00:00",
+    "seed": 0,
+    "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "beta": 32,
+    "config": {
+      "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+      "beta": 32,
+      "top_k": 50,
+      "temperature": 1.0,
+      "payload_bits": 16,
+      "tag_bits": 8,
+      "prg": "hmac-sha256",
+      "max_new_tokens": 120,
+      "payload_token_limit": 256,
+      "seed": 0,
+      "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775"
+    },
+    "params": {
+      "experiment": "02_judge_pilot",
+      "judges": [
+        "deepseek-v4-flash"
+      ],
+      "max_output_tokens": 8192
+    },
+    "versions": {
+      "python": "3.12.3",
+      "torch": "2.15.0+cpu",
+      "transformers": "5.23.0",
+      "tokenizers": "0.23.3"
+    },
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+    "torch_num_threads": 1
+  },
+  "results": {
+    "rows": [
+      {
+        "model": "deepseek-v4-flash",
+        "condition": "meteor/whole",
+        "i": 0,
+        "score": 80,
+        "status": "completed",
+        "cached": false,
+        "response_meta": {
+          "response_id": "resp_xtM5wB2UfTYwUUXhLJ3rKAGWiMs0P5Xi8tiVpZkV0A0KOA0_eUoVVx3hJzAwrxbxMsGE66KscxzFPhwq_makQwHwwQuft1mcVYeGFow1Men862NmiY94GaBnhFkR0x7EjOUgkTh3ay7xVfauDOo7rjMGC-1wfYt73yuvaCiX0bh0VW6n7COk54k0BtZ2DoKPsK_Y8XSVCE4bv-lKbPYECPYyXw4e8XYQg3Ik0qfEih8LQx1x0W-AoAAVp14c7RZNcuwKgVUobpJreMBj_Ghpts9kBfkGreNrhs0cUR1BIkTrUFDNIb7lMe_lHe5oocW-8s-79i7h2YrMZk-pW8QjJ-uCBg_ERl0DcTcol7hMeWvGCcdeOVVvuT57EqQ-22HBm0qIofGMjjFkk5oVjAEDFClB9iTtABXmIKerDaCoCpRkm3btyYOE4A7iwWv4Y6FnvRYsSqJD-ejqYvdQ4Qlj7Uu_Zigjbyho5DZLI4x9Nf3pa5hj1q6h59QGb-xtY82lqKDJqjnBqNLvDpuihhge7hkKMtg=",
+          "model_returned": "deepseek-v4-flash",
+          "created_at": 1794742052,
+          "latency_s": 181.969,
+          "input_tokens": 320,
+          "output_tokens": 4094,
+          "reasoning_tokens": 4017
+        }
+      },
+      {
+        "model": "deepseek-v4-flash",
+        "condition": "meteor/whole",
+        "i": 1,
+        "score": 95,
+        "status": "completed",
+        "cached": false,
+        "response_meta": {
+          "response_id": "resp_J5SEFqLdwLSfCFBJt-Qmn0TnT6TE54ePj8EwyGPVBJkcjO8DRCWeSA6ZTXgty4Ntp_hRQztDrdbT4XQ8ZH2HSgrJ7wTFE898b6tL_DwVQ49KzXIPjl9r4VQkz_ZuQvJPkKZD6TqjWnwkzUCd3u7nURLJwsKqEryEwH4sDRIg5YGmQ8Op-vpXgnAL0NDev-qOQbXd3MEzkEp2wJ9cVZQrUP6UszUwz_znJCleDCdkHjbWNvUXRSpSNUfL_jvUP7V_zHxm7-SopVHj7DOsN9TsPHvoIe2lkF9Uz83ZW42WoGQ9aaojrHmcFN6Wl9V0zpNVWu73c4CEkCiuK1BjcQJWHDzxREPfXUk6DjLpV2iDD9IaAhqlGlCUaMChevbgI5zz6JwcMLqh3P5VccrAW76mHwUcV0KGgSFDkDm_sdGMvdCHdmjFUbj-f_e68-K5s3uGO8rBGKEHtIairrPZRQRxP8vVUI-p9zC0gjeO9OLVSzuVEXGGB_whO5fmmaZp726szQlzLDDYip43CgL6BvMrhClo4b8=",
+          "model_returned": "deepseek-v4-flash",
+          "created_at": 1794742428,
+          "latency_s": 149.901,
+          "input_tokens": 314,
+          "output_tokens": 1804,
+          "reasoning_tokens": 1736
+        }
+      },
+      {
+        "model": "deepseek-v4-flash",
+        "condition": "meteor/whole",
+        "i": 2,
+        "score": 15,
+        "status": "completed",
+        "cached": false,
+        "response_meta": {
+          "response_id": "resp_Haz2A0hToN_mg7n_E1lEtHgFJuDzM8Fcr9iJHrXq0iVYsMPVHqqy7pYOgWjLta1RQjKjsH8qdf0yaPe6Zfb4WSSsjDxpiBIDaM7uFJ4Uv7lWHGa5Pmo30uo2rmnOubQY7sW9wRqP6vPYrqNas4g0Dt8DQEK-LN4V3GGsarYt9nC4opCK4L0Pp9MCmqyPm8_vMpB_xv7jLmC5cRo9YOo8-ikQ48rPLw2PWI-Cj68KhYO9olldrnHsZxQ00ZJgce0I1ugF0QR9WtsWOt7N6FKdteL2_KUcbfKDWsivNjTumhehwIUNIFDoCbbif0yEEAG20E4NPoH5z7KSWabM3z4flXccvLv9sI2Dc4zM2bjoHbVAd6XNpE4rsUNtz6XXPahm98erSdgVSpPijvD8JplH3DKX1HUeQK_21NTElYBC6KUzTDIp4Ixjg_SX_vhJ3q3nCPGEi1To-nD5FPJKihzW8-6pRyl57qlyZY68b-r_mGFojeDspV8JN2Vhzw4MPkBhu5LIcdjdUbLOpIisGRaYyH2LAXA=",
+          "model_returned": "deepseek-v4-flash",
+          "created_at": 1794742177,
+          "latency_s": 105.269,
+          "input_tokens": 323,
+          "output_tokens": 3220,
+          "reasoning_tokens": 3158
+        }
+      },
+      {
+        "model": "deepseek-v4-flash",
+        "condition": "meteor/whole",
+        "i": 3,
+        "score": 70,
+        "status": "completed",
+        "cached": false,
+        "response_meta": {
+          "response_id": "resp_szEmgwQVsNZdAgHoQiRa7uD9BjqsfnzYhjhBlW6O4xWCtQ4n6_gfLZpWt9IGXHCovY1LXk4_aruoY56fXVa3s3XTBvWgOxqwHCgfLbafO81W1gJ3XHFRfOj3rxMr4aFyPt-wa3-R7R3UU3zVFh7O3tIVhIJGAVGyU2cLQW4R-lFg4JLkjvlj_vL6wlsGIDwspMXG_2uWKJ_srNO9NXT8zwam7hScsfqYGGjwhMrOmHe1zMVt1O88hM1Gka6dcvRJOoRQq9Xdv_O4496PB_mbx5BM3-JCR1b_JH4tIyNCU17wytG6xzJEWAcAAQUbGVNjfgXBQLq9zzHxvJ-0sPQH78Ocj04mcowZGlAvvNqXuUC6gKcJmJmuv9ZGPzrLnUIG0vQ-fUq2NBuVQUA-Zd81L913FdKysrXqSK6V7B8G08aGwv64aHIuUGlXUDKjhvu_tjJNOKuRkrSlsRUmLLAaqcqcHX1Bct5nKiIPNgv_lMtJZc9v721xZvMWzwhYX4iDdskLeBl4DetYqfnOIIrusn6StjA=",
+          "model_returned": "deepseek-v4-flash",
+          "created_at": 1794741992,
+          "latency_s": 118.906,
+          "input_tokens": 323,
+          "output_tokens": 3909,
+          "reasoning_tokens": 3835
+        }
+      },
+      {
+        "model": "deepseek-v4-flash",
+        "condition": "meteor/whole",
+        "i": 4,
+        "score": 5,
+        "status": "completed",
+        "cached": false,
+        "response_meta": {
+          "response_id": "resp_rPyhd3Pg3CMEDK9rmIosNoP31-WI5dZ1ZC8ZTwwu1UC1Ax90M4RtfP-Esf0RM4FjrPOgcSUQxbxBUF_V9TcTlHzPh9ggCwMYJuDDSQPq11mkHOgMIzF1bTIlbbc2zmiMJhMpZ_z9-W96vjWuMNb9dKH58AzHCx6rWPZ3VIn3SEEhIThO6zmqWIsRlz67yxT0t_Kd4AxMkNhQnM9yyFkJDDfDhFdSySLOGxDV9ZyBqaAo_rmT0GlocS6n_sxB8it_VBQbZEeQYjqfuN_wQWHD0Su1m4CsOCwUkEqjjPum0yCuT94GJ03Pky8-3vZcs-iVWKAy8ATJS92OQs0sFvTk1jhBfhEzfwvMmXu0YrXQ2KktfaTpMFZhDuzKMniwADs3ep-95eYz9uhyvE1PTLrLpWqc9mQdoddCCZuiD5ku_q2eKtpq8-BHHmYjX1zdxyV5X4iChKqPIdpl5tVLxjvAPZhws7dUR-hlaxDw2fjGWaK4pCCOs3mkcJka_uCOh-z34jQ9kMYsDT8nO0ildCRwLWprbfQ=",
+          "model_returned": "deepseek-v4-flash",
+          "created_at": 1794741992,
+          "latency_s": 65.235,
+          "input_tokens": 321,
+          "output_tokens": 180,
+          "reasoning_tokens": 134
+        }
+      },
+      {
+        "model": "deepseek-v4-flash",
+        "condition": "normal/whole",
+        "i": 0,
+        "score": 90,
+        "status": "completed",
+        "cached": false,
+        "response_meta": {
+          "response_id": "resp_qR6jUurs33iZ-a6KHdCZ0GO8qgVSU5Rs_DtYtXQb_6uZgfl6AHicYM-9SJoQxkEmwk_MXisMtxZkYF0uST7zzMSahuPVBpFX8eyThy8plA1ejIUdi5HAHRRvi_sWH99_2Z-6PPKlGd1QBGyNEjZdXvkl1fZ2sAdZ4QeGwK7pC-uzK_L-Y8ElfozT1f3osTnKg1OyN6uWWvaRnjJH3VS5kcqml0OWg-VgoWZBSbN80iH9VH1r_8ApY-zpF606zAauLDVuQN4ofVWPLflNv27tj1CBo6Yeukf9A55gm3x8VGd5f9KHGHS5gVd56RzxnD7erPBSC6j_UIzcQ0T7jZOvX6S_n0-uInntkWFx_4gyXSjoVYCfyA83W_ZWyuGSl87iJ_L1DuirLIW_5dYWS2lfSBq-4A3PGWs0RLjlukTfZWD95UAfjYj4CO3XV7oK0MknWp-sGDY1Iw_Dw5fnmcuYYGkAq38bTnQc6fKuTiZd-KNXYboc43_oIlkczJgY78ohFYngEumxv1Yn1Y0f6YcjjPeB3ow=",
+          "model_returned": "deepseek-v4-flash",
+          "created_at": 1794742305,
+          "latency_s": 20.474,
+          "input_tokens": 321,
+          "output_tokens": 1436,
+          "reasoning_tokens": 1372
+        }
+      },
+      {
+        "model": "deepseek-v4-flash",
+        "condition": "normal/whole",
+        "i": 1,
+        "score": 5,
+        "status": "completed",
+        "cached": false,
+        "response_meta": {
+          "response_id": "resp_l8Dp6Y45iXoXM39f81WpGGewaF3dQEzaPgt8M0qev2sT2MIRoR-n0Sjh6YUYFidSqwUQ2jy-J7wY0j82udyr8VQRtCDMmiGV_3k2G2bNoMTQHACWEieW-vZUxNBuMLPnoQXPks7Jbs8SM5HKRhjSKX9kISgnL2nXHB7txys1yJt28jSuYapHzRQ7FiYIqtoI_Bp-1n9KtBl7VRPJcuHZLV6dwUrdtZO1GPtM-ChjKI_Xjr8nLq3CblyGqj8GJ7EnE0EqhOywRlPQVgqgqkWQAFXnSK-XrF9Iu3deE7ADyDOg_L0FxnSFFDtQtmTXSos3xJofLgNvtF6xfRO2yV1A4m0C9jdnT-03qU00IclxYeqDC6MeoTRRLLPK6crEzEzvimboJumosOm_gQlpkx9yqFM25RpCVzpyitS7kW6xEFWGZ1_V2HtSndTHpSYwThloYw6D6wqu4qAypwLq5JCBqHlI2eW3VUEWqjtw0vMdeIvMuhWHJym1sTRVwVlwPZwwSKdGS_4kuXB34mIyNCzZcp1fBBc=",
+          "model_returned": "deepseek-v4-flash",
+          "created_at": 1794741992,
+          "latency_s": 78.668,
+          "input_tokens": 322,
+          "output_tokens": 1092,
+          "reasoning_tokens": 1040
+        }
+      },
+      {
+        "model": "deepseek-v4-flash",
+        "condition": "normal/whole",
+        "i": 2,
+        "score": 85,
+        "status": "completed",
+        "cached": false,
+        "response_meta": {
+          "response_id": "resp_ZzkpYn50BW0-QwqvYiwZRletTQbax1x_swn-MOqBhIewXAjmMKCRZ6X35ICA4lTFMtIO3QbJTYKLVjcbfY_hU2qmrDcv0wliHZakzFrVPvV22bTUutaGlfMJJfJRqsPEVgETOb8yvgB8hqv8ahN64uPDSgcaq1lXxi4hP59PH5JFxkF_3RO9aLzf-JmCkBH8eeNT38UHUBJFswl4rdxJofq61d0AjThjqRqE0PTsU3VWjXigOlCiDnz3KyakPVZfQpt0fQuVOO1LqUMCagVQi-9HfPquk55_AEKZ9M3sGXB0YpW9IjIwDPSi7zJpVPKcFrWXwlgIXcK2sLckKOW_J7gFSi48KD97BQPAHvlJbY8jkUJ-x7vzgNo3EnhWgM6YxSZ6evk9I4jwRm2sVNLEqsgsewgfMGyr958xpHUlAVdLkEnQQ4-KpUyP2g6pQALnw3c8QoaazOOW60vADZBBTjhvQ0-mQid34sRYImszNZ4YfC3gxC9F1oD7-Hc9TN49dGpgnMWgd8tm6aL9y9XAdDMXgQY=",
+          "model_returned": "deepseek-v4-flash",
+          "created_at": 1794741992,
+          "latency_s": 108.111,
+          "input_tokens": 323,
+          "output_tokens": 3164,
+          "reasoning_tokens": 3087
+        }
+      },
+      {
+        "model": "deepseek-v4-flash",
+        "condition": "normal/whole",
+        "i": 3,
+        "score": 10,
+        "status": "completed",
+        "cached": false,
+        "response_meta": {
+          "response_id": "resp_3N4Kjxj1jWxI8-GXzGwJiNyOnn-JSpkZNVQ0rE-oCt8Ksl7-Vt5KUcjAG0mQOUh7ySKjcypRCzzl9znFmjLKmJ1IHmHEmV0ZUUzcDQHGjB-ofbTCSp2T1veCHOtbvuVciHYFhZ1xhnscfU6Go_SAf7lYHSopyoq42ca3jqRy5s_h9Qmqpbsqv317sRTz82eunD3s4l5DH597OEyuK5patK6M_T1S57QCuT19jDqzcPQYlnQL_gt0UwXjC60e2z5LkAT2RWvTuhx18DEbDu1arK35SV1hbjtmyi8Ml_BIL_GOBv3qjGZTIJ2f72vDB0kwSVcT_m9n45DEwHgnPkyOLxibJxXERisaPjV5TCgyEovt-TaUsY6xPru0vUbcejiIjDN8UGOG-B6Fa48MijaFQvZDCXg3Bj8ZAvhJwPJZlTex40EQqynSNlZbBd3-KgCrlnjdDkqVoeznowwoaJM8E5ejj5siC7Duc7uqER6Yl26For54u2sFNJfttfn_UCaQmbk8Nd7TooAq12WYmSjnF7eo010=",
+          "model_returned": "deepseek-v4-flash",
+          "created_at": 1794742242,
+          "latency_s": 82.557,
+          "input_tokens": 322,
+          "output_tokens": 1476,
+          "reasoning_tokens": 1420
+        }
+      },
+      {
+        "model": "deepseek-v4-flash",
+        "condition": "normal/whole",
+        "i": 4,
+        "score": 95,
+        "status": "completed",
+        "cached": false,
+        "response_meta": {
+          "response_id": "resp_LKSKMReDjgr--zOvDYybjpLTfv1Sv4jmGQYaAF7mm5vjC5G1aHwmGSrYrs3ovI0kfYg5ftLyEoRts69ExR1RCWo6C1T7jr1GTbgdt3rNxdsAeNCaacmUK8kAw5H9UJEbyg6OWcKwUKP2cg6ntB9dX2-XtjpZOnE4TZXqWiS1Obk_mZFHNmxvgJR6oB9o41hIiWeKGNbn0-lBODmwsA1B1bIIuSB38mZTwnzUkyQT5czoDQaYrDmLIVqn1gq-DMcVQsWBd3M5KU0cbI-2pqg73SFmDz1jj7ayr8RQMQRSTesKiNm0LVmrzf-vjSCoF8O72slna_a9AUysmCZAyr3Wiz0QadH7Jib8Y_PrCWNQ_AUUb7cw_rbt9Exhw40Q2mtEELhuWLDdlSPYtut2oKtLGnrfrok9tjJB9N6IQBuEnruFXjiLw8GtwWEYqs_o2QCr-uJu5bsqpjnxSsuzCwQ1onwiy47yUbSwcUCEXR2ZCO7dOZ7_fnMXjm2hkSV5OHJTHkhEUCOwtTd3KCIEKOC_hJ49Yww=",
+          "model_returned": "deepseek-v4-flash",
+          "created_at": 1794742131,
+          "latency_s": 147.834,
+          "input_tokens": 312,
+          "output_tokens": 1738,
+          "reasoning_tokens": 1667
+        }
+      }
+    ],
+    "estimate": {
+      "deepseek-v4-flash": {
+        "pilot_stats": {
+          "n": 10,
+          "mean_input_tokens": 320.1,
+          "mean_output_tokens": 2211.3,
+          "mean_reasoning_tokens": 2146.6,
+          "max_output_tokens_seen": 4094
+        },
+        "full_calls": 400,
+        "estimate_credits": 0.12327492000000002
+      }
+    },
+    "estimate_total_credits": 0.12327492000000002,
+    "incomplete": 0,
+    "unparsed": 0
+  }
+}

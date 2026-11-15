@@ -31,6 +31,16 @@
       "reasoning_tokens": 37189,
       "credits": 0.164315424,
       "unpriced_calls": 0
+    },
+    "deepseek-v4-flash": {
+      "calls": 10,
+      "cache_hits": 0,
+      "retries": 6,
+      "input_tokens": 3201,
+      "output_tokens": 22113,
+      "reasoning_tokens": 21466,
+      "credits": 0.0030818730000000006,
+      "unpriced_calls": 0
     }
   }
 }
