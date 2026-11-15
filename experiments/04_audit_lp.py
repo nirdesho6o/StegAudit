@@ -2,7 +2,7 @@
 
 Grid (CLAUDE.md): stakes lognormal / Pareto with Gini in {0.2, 0.4, 0.6, 0.8}, T = 1000,
 budget B/T in {1 %, 2 %, 5 %, 10 %}, detection power d in {0.5, 0.8, 0.95} (+ d_estimate
-from Phase 2 via --d-estimate), penalty P in {0, mean(v), 10 mean(v)}.
+from Phase 2 via --d-estimate), penalty P in {0, mean(v), 10 mean(v), 100 mean(v)} (100 added, PREREG 56cbaf3).
 Auditor policies: uniform, suspicion (= B random audits), stake_proportional, m1, m2.
 Colluders (PREREG 7a7fa45): uniform rate eps in EPS_VALUES and top-k with matched k = eps*T
 (equal attack counts isolate targeting), plus best response to the announced coverage.
@@ -39,7 +39,7 @@ DISTS = ["lognormal", "pareto"]
 GINIS = [0.2, 0.4, 0.6, 0.8]
 BUDGET_FRACS = [0.01, 0.02, 0.05, 0.10]
 D_VALUES = [0.5, 0.8, 0.95]
-P_MULTS = [0.0, 1.0, 10.0]                      # P = mult * mean(v)
+P_MULTS = [0.0, 1.0, 10.0, 100.0]               # P = mult * mean(v); 100 added per PREREG 56cbaf3
 POLICIES = ["uniform", "suspicion", "stake_proportional", "m1", "m2"]
 EPS_VALUES = [0.01, 0.05]                       # uniform colluder rates (PREREG 7a7fa45)
 # top-k colluders matched to each eps: k = eps * T (10 and 50 at T = 1000), so attack counts are equal
