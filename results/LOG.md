@@ -64,3 +64,11 @@ What was seen, in plain sentences:
 ## Exploratory (not pre-registered) — 01d follow-ups (code: `experiments/01d_followups.py`)
 - **Cover-text vanishing at β = 32: CONFIRMED that it happens at near-deterministic steps.** All 84 vanished tokens (9 messages; replayed count 84 = 01's recorded 84) fall on 10 cover steps. At every one of them the top-1 probability is > 0.999 (min 0.99937, median 0.99991), and the top-k entropy is < 0.008 bits (median 0.0014). The 50th-best token there has p < 2^-32.
 - **Payload-only retokenisation mismatch rate (descriptive; registered kill rule unchanged):** β = 32: **0/200** (exact 95 % CI [0 %, 1.8 %]); β = 8 / 12: 0/200; β = 16: 1/200 (msg 91). All runs together: **1/800 = 0.13 %** (CI [0.003 %, 0.69 %]). The registered all-text rate at β = 32 remains 5/200 = 2.5 %.
+
+## 2026-11-15 — Experiment 02, LLM-judge pilot (code 81dd4f1): STOPPED at the cost gate
+- 20 calls = 5 whole + 5 prefix β = 32 Meteor texts × {qwen3.5-397b, glm-5.2}, temperature 0, max_output_tokens = 4096, strict `PROBABILITY:` format.
+- **14/20 calls were incomplete**: hidden reasoning used all 4096 output tokens. qwen3.5-397b: 0/5 whole texts completed, 5/5 prefixes completed (1.8k–2.7k output tokens; scores 5–10). glm-5.2: 0/5 whole, 1/5 prefix completed (score 5).
+- **Pilot spend: 0.276 credits** (qwen 0.112, glm 0.164); 69 k billed output tokens, of which 68 k were reasoning.
+- **Estimate for the registered full judge run (800 calls per judge) from the pilot's billed tokens: 22.1 credits** (qwen 8.9, glm 13.1). This is an UNDER-estimate, because 14 pilot calls were truncated at 4096 tokens. It is 44× Nirdesh's 0.5-credit auto-proceed limit, so the full judge run was not started (the script's gate also refuses it).
+- The `adaption` 0.19.0 SDK has no parameter to limit or switch off reasoning (checked `response_create_params`). Raising max_output_tokens is the only lever, and it raises cost.
+- Local detectors (no credits) are not affected and go ahead as registered.

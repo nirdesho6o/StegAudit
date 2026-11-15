@@ -10,5 +10,27 @@
       "credits": 1.3416e-05,
       "unpriced_calls": 0
     }
+  },
+  "02_judge": {
+    "qwen3.5-397b": {
+      "calls": 10,
+      "cache_hits": 0,
+      "retries": 0,
+      "input_tokens": 2118,
+      "output_tokens": 31553,
+      "reasoning_tokens": 30737,
+      "credits": 0.11160040000000002,
+      "unpriced_calls": 0
+    },
+    "glm-5.2": {
+      "calls": 10,
+      "cache_hits": 0,
+      "retries": 0,
+      "input_tokens": 2006,
+      "output_tokens": 37297,
+      "reasoning_tokens": 37189,
+      "credits": 0.164315424,
+      "unpriced_calls": 0
+    }
   }
 }
