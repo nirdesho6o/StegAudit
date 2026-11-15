@@ -69,3 +69,55 @@ def test_app_starts_and_tab4_renders():
     assert not at.exception
     at.selectbox[0].set_value("m2").run()                           # policy selector
     assert not at.exception and any("M2" in str(df.value) for df in at.dataframe)
+
+
+# ---------------- tab 1 helpers (no model) ----------------
+
+@pytest.mark.parametrize("secret", ["C", "Hi", "ab!?", "é"])
+def test_secret_bits_round_trip(secret):
+    from stegaudit.appcore import bits_to_secret, secret_to_bits
+    bits = secret_to_bits(secret)
+    assert len(bits) == 8 * len(secret.encode()) and bits_to_secret(bits) == secret
+
+
+def test_key_exchange_view_sender_receiver_agree_eve_differs():
+    from stegaudit.appcore import key_exchange_view
+    kx = key_exchange_view(5)
+    assert kx["sender_fingerprint"] == kx["receiver_fingerprint"] != kx["eve_fingerprint"]
+    ks, kr, ke = kx["keys"]
+    assert ks.mask_key == kr.mask_key != ke.mask_key
+
+
+def test_step_detail_matches_worked_example():
+    """meteor.py docstring example: beta 4, widths [9, 4, 3], chunk 1011, mask 0110 -> x 13 in C, n = 2."""
+    from stegaudit.appcore import step_detail
+    step = {"pos": 2, "lo": [0, 9, 13], "widths": [9, 4, 3], "chunk": 0b1011, "mask": 0b0110, "x": 13,
+            "n_bits": 2, "probs": [0.5, 0.3, 0.2]}
+    d = step_detail(step, 4)
+    assert (d["x"], d["lo"], d["hi_minus_1"], d["bits_sent"]) == ("1101", "1101", "1111", "10")
+
+
+# ---------------- tab 2 helpers (saved results) ----------------
+
+def test_detector_rows_from_saved_02():
+    from stegaudit.appcore import detector_rows
+    rs = detector_rows()
+    assert len(rs) >= 8 and all(r["ci95"][0] <= r["auroc"] <= r["ci95"][1] for r in rs)
+    whole_lp = next(r for r in rs if r["view"] == "whole" and r["detector"] == "mean token log-prob")
+    assert whole_lp["auroc"] == pytest.approx(0.522, abs=1e-3) and whole_lp["events_meteor"] is None
+
+
+def test_text_pair_is_paired_and_quiz_side_fixed():
+    from stegaudit.appcore import text_pair
+    a, b = text_pair(7), text_pair(7)
+    assert a == b and a["meteor_text"] != a["normal_text"]
+    assert {text_pair(i)["meteor_on_left"] for i in range(20)} == {True, False}
+
+
+@pytest.mark.parametrize("tab", ["1", "2", "3", "4"])
+def test_every_tab_opens_in_demo_mode(tab):
+    from streamlit.testing.v1 import AppTest
+    at = AppTest.from_file(str(REPO_ROOT / "app" / "streamlit_app.py"), default_timeout=120)
+    at.query_params["tab"] = tab
+    at.run()
+    assert not at.exception
