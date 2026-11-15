@@ -39,7 +39,9 @@ SRC01 = REPO_ROOT / "results" / "01_meteor_roundtrip.json"
 SWEEP_RUN_INDEX = {8: 4, 12: 5, 16: 6}          # msg_id = 10 000 * run_index + i (PREREG)
 NORMAL_SEED = 1
 MAX_NEW_TOKENS = 120
-BETAS = [32, 8, 12, 16]
+# Detector beta sweep (8, 12, 16) CUT on 2026-11-15 for the deadline (PREREG Deviations).
+# The generate stage still accepts --group 8|12|16 for future work, but score/report use BETAS only.
+BETAS = [32]
 JUDGES = ["qwen3.5-397b", "glm-5.2"]
 JUDGE_MAX_OUTPUT_TOKENS = 4096
 JUDGE_EXPERIMENT = "02_judge"
@@ -92,7 +94,7 @@ def load_texts():
     _, runs = load01()
     texts = {32: [{k: r[k] for k in ("i", "prompt", "ids", "text", "n_payload_tokens")}
                   for r in runs["32"]["records"]]}
-    for g in ["normal", 8, 12, 16]:
+    for g in ["normal"] + [b for b in BETAS if b != 32]:
         p = R / f"02_texts_{g}.json"
         texts[g] = json.loads(p.read_text())["results"]["texts"]
     n = min(len(v) for v in texts.values())
@@ -290,9 +292,14 @@ def stage_report() -> None:
     fig.savefig(R / "figs" / "02_auroc_beta32.png", dpi=150)
     plt.close(fig)
 
-    # Figure 2: vanishing-count AUROC by beta, whole vs prefix
+    # Figure 2: vanishing-count AUROC by beta, whole vs prefix (only if the beta sweep was run)
+    order = [b for b in (8, 12, 16, 32) if f"beta{b}/whole/vanishing_count" in local]
+    if len(order) < 2:
+        write_result_json(R / "02_detectability.json", {"local": local, "judge": judge},
+                          MeteorConfig(), experiment="02_report")
+        print(f"wrote {R / '02_detectability.json'} and figures (beta sweep cut: no figure 2)")
+        return
     fig, ax = plt.subplots(figsize=(6, 3.2))
-    order = [8, 12, 16, 32]
     for off, view, col in ((-0.08, "whole", blue), (0.08, "prefix", orange)):
         for k, b in enumerate(order):
             res = local[f"beta{b}/{view}/vanishing_count"]
