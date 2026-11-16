@@ -1,5 +1,7 @@
 # StegAudit
 
+Repository: https://github.com/nirdesho6o/StegAudit
+
 Meteor steganography pilot (local Qwen model, CPU) and stake-aware audit LPs.
 CNS course project, NIT Warangal. See `CLAUDE.md` for the full spec and `AI_USE.md` for what was AI-generated.
 
