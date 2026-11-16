@@ -3,7 +3,13 @@
 Outside judge: the model is loaded twice (two independent instances), and also
 in a fresh Python process. All three must give bit-identical next-token
 logits. Comparison is torch.equal (exact), never allclose.
+
+Memory: the first instance is the session-wide `qwen` fixture (conftest.py); the
+second instance exists only during the test that needs it, so at most two copies
+are alive in the pytest process at any time.
 """
+
+import gc
 
 import subprocess
 import sys
@@ -18,15 +24,17 @@ from stegaudit.lm import LocalLM
 PROMPT = "Write a short study tip about chemistry."
 
 
-@pytest.fixture(scope="module")
-def two_models():
-    a = LocalLM()
+@pytest.fixture
+def two_models(qwen):
+    """(session instance, a second independent load); the second is freed after the test."""
     b = LocalLM()
-    return a, b
+    yield qwen, b
+    del b
+    gc.collect()
 
 
-def test_pinned_revision_is_used(two_models):
-    a, _ = two_models
+def test_pinned_revision_is_used(qwen):
+    a = qwen
     assert a.cfg.model_revision == MODEL_REVISIONS[a.cfg.model_name]
     # weights and tokenizer were read from the snapshot folder named by the commit hash
     snap = Path(a.snapshot_dir)
@@ -34,8 +42,8 @@ def test_pinned_revision_is_used(two_models):
     assert any(snap.glob("*.safetensors"))
 
 
-def test_cpu_fp32_deterministic_settings(two_models):
-    a, _ = two_models
+def test_cpu_fp32_deterministic_settings(qwen):
+    a = qwen
     p = next(a.model.parameters())
     assert p.device.type == "cpu" and p.dtype == torch.float32
     assert torch.are_deterministic_algorithms_enabled()
@@ -53,15 +61,15 @@ def test_two_loads_bit_identical(two_models):
     assert torch.equal(torch.softmax(la, -1), torch.softmax(lb, -1))
 
 
-def test_same_instance_repeat_bit_identical(two_models):
-    a, _ = two_models
+def test_same_instance_repeat_bit_identical(qwen):
+    a = qwen
     ids = a.chat_prompt_ids(PROMPT)
     assert torch.equal(a.next_token_logits(ids), a.next_token_logits(ids))
 
 
-def test_fresh_process_bit_identical(two_models, tmp_path):
+def test_fresh_process_bit_identical(qwen, tmp_path):
     """A separate interpreter (no shared state) must reproduce the same logits."""
-    a, _ = two_models
+    a = qwen
     ids = a.chat_prompt_ids(PROMPT)
     expected = a.next_token_logits(ids)
     out = tmp_path / "logits.pt"
