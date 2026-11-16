@@ -196,3 +196,8 @@ Files: `results/04_audit_lp.json` (16 000 rows = 2 dists × 4 Ginis × 4 budgets
 - P3c tie classification (M1 / M2 vs the better baseline, best response): at P = 10·mean(v) M1 has 4 ties at 0 and 8 at a positive value; at 100·mean(v), 116 ties at 0 and 6 at a positive value.
 - Mean best-response attack counts (of T = 1000) over all cells, uniform / stake-proportional / M1 / M2: P = 0: all 1000; P = mean(v): 979 / 1000 / 971 / 999; 10·mean(v): 746 / 903 / 718 / 955; 100·mean(v): 147 / 237 / 102 / 256. (Diagnostic only, per PREREG 56cbaf3.)
 - `04_analyze.py` prints `timestamp: None` because it looks up the key `timestamp`; the result file stores `timestamp_utc` (2026-11-16T02:21:18 UTC). Cosmetic; the script is left unchanged as committed.
+
+## 2026-11-16 — Full test suite (HEAD bc85c01, slow tests included, nothing else running)
+- **One process (`pytest -q -m "slow or not slow"`): killed by the kernel OOM killer at test 168 / 330** (`test_lm.py::test_fresh_process_bit_identical`), pytest RSS 8.5 GB, swap full. Cause: several Qwen copies in one process (the live tab 1 AppTest keeps one in Streamlit's `cache_resource`, the session fixture holds one, `test_lm` loads more, and the fresh-process test starts another). The 167 tests before it passed.
+- **Each test file in its own process, sequentially: 330 / 330 passed, 0 failed, 0 skipped** (16 files; `test_meteor_qwen.py` 5 min 43 s, everything else < 40 s per file).
+- Not fixed yet: the suite needs ~9 GB in one process on this machine. Freeing the Streamlit cache after the live tab 1 test would lower it.
