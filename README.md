@@ -1,5 +1,7 @@
 # StegAudit
 
+<p align="center"><img src="docs/hero.svg" alt="Cartoon: two robots pass a secret inside a normal note; a monitor sees nothing; an auditor catches it by comparing answers" width="900"></p>
+
 Repository: https://github.com/nirdesho6o/StegAudit
 
 Meteor steganography pilot (local Qwen model, CPU) and stake-aware audit LPs.

@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 320" width="960" height="320" role="img"
+     aria-label="Cartoon: two robots pass a secret inside a normal note; a monitor sees nothing; an auditor catches it by comparing answers">
+  <title>StegAudit: hidden in the words, caught by the decisions</title>
+  <style>
+  text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  .pop { transform-box: fill-box; transform-origin: center; }
+  .a { animation-duration: 9s; animation-iteration-count: infinite; animation-fill-mode: both;
+        animation-timing-function: ease-in-out; }
+  .key1 { animation-name: key; }
+  .key2 { animation-name: key; animation-delay: .25s; }
+  .card { opacity: 0; animation-name: card; }
+  .note { transform: translate(210px, 0); animation-name: note; }
+  .seen { animation-name: seen; }
+  .lens { animation-name: lens; transform-box: fill-box; transform-origin: 20% 80%; }
+  .glow { opacity: 0; animation-name: glow; }
+  .think { animation-name: think; }
+  .ans { animation-name: ans; }
+  .flag { animation-name: flag; }
+  @keyframes key   { 0% {opacity:0; transform:scale(.2)} 5% {opacity:1; transform:scale(1.25)} 8% {transform:scale(1)}
+                     95% {opacity:1} 100% {opacity:0} }
+  @keyframes card  { 0%,9% {opacity:0; transform:scaleX(1)} 12% {opacity:1} 21% {opacity:1; transform:scaleX(1)}
+                     26% {opacity:1; transform:scaleX(.05)} 27%,100% {opacity:0; transform:scaleX(.05)} }
+  @keyframes note  { 0%,25% {opacity:0; transform:translate(0,0)} 28%,31% {opacity:1; transform:translate(0,0)}
+                     47% {transform:translate(210px,0)} 95% {opacity:1; transform:translate(210px,0)}
+                     100% {opacity:0; transform:translate(210px,0)} }
+  @keyframes lens  { 0%,30% {transform:rotate(0)} 34% {transform:rotate(-12deg)} 38% {transform:rotate(8deg)}
+                     42%,100% {transform:rotate(0)} }
+  @keyframes seen  { 0%,36% {opacity:0} 39%,95% {opacity:1} 100% {opacity:0} }
+  @keyframes glow  { 0%,49% {opacity:0} 52%,60% {opacity:1} 63%,100% {opacity:0} }
+  @keyframes think { 0%,55% {opacity:0} 59%,95% {opacity:1} 100% {opacity:0} }
+  @keyframes ans   { 0%,65% {opacity:0} 69%,95% {opacity:1} 100% {opacity:0} }
+  @keyframes flag  { 0%,76% {opacity:0; transform:scale(.2)} 80% {opacity:1; transform:scale(1.2)} 83%,95% {opacity:1; transform:scale(1)}
+                     100% {opacity:0} }
+  @media (prefers-reduced-motion: reduce) { .a { animation: none !important; } }
+</style>
+  <rect x="2" y="2" width="956" height="316" rx="28" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="3"/>
+  
+  <g class="key1 a pop" stroke="#334155" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="34" cy="158" r="8" fill="#FACC15"/>
+    <circle cx="34" cy="158" r="2.5" fill="#334155" stroke="none"/>
+    <path d="M42 158 H59 M53 158 V164 M59 158 V163" fill="none"/>
+  </g>
+  
+  <g class="key2 a pop" stroke="#334155" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="575" cy="172" r="8" fill="#FACC15"/>
+    <circle cx="575" cy="172" r="2.5" fill="#334155" stroke="none"/>
+    <path d="M583 172 H600 M594 172 V178 M600 172 V177" fill="none"/>
+  </g>
+  
+  <g stroke="#334155" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="105" y1="114" x2="105" y2="128"/>
+    <circle cx="105" cy="110" r="6" fill="#2563EB"/>
+    <rect x="85" y="232" width="14" height="20" rx="6" fill="#2563EB"/>
+    <rect x="111" y="232" width="14" height="20" rx="6" fill="#2563EB"/>
+    <rect x="75" y="184" width="60" height="52" rx="14" fill="#2563EB"/>
+    <rect x="71" y="128" width="68" height="52" rx="16" fill="#DBEAFE"/>
+    <circle cx="92" cy="152" r="5" fill="#334155" stroke="none"/>
+    <circle cx="118" cy="152" r="5" fill="#334155" stroke="none"/>
+    <path d="M96 165 Q105 172 114 165" fill="none" stroke-width="3"/>
+    <path d="M133 200 Q151 194 155 184" fill="none"/>
+  </g>
+  
+  <g stroke="#334155" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="300" y1="114" x2="300" y2="128"/>
+    <circle cx="300" cy="110" r="6" fill="#9333EA"/>
+    <rect x="280" y="232" width="14" height="20" rx="6" fill="#9333EA"/>
+    <rect x="306" y="232" width="14" height="20" rx="6" fill="#9333EA"/>
+    <rect x="270" y="184" width="60" height="52" rx="14" fill="#9333EA"/>
+    <rect x="266" y="128" width="68" height="52" rx="16" fill="#F3E8FF"/>
+    <circle cx="287" cy="152" r="5" fill="#334155" stroke="none"/>
+    <circle cx="313" cy="152" r="5" fill="#334155" stroke="none"/>
+    <path d="M291 165 Q300 172 309 165" fill="none" stroke-width="3"/>
+    <g class="lens a"><line x1="330" y1="198" x2="346" y2="118"/>
+    <circle cx="352" cy="102" r="17" fill="#E0F2FE" fill-opacity=".55" stroke-width="5"/>
+    <path d="M342 98 Q344 90 352 89" fill="none" stroke="#FFFFFF" stroke-width="3"/></g>
+  </g>
+  
+  <g stroke="#334155" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="520" y1="114" x2="520" y2="128"/>
+    <circle cx="520" cy="110" r="6" fill="#16A34A"/>
+    <rect x="500" y="232" width="14" height="20" rx="6" fill="#16A34A"/>
+    <rect x="526" y="232" width="14" height="20" rx="6" fill="#16A34A"/>
+    <rect x="490" y="184" width="60" height="52" rx="14" fill="#16A34A"/>
+    <rect x="486" y="128" width="68" height="52" rx="16" fill="#DCFCE7"/>
+    <circle cx="507" cy="152" r="5" fill="#334155" stroke="none"/>
+    <circle cx="533" cy="152" r="5" fill="#334155" stroke="none"/>
+    <path d="M511 165 Q520 172 529 165" fill="none" stroke-width="3"/>
+    <path d="M492 200 Q474 194 470 184" fill="none"/>
+  </g>
+  
+  <g stroke="#334155" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="850" y1="114" x2="850" y2="128"/>
+    <circle cx="850" cy="110" r="6" fill="#EA580C"/>
+    <rect x="830" y="232" width="14" height="20" rx="6" fill="#EA580C"/>
+    <rect x="856" y="232" width="14" height="20" rx="6" fill="#EA580C"/>
+    <rect x="820" y="184" width="60" height="52" rx="14" fill="#EA580C"/>
+    <rect x="816" y="128" width="68" height="52" rx="16" fill="#FFEDD5"/>
+    <circle cx="837" cy="152" r="5" fill="#334155" stroke="none"/>
+    <circle cx="863" cy="152" r="5" fill="#334155" stroke="none"/>
+    <path d="M841 165 Q850 172 859 165" fill="none" stroke-width="3"/>
+    <path d="M806 132 H894" stroke-width="5"/><path d="M824 132 V116 Q850 104 876 116 V132 Z" fill="#EA580C"/><rect x="788" y="180" width="40" height="52" rx="6" fill="#FFFFFF"/><path d="M796 196 H820 M796 208 H816 M796 220 H812" stroke-width="3"/>
+  </g>
+  <text x="105" y="280" text-anchor="middle" font-size="18" font-weight="700" fill="#2563EB">Sender</text>
+  <text x="300" y="280" text-anchor="middle" font-size="18" font-weight="700" fill="#9333EA">Monitor</text>
+  <text x="520" y="280" text-anchor="middle" font-size="18" font-weight="700" fill="#16A34A">Receiver</text>
+  <text x="850" y="280" text-anchor="middle" font-size="18" font-weight="700" fill="#EA580C">Auditor</text>
+  
+  <g class="card a pop">
+    <rect x="145" y="166" width="44" height="56" rx="8" fill="#DC2626" stroke="#334155" stroke-width="4"/>
+    <text x="167" y="204" text-anchor="middle" font-size="28" font-weight="800" fill="#FFFFFF">C</text>
+  </g>
+  
+  <g class="note a">
+    <rect x="150" y="40" width="196" height="58" rx="8" fill="#FFFFFF" stroke="#334155" stroke-width="3"/>
+    <rect class="glow a" x="251" y="50" width="48" height="20" rx="5" fill="#FDE68A"/>
+    <rect class="glow a" x="174" y="72" width="37" height="20" rx="5" fill="#FDE68A"/>
+    <text x="162" y="66" font-size="17" fill="#334155">Revise one topic</text>
+    <text x="162" y="88" font-size="17" fill="#334155">a day and test…</text>
+  </g>
+  
+  <g class="seen a">
+    <rect x="346" y="136" width="132" height="36" rx="18" fill="#FFFFFF" stroke="#9333EA" stroke-width="3"/>
+    <path d="M356 168 L338 178 L366 171" fill="#FFFFFF" stroke="#9333EA" stroke-width="3" stroke-linejoin="round"/>
+    <text x="412" y="160" text-anchor="middle" font-size="16" font-weight="600" fill="#334155">looks normal ✓</text>
+  </g>
+  
+  <g class="think a" stroke="#16A34A" stroke-width="3">
+    <circle cx="564" cy="124" r="5" fill="#FFFFFF"/>
+    <circle cx="578" cy="110" r="7" fill="#FFFFFF"/>
+    <ellipse cx="612" cy="80" rx="34" ry="28" fill="#FFFFFF"/>
+    <text x="612" y="91" text-anchor="middle" font-size="30" font-weight="800" fill="#DC2626" stroke="none">C</text>
+  </g>
+  
+  <g class="ans a">
+    <rect x="636" y="134" width="142" height="78" rx="12" fill="#FFFFFF" stroke="#EA580C" stroke-width="3"/>
+    <text x="650" y="164" font-size="19" font-weight="700" fill="#16A34A">Green: C ✓</text>
+    <text x="650" y="194" font-size="19" font-weight="700" fill="#9333EA">Purple: ?</text>
+  </g>
+  
+  <g class="flag a pop" stroke="#334155" stroke-width="3" stroke-linejoin="round">
+    <line x1="888" y1="198" x2="888" y2="66" stroke-linecap="round"/>
+    <path d="M888 66 H926 L916 80 L926 94 H888 Z" fill="#DC2626"/>
+    <text x="844" y="90" text-anchor="middle" font-size="18" font-weight="800" fill="#DC2626" stroke="none">gap!</text>
+  </g>
+  <text x="480" y="306" text-anchor="middle" font-size="23" font-weight="700" fill="#334155">Hidden in the words. Caught by the decisions.</text>
+</svg>
