@@ -57,8 +57,8 @@ Every result JSON has a `meta` block: git commit and dirty flag, seed, local mod
 
 ## Report
 
-- `report/report.tex` → `report/report.pdf` (20 pages). Build: `cd report && pdflatex report.tex && pdflatex report.tex` (needs TeX Live with `tcolorbox`, `animate`, TikZ, Latin Modern; e.g. `texlive-latex-extra texlive-pictures`).
-- `report/figs/`: copies of `results/figs/app_tab1–4.png`, `02_auroc_beta32.png` (as `02_auroc.png`) and `04_undetected_vs_gini.png` (as `04_undetected.png`).
+- `report/report.tex` → `report/report.pdf` (18 pages). Build: `cd report && pdflatex report.tex && pdflatex report.tex` (needs TeX Live with `tcolorbox`, `animate`, TikZ, Latin Modern; e.g. `texlive-latex-extra texlive-pictures`).
+- `report/figs/`: cropped app screenshots `results/figs/app_tab1–4_crop.png` (full screenshots stay in `results/figs/app_tab1–4.png`), `02_auroc_beta32.png` (as `02_auroc.png`) and `04_undetected_vs_gini.png` (as `04_undetected.png`).
 - The animation in Section 4.4 plays in Adobe Acrobat Reader or Okular; other viewers show its first frame, and the storyboard figure shows every frame.
 - `docs/stegaudit_explainer.html`: the same walkthrough as an interactive page; open it in any browser.
 - Every number in the report was checked against `results/LOG.md` and `results/*.json` (2026-11-16).
