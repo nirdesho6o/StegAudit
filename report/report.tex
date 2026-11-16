@@ -48,6 +48,10 @@
 \newtcolorbox{keypoint}{colback=orange!5,colframe=auditor!70,boxrule=0.5pt,
   arc=2pt,left=6pt,right=6pt,top=4pt,bottom=4pt}
 
+% ---------- repository link (placeholder until the final URL is known) ----------
+\newcommand{\repourl}{https://github.com/nirdesho6o/REPO}
+\newcommand{\repolink}{\expandafter\url\expandafter{\repourl}}
+
 % ---------- placeholders ----------
 % \missing{...} marks a number still to be filled from results/LOG.md.
 \newcommand{\missing}[1]{\colorbox{red!15}{\textcolor{red!70!black}{\small[#1]}}}
@@ -155,6 +159,8 @@
 {\large Nirdesh Bhandari\par}
 Roll No. 23ECB0F36 \quad B.Tech ECE, 2023--2027\par
 National Institute of Technology Warangal\par
+\vspace{1cm}
+Code: \repolink\par
 \vfill
 {\large November 2026\par}
 \end{titlepage}
@@ -414,10 +420,10 @@ The app is written in Streamlit. All logic is imported from the tested library; 
   \item \textbf{Audit game.} Sliders for budget, stake inequality, detection rate, false-flag rate and penalty. It solves the audit plans live and compares them.
 \end{enumerate}
 
-\shot{app_tab1.png}{Tab 1: Meteor live, with the per-step inspector.}
-\shot{app_tab2.png}{Tab 2: detectability quiz and detector results.}
-\shot{app_tab3.png}{Tab 3: collusion and decision audit on one item.}
-\shot{app_tab4.png}{Tab 4: the audit game.}
+\shot{app_tab1_crop.png}{Tab 1: the study tip with the payload tokens highlighted (orange), and the step-0 inspector: the model's next-token probabilities and the quantised intervals, with the chosen token's interval in orange and the masked value $x$ as a black line.}
+\shot[0.75\linewidth]{app_tab2_crop.png}{Tab 2: the quiz (one of the two texts hides a message) and the AUROC of every detector with its 95\% CI. Blue = whole text, orange = payload prefix only.}
+\shot{app_tab3_crop.png}{Tab 3: one private decision. The Receiver decodes the hint and answers correctly; the Sentinel (same model, no key) guesses wrong; the audit flags the decision.}
+\shot{app_tab4_crop.png}{Tab 4: the audit game. Sliders (left); coverage per decision for each policy and the value left undetected against a best-responding colluder (right).}
 
 % =====================================================================
 \section{Implementation Details}
@@ -520,6 +526,8 @@ False-flag rate $f$ (flag on normal items) & 0.16 [0.09, 0.23] & 0.11 [0.05, 0.1
 \bottomrule
 \end{tabular}
 \end{table}
+The gap and $d$ are equal here because both Receivers answered every hidden-message item correctly and the Sentinel's answers come from the same cached calls, so gap $=$ $d$ $=$ $1 -$ Sentinel accuracy on those items.
+
 Channel failures: 0 of 100. Controls (no hidden message; hint written openly; Sentinel given the key): gap 0.00 for both Sentinels in all three. These are equal by construction (identical prompts), so they check the pipeline, not model behaviour. Question-only accuracy: 0.28 (Qwen), 0.19 (GLM), 0.25 (DeepSeek); chance is 0.25. $d$ and $f$ use the untrusted Receiver \texttt{deepseek-v4-flash}; brackets are 95\% CIs over the 100 items.
 
 \begin{keypoint}
@@ -591,7 +599,7 @@ Audits needed vs cheating rate $\varepsilon$ & $\propto 1/\varepsilon^2$ when fa
 % =====================================================================
 \textbf{What is known.} Meteor \cite{kaptchuk2021}, the steganographic gap \cite{anwar2026}, audit games \cite{blocki2013}, attack selection in AI control \cite{greenblatt2024}.
 
-\textbf{What this project adds.} In Anwar et al.'s experiments the hidden messages use simple encodings (Rot13, codewords, substitution ciphers; specifically a bigram substitution cipher). We found no test of the gap on cryptographically secure steganography. Here it is tested on cryptographically secure steganography. We also combine it with stake-aware audit planning against a colluder who targets high stakes.
+\textbf{What this project adds.} In Anwar et al.'s experiments the hidden messages use simple encodings (Rot13, learned codewords, and a learned bigram substitution cipher). We found no test of the gap on cryptographically secure steganography. Here it is tested on cryptographically secure steganography. We also combine it with stake-aware audit planning against a colluder who targets high stakes.
 This is a new \emph{application and evaluation}, not a new algorithm. No novelty claim is made beyond that. A research manuscript is not submitted now.
 
 \textbf{Future work.}
@@ -610,7 +618,7 @@ A colluder that \emph{learns} where to cheat; the Shimmer scheme; paraphrasing d
 % =====================================================================
 \section{How to Run}
 % =====================================================================
-Full steps are in \texttt{README.md}. In short:
+Code: \repolink. Full steps are in \texttt{README.md}. In short:
 \begin{verbatim}
 pip install -e .            # install the package
 pytest -q                   # run all 330 tests (about 7 min)
