@@ -202,3 +202,10 @@ Files: `results/04_audit_lp.json` (16 000 rows = 2 dists × 4 Ginis × 4 budgets
 - **Each test file in its own process, sequentially: 330 / 330 passed, 0 failed, 0 skipped** (16 files; `test_meteor_qwen.py` 5 min 43 s, everything else < 40 s per file).
 - Not fixed yet: the suite needs ~9 GB in one process on this machine. Freeing the Streamlit cache after the live tab 1 test would lower it.
 - **Follow-up (same day): fixed.** The session-scoped `qwen` fixture is now shared by all Qwen tests, `test_lm`'s second instance lives only for the one test that needs it, and the live tab 1 app test reuses the session model and clears the app caches. One process: **330 / 330 passed in 417 s**; pytest process max RSS **5.67 GB** (`/usr/bin/time -v`; includes ≈ 0.9 GB of memory-mapped weights while the second instance loads), anonymous memory ≈ 4.45 GB (sampled), whole process tree with the fresh-process subprocesses ≈ 5.9 GB (sampled). The ~5 GB target holds for anonymous memory, not for peak RSS; the floor is `test_two_loads_bit_identical` (two independent fp32 copies in one process, by design).
+
+## 2026-11-16 — Literature check for the report's Section 9 claim (Anwar et al.)
+Source: arXiv:2602.23163v1 (PDF kept locally in `papers/`, gitignored). Claim checked: "In Anwar et al.'s experiments the hidden messages use simple encodings."
+- Section 6 "Validating the Proposed Formalism", pp. 7–9: "three methods of increasing realism" (p. 7).
+- Schemes: Rot13 applied post hoc (Fig. 2, p. 7); learned codewords via training with process supervision (pp. 7–8; App. p. 30); a bigram substitution cipher learned by fine-tuning GPT-4.1 (Fig. 3, p. 8; App. p. 32).
+- "Meteor" does not appear in the PDF. "Provably secure" appears only in the references (Hopper et al., p. 12).
+- Conclusion: the report sentence holds for this paper. "We found no test of the gap on cryptographically secure steganography" is a statement about our search, not a proof that none exists.
