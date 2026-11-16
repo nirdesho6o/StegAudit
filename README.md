@@ -23,7 +23,7 @@ pytest -q
 ```
 
 Runtime on CPU (one thread, by design), once the model is cached:
-- `pytest -q`: everything, about 6–7 min (132 tests on 2026-11-15). Most of the time is `tests/test_meteor_qwen.py`: 50 real Meteor round trips, decoded from ids and from text.
+- `pytest -q`: everything, about 7 min in one process (330 tests on 2026-11-16; peak memory about 5.7 GB). Most of the time is `tests/test_meteor_qwen.py`: 50 real Meteor round trips, decoded from ids and from text.
 - `pytest -q -m "not slow"`: skips only the real-model Meteor round trips, about 40 s. Use it for quick checks during live edits, then run the full suite.
 
 The first run also includes the model download. Remote tests use a fake SDK client: no network, no credits.
@@ -51,6 +51,13 @@ Rule for this project: any single run expected to take more than 45 minutes is a
 
 Every result JSON has a `meta` block: git commit and dirty flag, seed, local model and revision, config, library versions, timestamp. Remote answers are cached in `cache/` (gitignored); rerunning a script reads the cache and costs nothing.
 
+## Report
+
+- `report/report.tex` → `report/report.pdf` (20 pages). Build: `cd report && pdflatex report.tex && pdflatex report.tex` (needs TeX Live with `tcolorbox`, `animate`, TikZ, Latin Modern; e.g. `texlive-latex-extra texlive-pictures`).
+- `report/figs/`: copies of `results/figs/app_tab1–4.png`, `02_auroc_beta32.png` (as `02_auroc.png`) and `04_undetected_vs_gini.png` (as `04_undetected.png`).
+- The animation in Section 4.4 plays in Adobe Acrobat Reader or Okular; other viewers show its first frame, and the storyboard figure shows every frame.
+- `docs/stegaudit_explainer.html`: the same walkthrough as an interactive page; open it in any browser.
+- Every number in the report was checked against `results/LOG.md` and `results/*.json` (2026-11-16).
 
 ## Future work (cut for the course deadline, 2026-11-15)
 These were planned but cut to meet the deadline. None of them has been started.

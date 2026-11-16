@@ -17,8 +17,19 @@ Each entry is marked **[VERIFIED]** (Nirdesh checked it against the PDF), **[VER
   Used for: candidate fix for retokenisation mismatches, only if the kill rule in PREREG.md (P1d) fires. Reported to remove ambiguous tokens from the candidate set, which changes the distribution; check against the paper whether this breaks provable security.
 - **[VERIFY]** Qi et al. (2024). *SyncPool* (tokenization-ambiguity handling for provably secure steganography). Exact title, venue and authors to be checked against the PDF.
   Used for: second candidate fix for retokenisation mismatches; claims to preserve security. Not implemented; only if the P1d kill rule fires.
-- **TODO** *Breaking the Provable Security* (ACL Findings 2026): authors and full title not yet recorded.
-  Used for: the low-probability vanishing phenomenon in `quantize.py`.
+- **[VERIFIED]** Cao, W., Wang, Y., Hu, D. (2026). *Breaking the "Provable Security": Detecting Finite-Precision Artifacts in LLM-based Steganography via Low-Probability Vanishing.* Findings of ACL 2026, pp. 20262–20274. doi:10.18653/v1/2026.findings-acl.1013. (From the ACL Anthology .bib, supplied by Nirdesh 2026-11-16.)
+  Used for: the low-probability vanishing phenomenon in `quantize.py`; cited in the report's limitations (the detector itself was not tested).
+- **[VERIFY]** Greenblatt, R., Shlegeris, B., Sachan, K., Roger, F. (2024). *AI Control: Improving Safety Despite Intentional Subversion.* ICML 2024.
+  Used for: attack selection in AI control (report, related work).
+- **[VERIFY]** Ziegler, Z., Deng, Y., Rush, A. (2019). *Neural Linguistic Steganography.* EMNLP 2019.
+  Used for: arithmetic-coding steganography that Meteor improves on (report background).
+- **[VERIFY]** Qwen Team (2024). *Qwen2.5 Technical Report.* arXiv:2412.15115.
+  Used for: citing the local channel model in the report.
+
+## Standards (RFCs)
+- **[VERIFY]** Langley, A., Hamburg, M., Turner, S. (2016). *Elliptic Curves for Security.* RFC 7748. Used for: X25519 in `keys.py`.
+- **[VERIFY]** Krawczyk, H., Eronen, P. (2010). *HMAC-based Extract-and-Expand Key Derivation Function (HKDF).* RFC 5869. Used for: `keys.py`.
+- **[VERIFY]** Krawczyk, H., Bellare, M., Canetti, R. (1997). *HMAC: Keyed-Hashing for Message Authentication.* RFC 2104. Used for: the PRG and the payload tag (`prg.py`, `meteor.py`).
 
 ## Models
 - Qwen2.5-0.5B-Instruct (`Qwen/Qwen2.5-0.5B-Instruct`), Hugging Face, local stego channel (default).

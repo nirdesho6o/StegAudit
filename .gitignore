@@ -42,3 +42,9 @@ dist/
 .DS_Store
 .vscode/
 .idea/
+
+# LaTeX build files (report/report.pdf is committed)
+report/*.aux
+report/*.log
+report/*.out
+report/*.toc
