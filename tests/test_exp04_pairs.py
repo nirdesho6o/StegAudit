@@ -21,3 +21,18 @@ def test_p3a_cells_pair_each_d_with_its_own_f(tmp_path):
     assert len(registered) == len(exp04.P3A_FPR) * 5                 # registered f x all five d values
     assert {c[0] for c in registered} == set(exp04.P3A_FPR)          # measured f never crossed with other d's
     assert [c for c in cells if c[2] is not None] == [(0.18, 0.7, "q"), (0.2, 0.6, "g")]
+
+
+def test_checkpoint_resume_gives_identical_rows(tmp_path):
+    """A run killed after some blocks and restarted loads them and matches an uninterrupted run."""
+    full = exp04.run_grid([0.8], quick=True)                          # no checkpoints
+    ck = tmp_path / "ck"
+    first = exp04.run_grid([0.8], quick=True, ckpt_dir=ck)
+    files = sorted(ck.glob("*.json"))
+    assert len(files) == 2 and not list(ck.glob("*.tmp"))            # quick grid: 1 dist x 2 Ginis
+    files[1].unlink()                                                 # as if killed during the second block
+    resumed = exp04.run_grid([0.8], quick=True, ckpt_dir=ck)
+    assert json.loads(json.dumps(full)) == first == resumed
+    assert len(list(ck.glob("*.json"))) == 2
+    other = exp04.run_grid([0.5], quick=True, ckpt_dir=ck)            # different grid: new files, no reuse
+    assert other != first and len(list(ck.glob("*.json"))) == 4

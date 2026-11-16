@@ -17,6 +17,11 @@ measured Phase 2 pairs (d_s, f_s), one per Sentinel s, each d with its own f (PR
 
 Outputs: results/04_audit_lp.json, results/figs/04_*.png
 Usage:   python experiments/04_audit_lp.py [--phase2] [--quick]
+
+Checkpointing (added 2026-11-16 after a run was killed for low memory): each (dist, Gini) block's
+rows are written to cache/04_checkpoint/ as soon as the block finishes; a rerun with the same grid
+loads finished blocks instead of recomputing them. Every block has its own seeds (seed_for), so a
+resumed run gives the same rows as an uninterrupted one. Only how output is saved changed.
 """
 
 from __future__ import annotations
@@ -69,15 +74,34 @@ def colluder_attacks(name: str, c, v, d: float, P: float) -> np.ndarray:
     raise ValueError(name)
 
 
-def run_grid(d_values, quick: bool):
+CHECKPOINT_DIR = REPO_ROOT / "cache" / "04_checkpoint"
+
+
+def block_checkpoint(ckpt_dir: Path | None, dist: str, g: float, grid: dict) -> Path | None:
+    """File for one (dist, Gini) block; the name includes a hash of the grid, so a changed grid never reuses it."""
+    if ckpt_dir is None:
+        return None
+    h = zlib.crc32(json.dumps(grid, sort_keys=True).encode())
+    return Path(ckpt_dir) / f"{dist}_g{g}_{h:08x}.json"
+
+
+def run_grid(d_values, quick: bool, ckpt_dir: Path | None = None):
     rows = []
     dists = DISTS[:1] if quick else DISTS
     ginis = GINIS[::2] if quick else GINIS
     fracs = BUDGET_FRACS[2:3] if quick else BUDGET_FRACS
     pm = P_MULTS[1:2] if quick else P_MULTS
     draws = 500 if quick else MC_DRAWS
+    grid = {"d": list(d_values), "fracs": fracs, "P_mults": pm, "draws": draws, "policies": POLICIES,
+            "colluders": COLLUDERS, "T": T, "seed": SEED}
     for dist in dists:
         for g in ginis:
+            ckpt = block_checkpoint(ckpt_dir, dist, g, grid)
+            if ckpt is not None and ckpt.exists():
+                rows += json.loads(ckpt.read_text())
+                print(f"loaded {dist} gini={g} from {ckpt.name} ({len(rows)} rows)", flush=True)
+                continue
+            start = len(rows)
             v = stakes(dist, g, T, np.random.default_rng(seed_for("stakes", dist, g)))
             for frac in fracs:
                 B = frac * T
@@ -105,6 +129,11 @@ def run_grid(d_values, quick: bool):
                                     "mc_mean": mc["mean"], "mc_se": mc["se"], "mc_z": z,
                                     "mc_in_ci95": abs(z) <= 1.96 or mc["se"] == 0,
                                 })
+            if ckpt is not None:
+                ckpt.parent.mkdir(parents=True, exist_ok=True)
+                tmp = ckpt.with_suffix(".tmp")
+                tmp.write_text(json.dumps(rows[start:]))
+                tmp.replace(ckpt)                          # atomic: a kill never leaves half a block
             print(f"done {dist} gini={g} ({len(rows)} rows)", flush=True)
     return rows
 
@@ -231,17 +260,18 @@ def load_phase2_pairs(path: Path) -> list[dict]:
     return json.loads(Path(path).read_text())["results"]["pairs"]
 
 
-def main(phase2: Path | None, quick, out, figdir):
+def main(phase2: Path | None, quick, out, figdir, ckpt_dir: Path | None = CHECKPOINT_DIR):
     pairs = load_phase2_pairs(phase2) if phase2 else []
     d_values = D_VALUES + [p["d"] for p in pairs]
     t0 = time.perf_counter()
-    rows = run_grid(d_values, quick)
+    n_ckpt = len(list(Path(ckpt_dir).glob("*.json"))) if ckpt_dir and Path(ckpt_dir).exists() else 0
+    rows = run_grid(d_values, quick, ckpt_dir)
     p3a = run_p3a(d_values, pairs)
     outside95 = sum(not r["mc_in_ci95"] for r in rows)
     beyond4 = [r for r in rows if abs(r["mc_z"]) > 4]
     summary = {"n_rows": len(rows), "mc_outside_ci95": outside95,
                "mc_outside_ci95_frac": outside95 / len(rows), "mc_beyond_4se": len(beyond4),
-               "phase2_pairs": pairs, "quick": quick,
+               "phase2_pairs": pairs, "quick": quick, "checkpoint_files_at_start": n_ckpt,
                "wall_s": round(time.perf_counter() - t0, 1)}
     print(summary, flush=True)
     write_result_json(out, {"summary": summary, "rows": rows, "p3a": p3a, "beyond_4se": beyond4},
@@ -260,5 +290,7 @@ if __name__ == "__main__":
     ap.add_argument("--quick", action="store_true", help="tiny grid, 500 MC draws (smoke test)")
     ap.add_argument("--out", type=Path, default=REPO_ROOT / "results" / "04_audit_lp.json")
     ap.add_argument("--figdir", type=Path, default=REPO_ROOT / "results" / "figs")
+    ap.add_argument("--checkpoint-dir", type=Path, default=CHECKPOINT_DIR,
+                    help="per-block checkpoints (cache/, not committed)")
     a = ap.parse_args()
-    main(a.phase2, a.quick, a.out, a.figdir)
+    main(a.phase2, a.quick, a.out, a.figdir, a.checkpoint_dir)
