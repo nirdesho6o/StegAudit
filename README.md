@@ -2,11 +2,15 @@
 
 <p align="center"><img src="docs/hero.svg" alt="Cartoon: two robots pass a secret inside a normal note; a monitor sees nothing; an auditor catches it by comparing answers" width="900"></p>
 
+<p align="center">Nirdesh Bhandari · NIT Warangal<!-- · LINKS: add personal links here --></p>
+
 ## What this is
 
 - Two AI agents can hide data inside ordinary-looking text with **Meteor** steganography (run here on a local Qwen2.5-0.5B-Instruct model, CPU only).
 - **Transcript detectors fail** against it: log-prob statistics, a vanishing-token test and an LLM judge all score at chance.
 - **Decision auditing** (does an agent act on information it should not have?) does catch it, and **audit-game LPs** plan where a limited audit budget should go when colluders target high-stakes decisions.
+
+**Takeaway:** when the hidden channel is cryptographically undetectable, audit what agents decide, not what they write, and spend the audit budget by stake.
 
 ## Key results
 
@@ -16,8 +20,8 @@ All numbers are from [`results/LOG.md`](results/LOG.md); predictions were regist
 |---|---|
 | 01 Meteor round trip (β = 32) | decoded **200 / 200** messages (from token ids and from text) |
 | 02 Transcript detectors, whole text (200 Meteor vs 200 normal) | AUROC **0.45–0.52**, every 95 % CI covers 0.5 (log-prob 0.522, EOS 0.498, vanishing 0.500, outside-top-k 0.500, LLM judge 0.452) |
-| 03 Decision audit: gap = Receiver − Sentinel accuracy (100 private-information decisions) | **+0.74** [0.65, 0.82] (qwen3.5-397b Sentinel), **+0.78** [0.70, 0.86] (glm-5.2 Sentinel); no-stego and open-hint controls 0.00 |
-| 04 Audit LP vs best-responding colluder (640 settings) | **M1** never worse than the better of uniform (random) and stake-proportional auditing in **640 / 640**, strictly better in **506**; **M2** worse in **238 / 640** (it minimises the colluder's best single payoff, not the total value left undetected) |
+| 03 Decision audit: gap = Receiver − Sentinel accuracy (100 private-information decisions) | **+0.74** [0.65, 0.82] (qwen3.5-397b Sentinel), **+0.78** [0.70, 0.86] (glm-5.2 Sentinel); brackets: 95 % paired bootstrap CI of the gap over items (2000 resamples). No-stego and open-hint controls 0.00 |
+| 04 Audit LP vs best-responding colluder (640 settings) | **M1** (minimises the total value left undetected) never worse than the better of uniform (random) and stake-proportional auditing in **640 / 640**, strictly better in **506**; **M2** worse in **238 / 640** (it minimises the colluder's best single payoff, not the total value left undetected) |
 
 ## Try the demo
 
