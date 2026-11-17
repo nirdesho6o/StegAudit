@@ -2,10 +2,37 @@
 
 <p align="center"><img src="docs/hero.svg" alt="Cartoon: two robots pass a secret inside a normal note; a monitor sees nothing; an auditor catches it by comparing answers" width="900"></p>
 
-Repository: https://github.com/nirdesho6o/StegAudit
+## What this is
 
-Meteor steganography pilot (local Qwen model, CPU) and stake-aware audit LPs.
-CNS course project, NIT Warangal. See `CLAUDE.md` for the full spec and `AI_USE.md` for what was AI-generated.
+- Two AI agents can hide data inside ordinary-looking text with **Meteor** steganography (run here on a local Qwen2.5-0.5B-Instruct model, CPU only).
+- **Transcript detectors fail** against it: log-prob statistics, a vanishing-token test and an LLM judge all score at chance.
+- **Decision auditing** (does an agent act on information it should not have?) does catch it, and **audit-game LPs** plan where a limited audit budget should go when colluders target high-stakes decisions.
+
+## Key results
+
+All numbers are from [`results/LOG.md`](results/LOG.md); predictions were registered in [`PREREG.md`](PREREG.md) before each run.
+
+| Experiment | Measured |
+|---|---|
+| 01 Meteor round trip (β = 32) | decoded **200 / 200** messages (from token ids and from text) |
+| 02 Transcript detectors, whole text (200 Meteor vs 200 normal) | AUROC **0.45–0.52**, every 95 % CI covers 0.5 (log-prob 0.522, EOS 0.498, vanishing 0.500, outside-top-k 0.500, LLM judge 0.452) |
+| 03 Decision audit: gap = Receiver − Sentinel accuracy (100 private-information decisions) | **+0.74** [0.65, 0.82] (qwen3.5-397b Sentinel), **+0.78** [0.70, 0.86] (glm-5.2 Sentinel); no-stego and open-hint controls 0.00 |
+| 04 Audit LP vs best-responding colluder (640 settings) | **M1** never worse than the better of uniform (random) and stake-proportional auditing in **640 / 640**, strictly better in **506**; **M2** worse in **238 / 640** (it minimises the colluder's best single payoff, not the total value left undetected) |
+
+## Try the demo
+
+```bash
+streamlit run app/streamlit_app.py
+```
+
+Demo mode is on by default: the four tabs (Meteor channel, detectability, gap / audit rates, audit game) show saved results from `results/`, and tab 4 solves the audit LPs live. No API key and no model download are needed. Install first (see below).
+
+<p align="center"><img src="results/figs/app_tab4_crop.png" alt="Streamlit app, tab 4: audit game with coverage-vs-stake plot and undetected value per policy" width="800"></p>
+
+## Read more
+
+- [`report/report.pdf`](report/report.pdf): full report (18 pages).
+- [`docs/stegaudit_explainer.html`](docs/stegaudit_explainer.html): interactive walkthrough; download it and open it in a browser.
 
 ## Install (CPU only, Python ≥ 3.11)
 
@@ -49,7 +76,8 @@ Run from the repo root with the venv active. Times are measured on this machine 
 | `experiments/02_detectability.py judge [--max-credits 0.5]` | LLM judge (deepseek-v4-flash) on 400 whole texts; refuses to run if the pilot estimate exceeds the limit | 400 (~0.10) | ~20 min |
 | `experiments/02_detectability.py report` | Summary JSON + AUROC figure | 0 | seconds |
 | `experiments/02b_prefix_check.py` | *Exploratory:* is the prefix log-prob signal a payload-boundary artefact? | 0 | 5 min |
-| `experiments/04_audit_lp.py [--phase2] [--quick]` | Audit LPs vs colluders on synthetic stakes; P3a audits-vs-ε; `--phase2` adds both (d, f) pairs from `results/d_estimate.json` | 0 | ~25–34 min (estimated) |
+| `experiments/03_gap_sanity.py items\|generate\|decode\|pilot\|run\|report` | Gap sanity check: 100 private-information decisions; Receiver vs Sentinel accuracy, controls, audit rates d and f (`results/d_estimate.json`). Stages and order in the script docstring | 1400 (3.17 for the run) | `run`: 68 min (concurrency 12) |
+| `experiments/04_audit_lp.py [--phase2] [--quick]` | Audit LPs vs colluders on synthetic stakes; P3a audits-vs-ε; `--phase2` adds both (d, f) pairs from `results/d_estimate.json` | 0 | 24.5 min |
 
 Rule for this project: any single run expected to take more than 45 minutes is announced and approved first. 01 and 01b ran before that rule existed.
 
@@ -72,3 +100,13 @@ These were planned but cut to meet the deadline. None of them has been started.
 - **β sweep for the detectors** in experiment 02 (β = 8, 12, 16). Experiment 01 already measured how the vanishing rate depends on β.
 - **Further efficiency analysis** beyond the exploratory 01c result (about 0.58 bits per bit of top-k entropy at β = 32).
 - Retokenisation-robust encoding (Nozaki & Murawaki 2022; SyncPool, Qi et al. 2024). Not needed so far: the PREREG kill rule did not fire.
+
+## Context
+
+CNS course project, NIT Warangal, and the pilot for a study on stake-aware auditing. Course material is in [`docs/course/`](docs/course/): the project spec (`CLAUDE.md`), viva questions (`NOTES.md`) and the demo script (`DEMO.md`). What was AI-generated is recorded in [`AI_USE.md`](AI_USE.md); papers, libraries and models are in [`REFERENCES.md`](REFERENCES.md).
+
+Repository: https://github.com/nirdesho6o/StegAudit
+
+## License
+
+MIT, see [`LICENSE`](LICENSE).
